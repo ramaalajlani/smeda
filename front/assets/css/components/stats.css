@@ -1,0 +1,30 @@
+.stats-section {
+  background: linear-gradient(
+    180deg,
+    #f2fbf8 0%,
+    #ffffff 100%
+  );
+  padding: 4.5rem 0;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 1rem;
+}
+
+/* الرقم */
+.stat-card h2 {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 900;
+  color: #17947B;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+/* الوصف */
+.stat-card p {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #354052;
+}

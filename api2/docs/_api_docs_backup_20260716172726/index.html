@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>SMEDC OpenAPI Viewer</title>
+<style>
+body { margin:0; font-family: system-ui, sans-serif; }
+header { background:#1a5f4a; color:#fff; padding:1rem; }
+#spec { height: calc(100vh - 56px); overflow:auto; padding:1rem; white-space:pre-wrap; font-family: Consolas, monospace; font-size:12px; direction:ltr; text-align:left; }
+.warn { background:#fef3c7; color:#92400e; padding:.75rem; margin:1rem; border-radius:6px; }
+</style>
+</head>
+<body>
+<header>
+<strong>SMEDC API — OpenAPI 3.1</strong>
+<span style="float:left"><a href="API_DOCUMENTATION_AR.html" style="color:#fff">التوثيق العربي</a></span>
+</header>
+<div class="warn">⚠️ للاستخدام الداخلي فقط — لا تنشر على Production دون حماية. لعرض تفاعلي كامل استورد openapi.yaml في Swagger Editor أو Postman.</div>
+<pre id="spec">جاري التحميل...</pre>
+<script>
+fetch('openapi.yaml').then(r => r.text()).then(t => document.getElementById('spec').textContent = t).catch(e => document.getElementById('spec').textContent = 'خطأ تحميل openapi.yaml: ' + e);
+</script>
+</body>
+</html>

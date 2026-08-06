@@ -1,0 +1,1632 @@
+erDiagram
+
+    administrative_units {
+        bigint id PK
+        int governorate_id
+        int branch_id
+        string district_name
+        string unit_name
+        string countryside_name
+        string locality_name
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+    }
+    agreements {
+        bigint id PK
+        string title
+        string partner_name
+        string agreement_type
+        string status
+        string start_date
+        string end_date
+        string amount
+        string notes
+        int created_by
+        int approved_by
+        datetime created_at
+        datetime updated_at
+        string scope_type
+        int governorate_id
+        int branch_id
+    }
+    audit_logs {
+        bigint id PK
+        int user_id
+        string action
+        string auditable_type
+        int auditable_id
+        string ip_address
+        string user_agent
+        json old_values
+        json new_values
+        json metadata
+        datetime created_at
+        string module
+        string description
+    }
+    branches {
+        bigint id PK
+        int governorate_id
+        string name
+        string code
+        boolean is_active
+        string notes
+        datetime created_at
+        datetime updated_at
+        int manager_user_id
+    }
+    cache {
+        string key
+        string value
+        int expiration
+    }
+    cache_locks {
+        string key
+        string owner
+        int expiration
+    }
+    certificate_approvals {
+        bigint id PK
+        int certificate_id
+        int approved_by
+        datetime decision_at
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    certificates {
+        bigint id PK
+        int trainee_id
+        int training_center_id
+        int trainer_id
+        int training_kit_id
+        int training_program_id
+        int training_course_id
+        string certificate_number
+        string reference_number
+        string verification_code
+        string score
+        string issue_date
+        string certificate_date
+        string qr_code_path
+        string certificate_file_path
+        boolean is_verified
+        datetime verified_at
+        string notes
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        string security_hash
+        string certificate_code
+        string center_code
+        string trainer_code
+        string kit_code
+        string course_code
+        string trainee_code
+        string qr_url
+        datetime issued_at
+    }
+    consultant_assignments {
+        bigint id PK
+        int funding_application_id
+        int consultant_office_id
+        int assigned_by
+        datetime assigned_at
+        string status
+        string price_offer_amount
+        string price_offer_currency
+        string price_offer_status
+        string consultant_notes
+        datetime completed_at
+        datetime created_at
+        datetime updated_at
+    }
+    consultant_offices {
+        bigint id PK
+        string name
+        string license_number
+        int governorate_id
+        int branch_id
+        string specialization
+        json sectors
+        string contact_person
+        string phone
+        string email
+        string address
+        string status
+        int created_by
+        datetime created_at
+        datetime updated_at
+        int approved_by
+        datetime approved_at
+        string supervised_by_type
+        int updated_by
+    }
+    consultant_reports {
+        bigint id PK
+        int funding_application_id
+        int consultant_office_id
+        int consultant_user_id
+        string risk_level
+        string recommended_amount
+        string recommendation
+        string report_summary
+        string strengths
+        string weaknesses
+        string conditions
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_categories {
+        bigint id PK
+        string code
+        string name_ar
+        string name_en
+        string description
+        json applicable_sectors
+        boolean requires_isic4
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_contracts {
+        bigint id PK
+        string contract_code
+        int request_id
+        int offer_id
+        int office_id
+        int client_user_id
+        datetime signed_by_client_at
+        datetime signed_by_office_at
+        string start_date
+        string expected_end_date
+        string actual_end_date
+        string total_value
+        string payment_status
+        string contract_pdf_path
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_messages {
+        bigint id PK
+        int contract_id
+        int sender_id
+        string sender_role
+        string message_text
+        string attachment_path
+        boolean is_read
+        datetime read_at
+        datetime sent_at
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_offers {
+        bigint id PK
+        int request_id
+        int office_id
+        string methodology_text
+        string price
+        string sample_attachments
+        string status
+        datetime submitted_at
+        datetime seen_by_client_at
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_office_specializations {
+        bigint id PK
+        int office_id
+        string category_code
+        string sector
+        string sample_work_url
+        boolean is_verified
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_office_violations {
+        bigint id PK
+        int office_id
+        int reported_by
+        string violation_type
+        string description
+        string status
+        string action_taken
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_offices {
+        bigint id PK
+        int user_id
+        int governorate_id
+        string name
+        string code
+        string license_number
+        string license_date
+        string license_expiry
+        string address
+        string phone
+        string email
+        string website
+        string status
+        string accreditation_date
+        string overall_rating
+        string on_time_rate
+        string report_accept_rate
+        string bio
+        string notes
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }
+    consulting_reports {
+        bigint id PK
+        int contract_id
+        int request_id
+        string report_pdf_path
+        datetime submission_date
+        string review_status
+        int reviewer_id
+        datetime review_date
+        string reviewer_notes
+        string recommendation_details
+        string isic4_recommendation
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_request_attachments {
+        bigint id PK
+        int request_id
+        int uploader_id
+        string file_name
+        string file_path
+        string file_type
+        int file_size
+        string upload_stage
+        datetime created_at
+        datetime updated_at
+    }
+    consulting_requests {
+        bigint id PK
+        string request_code
+        int user_id
+        int governorate_id
+        int branch_id
+        int branch_manager_id
+        string category_code
+        string request_type
+        string title
+        string description
+        string project_name
+        string economic_activity
+        string isic4_code
+        string budget_min
+        string budget_max
+        string branch_notes
+        datetime submitted_at
+        datetime completed_at
+        datetime offers_deadline
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }
+    consulting_reviews {
+        bigint id PK
+        int contract_id
+        int office_id
+        int reviewer_id
+        string comment
+        boolean is_published
+        datetime created_at
+        datetime updated_at
+    }
+    course_registration_request_members {
+        bigint id PK
+        int course_registration_request_id
+        int trainee_id
+        string full_name
+        string national_id
+        string phone
+        string email
+        string birth_date
+        string gender
+        string education_level
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    course_registration_requests {
+        bigint id PK
+        string request_number
+        int training_course_id
+        int submitted_by_user_id
+        string submitted_by_type
+        string applicant_name
+        string applicant_phone
+        string applicant_email
+        string guardian_name
+        string guardian_phone
+        string guardian_national_id
+        string notes
+        datetime guardian_confirmed_at
+        datetime completed_at
+        datetime created_at
+        datetime updated_at
+    }
+    document_electronic_signatures {
+        bigint id PK
+        string signable_type
+        int signable_id
+        string role_key
+        int signed_by_user_id
+        string signer_name
+        string signer_title
+        string document_hash
+        string signature_hmac
+        string verification_code
+        datetime signed_at
+        datetime created_at
+        datetime updated_at
+        int user_electronic_signature_id
+        string signature_image_path
+        string signature_image_hash
+    }
+    entrepreneur_profiles {
+        bigint id PK
+        int user_id
+        string full_name
+        string governorate
+        string phone
+        string email
+        string education_level
+        string specialization
+        string project_name
+        string project_field
+        string project_field_other
+        string founding_year
+        string executive_summary
+        string elevator_pitch
+        string readiness_stage
+        boolean has_prototype
+        boolean tested_with_users
+        string testing_results
+        string problem_description
+        string target_customers
+        string differentiation
+        json competitive_advantages
+        string team_size_range
+        json team_roles
+        json technologies
+        json market_validation_methods
+        string target_market
+        string current_users_range
+        string current_customers_range
+        boolean has_revenue
+        json revenue_sources
+        json funding_sources
+        boolean seeking_investment
+        string investment_needed_range
+        json challenges
+        string jobs_3years_range
+        string scalability_outside_syria
+        json support_needed
+        json previous_participation
+        string additional_notes
+        string status
+        string reviewer_notes
+        int reviewed_by
+        datetime reviewed_at
+        datetime created_at
+        datetime updated_at
+    }
+    executive_signer_profiles {
+        bigint id PK
+        string role_key
+        int user_id
+        string signer_name
+        string signer_title
+        string signature_image_path
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+    }
+    failed_jobs {
+        bigint id PK
+        string uuid
+        string connection
+        string queue
+        string payload
+        string exception
+        datetime failed_at
+    }
+    financial_records {
+        bigint id PK
+        string record_type
+        string title
+        string amount
+        string currency
+        string status
+        int branch_id
+        int governorate_id
+        string notes
+        int created_by
+        int approved_by
+        datetime created_at
+        datetime updated_at
+    }
+    funded_loans {
+        bigint id PK
+        int funding_application_id
+        int funding_partner_id
+        string loan_number
+        string approved_amount
+        string currency
+        string interest_type
+        string interest_rate
+        string profit_margin
+        string installment_amount
+        string start_date
+        string end_date
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+    funding_application_details {
+        bigint id PK
+        int funding_application_id
+        string owner_experience
+        string monthly_revenue
+        string monthly_expenses
+        string existing_debts
+        string assets_description
+        string market_description
+        string challenges
+        string requested_support
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    funding_applications {
+        bigint id PK
+        string application_number
+        int applicant_user_id
+        string applicant_name
+        string national_id
+        string phone
+        string email
+        int governorate_id
+        int branch_id
+        string project_name
+        string project_type
+        string project_sector
+        string project_size
+        string business_stage
+        string requested_amount
+        string currency
+        string financing_type
+        string purpose
+        string description
+        string current_stage
+        datetime submitted_at
+        int created_by
+        int updated_by
+        datetime created_at
+        datetime updated_at
+    }
+    funding_documents {
+        bigint id PK
+        int funding_application_id
+        string document_type
+        string file_path
+        string original_name
+        string mime_type
+        int size
+        int uploaded_by
+        datetime created_at
+        datetime updated_at
+    }
+    funding_partner_assignments {
+        bigint id PK
+        int funding_application_id
+        int funding_partner_id
+        int assigned_by
+        datetime assigned_at
+        string status
+        string approved_amount
+        string approved_currency
+        string decision_notes
+        datetime decision_at
+        datetime created_at
+        datetime updated_at
+    }
+    funding_partners {
+        bigint id PK
+        string name
+        string partner_type
+        string contact_person
+        string phone
+        string email
+        string status
+        int created_by
+        datetime created_at
+        datetime updated_at
+        string license_number
+        int approved_by
+        datetime approved_at
+        string supervised_by_type
+        int updated_by
+    }
+    governorates {
+        bigint id PK
+        string name_ar
+        string name_en
+        string code
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+    }
+    inbox_message_reads {
+        bigint id PK
+        int message_id
+        int user_id
+        datetime read_at
+    }
+    inbox_messages {
+        bigint id PK
+        int sender_id
+        string sender_role
+        int recipient_id
+        boolean is_broadcast
+        string broadcast_role
+        string subject
+        string body
+        boolean requires_reply
+        string priority
+        json attachments
+        int parent_id
+        boolean is_read
+        datetime read_at
+        datetime deleted_at
+        datetime created_at
+        datetime updated_at
+    }
+    incubated_projects {
+        bigint id PK
+        int application_id
+        int incubator_id
+        int owner_user_id
+        int mentor_user_id
+        string project_name
+        string stage
+        string start_date
+        string expected_end_date
+        string actual_end_date
+        string status
+        string current_revenue
+        int current_employees
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    incubation_applications {
+        bigint id PK
+        string application_number
+        int incubator_id
+        int program_id
+        int applicant_user_id
+        string project_name
+        string project_sector
+        string business_stage
+        string project_description
+        string problem_statement
+        string target_market
+        int team_size
+        boolean has_prototype
+        boolean has_revenue
+        string status
+        string reviewer_notes
+        int reviewed_by
+        datetime reviewed_at
+        datetime created_at
+        datetime updated_at
+        int tech_readiness_level
+        string revenue_model
+        string demo_url
+        string github_url
+        boolean has_ip
+        string ip_description
+        json tech_stack
+        string target_platform
+        string funding_needed
+        string funding_stage
+        string competitive_advantage
+    }
+    incubation_programs {
+        bigint id PK
+        int incubator_id
+        string name
+        string description
+        int duration_months
+        int seats
+        string start_date
+        string end_date
+        string status
+        string requirements
+        datetime created_at
+        datetime updated_at
+    }
+    incubation_progress_reports {
+        bigint id PK
+        int project_id
+        int submitted_by
+        string period_type
+        string period_label
+        string revenue
+        int employees
+        int customers
+        string achievements
+        string challenges
+        string next_steps
+        int overall_rating
+        datetime created_at
+        datetime updated_at
+    }
+    incubators {
+        bigint id PK
+        string name
+        string code
+        string description
+        string sector
+        string location
+        int governorate_id
+        int branch_id
+        int manager_user_id
+        string phone
+        string email
+        int capacity
+        string status
+        int created_by
+        datetime created_at
+        datetime updated_at
+    }
+    job_applications {
+        bigint id PK
+        int job_posting_id
+        int user_id
+        string applicant_name
+        string phone
+        string email
+        string specialty
+        string city
+        string experience_years
+        string summary
+        string cv_path
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+    job_batches {
+        string id
+        string name
+        int total_jobs
+        int pending_jobs
+        int failed_jobs
+        string failed_job_ids
+        string options
+        int cancelled_at
+        int created_at
+        int finished_at
+    }
+    job_postings {
+        bigint id PK
+        int user_id
+        string organization_name
+        string title
+        string city
+        int governorate_id
+        string employment_type
+        string sector
+        string description
+        string skills
+        string status
+        string contact_email
+        string contact_phone
+        datetime created_at
+        datetime updated_at
+    }
+    jobs {
+        bigint id PK
+        string queue
+        string payload
+    }
+    legacy_import_id_mappings {
+        bigint id PK
+        string source
+        string entity
+        int old_id
+        int new_id
+        string dedupe_key
+        datetime created_at
+        datetime updated_at
+    }
+    legacy_import_runs {
+        bigint id PK
+        string source
+        boolean dry_run
+        string status
+        json report
+        datetime started_at
+        datetime finished_at
+        datetime created_at
+        datetime updated_at
+    }
+    loan_payments {
+        bigint id PK
+        int funded_loan_id
+        string due_date
+        string paid_date
+        string amount_due
+        string amount_paid
+        string status
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    mentoring_sessions {
+        bigint id PK
+        int project_id
+        int mentor_user_id
+        string session_date
+        int duration_minutes
+        string topic
+        string notes
+        string action_items
+        int rating
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+    need_action_logs {
+        bigint id PK
+        int need_id
+        string action
+        string from_status
+        string to_status
+        int performed_by
+        string note
+        json payload
+        datetime created_at
+        datetime updated_at
+    }
+    need_lookups {
+        bigint id PK
+        string lookup_type
+        string value
+        string label
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+    }
+    needs {
+        bigint id PK
+        string need_code
+        string title
+        string description
+        string summary
+        string need_owner_type
+        string need_scope
+        string need_type
+        string need_category
+        string need_complexity
+        string source_platform
+        string source_module
+        int source_record_id
+        int governorate_id
+        int branch_id
+        string district_name
+        string administrative_unit_name
+        string countryside_name
+        string locality_name
+        string village_or_neighborhood
+        string address_details
+        string latitude
+        string longitude
+        string location_source
+        string sector
+        string economic_sector
+        string syrsic_section
+        string syrsic_division
+        string syrsic_group
+        string syrsic_class
+        string syrsic_activity
+        string priority
+        string status
+        string approval_status
+        string state_need_level
+        string citizen_need_profile
+        string responsible_entity
+        string proposed_intervention
+        string applicant_name
+        string applicant_phone
+        string applicant_email
+        string applicant_type
+        string organization_name
+        string impact_level
+        string urgency_level
+        string expected_duration
+        string available_partners
+        string obstacles
+        string requirements
+        string notes
+        json metadata
+        int funding_application_id
+        int training_course_id
+        int created_by
+        int updated_by
+        int reviewed_by
+        int approved_by
+        int rejected_by
+        int classified_by
+        int returned_by
+        int resolved_by
+        string reviewer_note
+        string approval_note
+        string rejection_reason
+        string return_reason
+        string classification_note
+        datetime reviewed_at
+        datetime approved_at
+        datetime rejected_at
+        datetime classified_at
+        datetime returned_at
+        datetime resolved_at
+        boolean is_public
+        boolean is_mapped
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }
+    news {
+        bigint id PK
+        string title
+        string slug
+        string summary
+        string body
+        string image_url
+        string category
+        int branch_id
+        string status
+        boolean is_pinned
+        datetime published_at
+        int created_by
+        datetime created_at
+        datetime updated_at
+    }
+    notifications {
+        bigint id PK
+        int user_id
+        string type
+        string title
+        string body
+        string action_url
+        string action_label
+        string icon
+        string color
+        string reference_type
+        int reference_id
+        boolean is_read
+        datetime read_at
+        datetime created_at
+    }
+    password_reset_tokens {
+        string email
+        string token
+        datetime created_at
+    }
+    permissions {
+        bigint id PK
+        string name
+        string guard_name
+        datetime created_at
+        datetime updated_at
+    }
+    personal_access_tokens {
+        bigint id PK
+        string tokenable_type
+        int tokenable_id
+        string name
+        string token
+        string abilities
+        datetime last_used_at
+        datetime expires_at
+        datetime created_at
+        datetime updated_at
+    }
+    sessions {
+        string id
+        int user_id
+        string ip_address
+        string user_agent
+        string payload
+    }
+    staff_training_requests {
+        bigint id PK
+        int user_id
+        string organization_name
+        string training_field
+        string city
+        string details
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+    status_histories {
+        bigint id PK
+        string model_type
+        int model_id
+        string from_status
+        string to_status
+        int changed_by
+        string reason
+        datetime created_at
+    }
+    success_stories {
+        bigint id PK
+        string title
+        string slug
+        string summary
+        string body
+        int incubated_project_id
+        int incubator_id
+        int branch_id
+        string hero_name
+        string hero_title
+        string hero_photo_url
+        string project_name
+        string sector
+        string revenue_achieved
+        int jobs_created
+        int years_in_incubator
+        string current_stage
+        string featured_quote
+        string cover_image_url
+        string video_url
+        json gallery
+        string status
+        boolean is_featured
+        datetime published_at
+        int created_by
+        int approved_by
+        datetime created_at
+        datetime updated_at
+    }
+    syria_locations {
+        bigint id PK
+        string gov_pcode
+        string gov_name_en
+        string gov_name_ar
+        string district_pcode
+        string district_name_en
+        string district_name_ar
+        string subdistrict_pcode
+        string subdistrict_name_en
+        string subdistrict_name_ar
+        string community_pcode
+        string community_name_en
+        string community_name_ar
+        string latitude
+        string longitude
+    }
+    trainee_registration_requests {
+        bigint id PK
+        string request_number
+        string full_name
+        string national_id
+        string phone
+        string email
+        string city
+        string address
+        string birth_date
+        string gender
+        string education_level
+        string guardian_name
+        string guardian_phone
+        string guardian_national_id
+        string group_name
+        int submitted_by_user_id
+        int reviewed_by_user_id
+        string review_notes
+        int approved_trainee_id
+        datetime approved_at
+        datetime rejected_at
+        datetime created_at
+        datetime updated_at
+    }
+    trainees {
+        bigint id PK
+        string name
+        string trainee_code
+        string national_id
+        string phone
+        string email
+        string city
+        string address
+        string birth_date
+        string gender
+        string education_level
+        string notes
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        string governorate
+        string district
+        string location_visibility
+    }
+    trainer_profiles {
+        bigint id PK
+        int trainer_id
+        string headline
+        string bio
+        string skills
+        string special_interests
+        string linkedin_summary
+        string cv_file
+        string profile_image
+        string visibility
+        datetime created_at
+        datetime updated_at
+    }
+    trainer_registration_requests {
+        bigint id PK
+        string request_number
+        int training_center_id
+        string full_name
+        string national_id
+        string phone
+        string email
+        string specialization
+        string classification_requested
+        boolean has_tot
+        string tot_certificate_number
+        string tot_certificate_source
+        string tot_issue_date
+        string tot_expiry_date
+        string cv_file
+        string certificate_file
+        int submitted_by_user_id
+        int reviewed_by_user_id
+        string review_notes
+        int approved_trainer_id
+        datetime approved_at
+        datetime rejected_at
+        datetime created_at
+        datetime updated_at
+    }
+    trainer_training_kit {
+        bigint id PK
+        int trainer_id
+        int training_kit_id
+        boolean is_authorized
+        string authorized_from
+        string authorized_to
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    trainers {
+        bigint id PK
+        int training_center_id
+        string name
+        string trainer_code
+        string phone
+        string email
+        string specialization
+        string classification
+        boolean has_tot
+        string tot_certificate_number
+        string tot_certificate_source
+        string tot_issue_date
+        string tot_expiry_date
+        boolean can_train
+        boolean can_evaluate
+        string accreditation_start_date
+        string accreditation_end_date
+        string bio
+        string notes
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        string governorate
+        string city
+        string district
+        json service_areas
+        string location_visibility
+    }
+    training_center_platforms {
+        bigint id PK
+        int training_center_id
+        string platform_name
+        string platform_url
+        string approved_at
+        string expires_at
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    training_center_registration_requests {
+        bigint id PK
+        string request_number
+        string center_name
+        string city
+        string address
+        string phone
+        string email
+        string classification_requested
+        boolean supports_offline_training
+        boolean supports_online_training
+        string latitude
+        string longitude
+        string license_number
+        string license_issue_date
+        string license_issued_by
+        string license_image_path
+        string license_file
+        string accreditation_file
+        string notes
+        int submitted_by_user_id
+        int reviewed_by_user_id
+        string review_notes
+        string decision_notes
+        int approved_training_center_id
+        datetime reviewed_at
+        datetime approved_at
+        datetime rejected_at
+        datetime created_at
+        datetime updated_at
+    }
+    training_centers {
+        bigint id PK
+        string name
+        string code
+        string city
+        string address
+        string phone
+        string email
+        string classification
+        boolean supports_offline_training
+        boolean supports_online_training
+        string accreditation_start_date
+        string accreditation_end_date
+        boolean is_active
+        string notes
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        string governorate
+        string district
+        string latitude
+        string longitude
+        string location_visibility
+        string license_number
+        string license_issue_date
+        string license_expiry_date
+        string license_issued_by
+        string license_image_path
+        int supervisor_id
+    }
+    training_course_trainee {
+        bigint id PK
+        int training_course_id
+        int trainee_id
+        string score
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    training_courses {
+        bigint id PK
+        int training_center_id
+        int trainer_id
+        int training_kit_id
+        int training_program_id
+        string course_code
+        string title
+        string delivery_mode
+        string approved_platform
+        string start_date
+        string end_date
+        string notes
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        string venue_name
+        string governorate
+        string city
+        string district
+        string address
+        string latitude
+        string longitude
+        string location_visibility
+        string online_platform
+        string online_url
+    }
+    training_kit_nominations {
+        bigint id PK
+        int trainer_id
+        int training_kit_id
+        string proposed_name
+        string description
+        string sector
+        string category
+        int hours
+        string decision_notes
+        datetime decided_at
+        datetime created_at
+        datetime updated_at
+    }
+    training_kit_public_requests {
+        bigint id PK
+        string applicant_name
+        string applicant_email
+        string proposed_name
+        string city
+        string notes
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+    training_kits {
+        bigint id PK
+        string name
+        string code
+        string sector
+        string category
+        string type
+        string material_code
+        string level
+        string objective
+        string description
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }
+    training_program_approval_logs {
+        bigint id PK
+        int program_id
+        string from_status
+        string to_status
+        string action
+        string notes
+        int user_id
+        datetime created_at
+        datetime updated_at
+    }
+    training_program_executions {
+        bigint id PK
+        int program_id
+        int course_id
+        int created_by
+        datetime created_at
+        datetime updated_at
+    }
+    training_program_modules {
+        bigint id PK
+        int program_id
+        string title
+        string description
+        string objectives
+        string activities
+        string required_tools
+        string evaluation_method
+        datetime created_at
+        datetime updated_at
+    }
+    training_program_outcomes {
+        bigint id PK
+        int program_id
+        string title
+        string description
+        datetime created_at
+        datetime updated_at
+    }
+    training_program_service_links {
+        bigint id PK
+        int program_id
+        int service_reference_id
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    training_program_training_kit {
+        bigint id PK
+        int training_program_id
+        int training_kit_id
+        boolean is_required
+        datetime created_at
+        datetime updated_at
+    }
+    training_programs {
+        bigint id PK
+        string name
+        string code
+        string description
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+        string title
+        string slug
+        string sector
+        string target_audience
+        string level
+        string delivery_mode
+        string prerequisites
+        string outcomes_summary
+        boolean grants_certificate
+        boolean requires_final_exam
+        boolean requires_project
+        int created_by
+        int approved_by
+        datetime approved_at
+        datetime suspended_at
+        datetime archived_at
+    }
+    training_supervisors {
+        bigint id PK
+        string name
+        string code
+        string type
+        int parent_id
+        int governorate_id
+        int branch_id
+        boolean is_active
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+    user_electronic_signatures {
+        bigint id PK
+        int user_id
+        string signature_path
+        string original_name
+        string mime_type
+        string file_hash
+        boolean is_active
+        int uploaded_by
+        datetime created_at
+        datetime updated_at
+    }
+    users {
+        bigint id PK
+        string name
+        string email
+        datetime email_verified_at
+        string password
+        string entity_type
+        int parent_user_id
+        boolean is_active
+        string remember_token
+        datetime created_at
+        datetime updated_at
+        int training_center_id
+        int trainer_id
+        int trainee_id
+        string phone
+        datetime last_login_at
+        int governorate_id
+        int branch_id
+        int consultant_office_id
+        int funding_partner_id
+        int training_supervisor_id
+    }
+    workforces {
+        bigint id PK
+        int trainee_id
+        string workforce_code
+        string joined_at
+        string notes
+        datetime created_at
+        datetime updated_at
+    }
+
+    governorates ||--o{ administrative_units : "governorate_id"
+    branches ||--o{ administrative_units : "branch_id"
+    users ||--o{ agreements : "created_by"
+    users ||--o{ agreements : "approved_by"
+    governorates ||--o{ agreements : "governorate_id"
+    branches ||--o{ agreements : "branch_id"
+    users ||--o{ audit_logs : "user_id"
+    governorates ||--o{ branches : "governorate_id"
+    users ||--o{ branches : "manager_user_id"
+    funding_applications ||--o{ consultant_assignments : "funding_application_id"
+    consultant_offices ||--o{ consultant_assignments : "consultant_office_id"
+    users ||--o{ consultant_assignments : "assigned_by"
+    governorates ||--o{ consultant_offices : "governorate_id"
+    branches ||--o{ consultant_offices : "branch_id"
+    users ||--o{ consultant_offices : "created_by"
+    users ||--o{ consultant_offices : "approved_by"
+    users ||--o{ consultant_offices : "updated_by"
+    funding_applications ||--o{ consultant_reports : "funding_application_id"
+    consultant_offices ||--o{ consultant_reports : "consultant_office_id"
+    users ||--o{ consultant_reports : "consultant_user_id"
+    consulting_requests ||--o{ consulting_contracts : "request_id"
+    consulting_offers ||--o{ consulting_contracts : "offer_id"
+    consulting_offices ||--o{ consulting_contracts : "office_id"
+    users ||--o{ consulting_contracts : "client_user_id"
+    consulting_contracts ||--o{ consulting_messages : "contract_id"
+    users ||--o{ consulting_messages : "sender_id"
+    consulting_requests ||--o{ consulting_offers : "request_id"
+    consulting_offices ||--o{ consulting_offers : "office_id"
+    consulting_offices ||--o{ consulting_office_specializations : "office_id"
+    consulting_offices ||--o{ consulting_office_violations : "office_id"
+    users ||--o{ consulting_office_violations : "reported_by"
+    users ||--o{ consulting_offices : "user_id"
+    governorates ||--o{ consulting_offices : "governorate_id"
+    consulting_contracts ||--o{ consulting_reports : "contract_id"
+    consulting_requests ||--o{ consulting_reports : "request_id"
+    users ||--o{ consulting_reports : "reviewer_id"
+    consulting_requests ||--o{ consulting_request_attachments : "request_id"
+    users ||--o{ consulting_request_attachments : "uploader_id"
+    users ||--o{ consulting_requests : "user_id"
+    governorates ||--o{ consulting_requests : "governorate_id"
+    branches ||--o{ consulting_requests : "branch_id"
+    users ||--o{ consulting_requests : "branch_manager_id"
+    consulting_contracts ||--o{ consulting_reviews : "contract_id"
+    consulting_offices ||--o{ consulting_reviews : "office_id"
+    users ||--o{ consulting_reviews : "reviewer_id"
+    users ||--o{ document_electronic_signatures : "signed_by_user_id"
+    users ||--o{ entrepreneur_profiles : "user_id"
+    users ||--o{ entrepreneur_profiles : "reviewed_by"
+    users ||--o{ executive_signer_profiles : "user_id"
+    branches ||--o{ financial_records : "branch_id"
+    governorates ||--o{ financial_records : "governorate_id"
+    users ||--o{ financial_records : "created_by"
+    users ||--o{ financial_records : "approved_by"
+    funding_applications ||--o{ funded_loans : "funding_application_id"
+    funding_partners ||--o{ funded_loans : "funding_partner_id"
+    funding_applications ||--o{ funding_application_details : "funding_application_id"
+    users ||--o{ funding_applications : "applicant_user_id"
+    governorates ||--o{ funding_applications : "governorate_id"
+    branches ||--o{ funding_applications : "branch_id"
+    users ||--o{ funding_applications : "created_by"
+    users ||--o{ funding_applications : "updated_by"
+    funding_applications ||--o{ funding_documents : "funding_application_id"
+    users ||--o{ funding_documents : "uploaded_by"
+    funding_applications ||--o{ funding_partner_assignments : "funding_application_id"
+    funding_partners ||--o{ funding_partner_assignments : "funding_partner_id"
+    users ||--o{ funding_partner_assignments : "assigned_by"
+    users ||--o{ funding_partners : "created_by"
+    users ||--o{ funding_partners : "approved_by"
+    users ||--o{ funding_partners : "updated_by"
+    inbox_messages ||--o{ inbox_message_reads : "message_id"
+    users ||--o{ inbox_message_reads : "user_id"
+    users ||--o{ inbox_messages : "sender_id"
+    users ||--o{ inbox_messages : "recipient_id"
+    inbox_messages ||--o{ inbox_messages : "parent_id"
+    incubation_applications ||--o{ incubated_projects : "application_id"
+    incubators ||--o{ incubated_projects : "incubator_id"
+    users ||--o{ incubated_projects : "owner_user_id"
+    users ||--o{ incubated_projects : "mentor_user_id"
+    incubators ||--o{ incubation_applications : "incubator_id"
+    incubation_programs ||--o{ incubation_applications : "program_id"
+    users ||--o{ incubation_applications : "applicant_user_id"
+    users ||--o{ incubation_applications : "reviewed_by"
+    incubators ||--o{ incubation_programs : "incubator_id"
+    incubated_projects ||--o{ incubation_progress_reports : "project_id"
+    users ||--o{ incubation_progress_reports : "submitted_by"
+    governorates ||--o{ incubators : "governorate_id"
+    branches ||--o{ incubators : "branch_id"
+    users ||--o{ incubators : "manager_user_id"
+    users ||--o{ incubators : "created_by"
+    job_postings ||--o{ job_applications : "job_posting_id"
+    users ||--o{ job_applications : "user_id"
+    users ||--o{ job_postings : "user_id"
+    governorates ||--o{ job_postings : "governorate_id"
+    funded_loans ||--o{ loan_payments : "funded_loan_id"
+    incubated_projects ||--o{ mentoring_sessions : "project_id"
+    users ||--o{ mentoring_sessions : "mentor_user_id"
+    needs ||--o{ need_action_logs : "need_id"
+    users ||--o{ need_action_logs : "performed_by"
+    governorates ||--o{ needs : "governorate_id"
+    branches ||--o{ needs : "branch_id"
+    funding_applications ||--o{ needs : "funding_application_id"
+    training_courses ||--o{ needs : "training_course_id"
+    users ||--o{ needs : "created_by"
+    users ||--o{ needs : "updated_by"
+    users ||--o{ needs : "reviewed_by"
+    users ||--o{ needs : "approved_by"
+    users ||--o{ needs : "rejected_by"
+    users ||--o{ needs : "classified_by"
+    users ||--o{ needs : "returned_by"
+    users ||--o{ needs : "resolved_by"
+    branches ||--o{ news : "branch_id"
+    users ||--o{ news : "created_by"
+    users ||--o{ notifications : "user_id"
+    users ||--o{ staff_training_requests : "user_id"
+    users ||--o{ status_histories : "changed_by"
+    incubated_projects ||--o{ success_stories : "incubated_project_id"
+    incubators ||--o{ success_stories : "incubator_id"
+    branches ||--o{ success_stories : "branch_id"
+    users ||--o{ success_stories : "created_by"
+    users ||--o{ success_stories : "approved_by"
+    training_programs ||--o{ training_program_approval_logs : "program_id"
+    users ||--o{ training_program_approval_logs : "user_id"
+    training_programs ||--o{ training_program_executions : "program_id"
+    training_courses ||--o{ training_program_executions : "course_id"
+    users ||--o{ training_program_executions : "created_by"
+    training_programs ||--o{ training_program_modules : "program_id"
+    training_programs ||--o{ training_program_outcomes : "program_id"
+    training_programs ||--o{ training_program_service_links : "program_id"
+    users ||--o{ training_programs : "created_by"
+    users ||--o{ training_programs : "approved_by"
+    training_supervisors ||--o{ training_supervisors : "parent_id"
+    governorates ||--o{ training_supervisors : "governorate_id"
+    branches ||--o{ training_supervisors : "branch_id"
+    users ||--o{ user_electronic_signatures : "user_id"
+    users ||--o{ user_electronic_signatures : "uploaded_by"
+    governorates ||--o{ users : "governorate_id"
+    branches ||--o{ users : "branch_id"
+    consultant_offices ||--o{ users : "consultant_office_id"
+    funding_partners ||--o{ users : "funding_partner_id"
+    trainees ||--o{ certificates : "trainee_id"
+    training_centers ||--o{ certificates : "training_center_id"
+    trainers ||--o{ certificates : "trainer_id"
+    training_kits ||--o{ certificates : "training_kit_id"
+    training_programs ||--o{ certificates : "training_program_id"
+    training_courses ||--o{ certificates : "training_cours_id"
+    governorates ||--o{ certificates : "governorate_id"
+    certificates ||--o{ certificate_approvals : "certificate_id"
+    users ||--o{ certificate_approvals : "approved_by"
+    certificate_approvals ||--o{ document_electronic_signatures : "signable"
+    training_courses ||--o{ course_registration_requests : "training_cours_id"
+    users ||--o{ course_registration_requests : "submitted_by_user_id"
+    governorates ||--o{ course_registration_requests : "governorate_id"
+    course_registration_requests ||--o{ course_registration_request_members : "course_registration_request_id"
+    trainees ||--o{ course_registration_request_members : "trainee_id"
+    user_electronic_signatures ||--o{ document_electronic_signatures : "user_electronic_signature_id"
+    incubation_applications ||--o{ incubated_projects : "incubation_application_id"
+    incubation_programs ||--o{ incubation_applications : "incubation_program_id"
+    training_courses ||--o{ needs : "training_cours_id"
+    governorates ||--o{ trainees : "governorate_id"
+    trainees ||--o{ workforces : "trainee_id"
+    users ||--o{ trainee_registration_requests : "submitted_by_user_id"
+    users ||--o{ trainee_registration_requests : "reviewed_by_user_id"
+    trainees ||--o{ trainee_registration_requests : "approved_trainee_id"
+    governorates ||--o{ trainee_registration_requests : "governorate_id"
+    training_centers ||--o{ trainers : "training_center_id"
+    governorates ||--o{ trainers : "governorate_id"
+    trainers ||--o{ training_courses : "trainer_id"
+    trainers ||--o{ training_kit_nominations : "trainer_id"
+    trainers ||--o{ trainer_profiles : "trainer_id"
+    training_kits }o--o{ trainer_training_kit : "training_kit_id"
+    training_centers ||--o{ trainer_registration_requests : "training_center_id"
+    users ||--o{ trainer_registration_requests : "submitted_by_user_id"
+    users ||--o{ trainer_registration_requests : "reviewed_by_user_id"
+    trainers ||--o{ trainer_registration_requests : "approved_trainer_id"
+    governorates ||--o{ trainer_registration_requests : "governorate_id"
+    governorates ||--o{ training_centers : "governorate_id"
+    training_supervisors ||--o{ training_centers : "supervisor_id"
+    training_centers ||--o{ training_center_platforms : "training_center_id"
+    training_centers ||--o{ training_courses : "training_center_id"
+    users ||--o{ training_center_registration_requests : "submitted_by_user_id"
+    users ||--o{ training_center_registration_requests : "reviewed_by_user_id"
+    training_centers ||--o{ training_center_registration_requests : "approved_training_center_id"
+    governorates ||--o{ training_center_registration_requests : "governorate_id"
+    training_kits ||--o{ training_courses : "training_kit_id"
+    training_programs ||--o{ training_courses : "training_program_id"
+    governorates ||--o{ training_courses : "governorate_id"
+    training_kits ||--o{ training_kit_nominations : "training_kit_id"
+    training_kits }o--o{ training_program_training_kit : "training_kit_id"
+    training_supervisors ||--o{ users : "training_supervisor_id"
+    training_centers ||--o{ users : "training_center_id"
+    trainers ||--o{ users : "trainer_id"
+    trainees ||--o{ users : "trainee_id"
+    training_courses ||--o{ certificates : "training_course_id"
+    training_courses ||--o{ course_registration_requests : "training_course_id"
+    news ||--o{ legacy_import_id_mappings : "new_id"
+    users ||--o{ sessions : "user_id"
+    trainers ||--o{ trainer_training_kit : "trainer_id"
+    training_courses ||--o{ training_course_trainee : "training_course_id"
+    trainees ||--o{ training_course_trainee : "trainee_id"
+    training_programs ||--o{ training_program_training_kit : "training_program_id"

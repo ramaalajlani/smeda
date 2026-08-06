@@ -1,0 +1,331 @@
+# تقرير تدقيق ERD — SMEDC
+
+> **ملاحظة:** هذا التقرير للقراءة فقط — لم يُنفّذ أي إصلاح.
+
+## ملخص
+
+| المؤشر | القيمة |
+|--------|--------|
+| عدد الجداول | 89 |
+| علاقات مؤكدة (FK) | 139 |
+| علاقات قوية (Model) | 61 |
+| علاقات محتملة | 8 |
+| علاقات غير محسومة | 52 |
+| مشكلات مكتشفة | 99 |
+
+## تعارض SQL vs Migrations
+
+- **أحدث/أكمل SQL dump:** `u142331648_authority32 (2).sql`
+- **جداول في migrations فقط:** 34
+  - consulting_categories, consulting_offices, consulting_office_specializations, consulting_requests, consulting_request_attachments, consulting_offers, consulting_contracts, consulting_messages, consulting_reports, consulting_reviews, consulting_office_violations, notifications, inbox_messages, inbox_message_reads, incubators, incubation_programs, incubation_applications, incubated_projects, mentoring_sessions, incubation_progress_reports, success_stories, news, entrepreneur_profiles, executive_signer_profiles, document_electronic_signatures, user_electronic_signatures, training_program_modules, training_program_outcomes, training_program_service_links, training_program_approval_logs
+  - ... و4 أخرى
+- **جداول في SQL dump فقط (legacy):** 5
+  - migrations, model_has_permissions, model_has_roles, roles, role_has_permissions
+
+## المشكلات المكتشفة
+
+### عالية (5)
+
+- **جدول بلا Primary Key** — جدول `cache`
+  - الملف: `0001_01_01_000001_create_cache_table.php`
+  - التوصية: تعريف primary key صريح
+- **جدول بلا Primary Key** — جدول `cache_locks`
+  - الملف: `0001_01_01_000001_create_cache_table.php`
+  - التوصية: تعريف primary key صريح
+- **جدول بلا Primary Key** — جدول `job_batches`
+  - الملف: `0001_01_01_000002_create_jobs_table.php`
+  - التوصية: تعريف primary key صريح
+- **جدول بلا Primary Key** — جدول `password_reset_tokens`
+  - الملف: `0001_01_01_000000_create_users_table.php`
+  - التوصية: تعريف primary key صريح
+- **جدول بلا Primary Key** — جدول `sessions`
+  - الملف: `0001_01_01_000000_create_users_table.php`
+  - التوصية: تعريف primary key صريح
+
+### متوسطة (60)
+
+- ***_id بدون Foreign Key** — جدول `certificate_approvals`, عمود `certificate_id`
+  - الملف: `2026_04_09_194054_create_certificate_approvals_table.php`
+  - التوصية: إضافة foreignId('certificate_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `certificates`, عمود `trainee_id`
+  - الملف: `2026_04_09_131731_create_certificates_table.php`
+  - التوصية: إضافة foreignId('trainee_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `certificates`, عمود `training_center_id`
+  - الملف: `2026_04_09_131731_create_certificates_table.php`
+  - التوصية: إضافة foreignId('training_center_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `certificates`, عمود `trainer_id`
+  - الملف: `2026_04_09_131731_create_certificates_table.php`
+  - التوصية: إضافة foreignId('trainer_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `certificates`, عمود `training_kit_id`
+  - الملف: `2026_04_09_131731_create_certificates_table.php`
+  - التوصية: إضافة foreignId('training_kit_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `certificates`, عمود `training_program_id`
+  - الملف: `2026_04_09_131731_create_certificates_table.php`
+  - التوصية: إضافة foreignId('training_program_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `certificates`, عمود `training_course_id`
+  - الملف: `2026_04_09_131731_create_certificates_table.php`
+  - التوصية: إضافة foreignId('training_course_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `course_registration_request_members`, عمود `course_registration_request_id`
+  - الملف: `2026_04_19_175950_create_course_registration_request_members_table.php`
+  - التوصية: إضافة foreignId('course_registration_request_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `course_registration_request_members`, عمود `trainee_id`
+  - الملف: `2026_04_19_175950_create_course_registration_request_members_table.php`
+  - التوصية: إضافة foreignId('trainee_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `course_registration_request_members`, عمود `national_id`
+  - الملف: `2026_04_19_175950_create_course_registration_request_members_table.php`
+  - التوصية: إضافة foreignId('national_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `course_registration_requests`, عمود `training_course_id`
+  - الملف: `2026_04_19_175918_create_course_registration_requests_table.php`
+  - التوصية: إضافة foreignId('training_course_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `course_registration_requests`, عمود `submitted_by_user_id`
+  - الملف: `2026_04_19_175918_create_course_registration_requests_table.php`
+  - التوصية: إضافة foreignId('submitted_by_user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `course_registration_requests`, عمود `guardian_national_id`
+  - الملف: `2026_04_19_175918_create_course_registration_requests_table.php`
+  - التوصية: إضافة foreignId('guardian_national_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `document_electronic_signatures`, عمود `user_electronic_signature_id`
+  - الملف: `2026_06_22_200000_create_executive_electronic_signatures.php`
+  - التوصية: إضافة foreignId('user_electronic_signature_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `funding_applications`, عمود `national_id`
+  - الملف: `2026_06_21_100000_create_funding_platform_tables.php`
+  - التوصية: إضافة foreignId('national_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `legacy_import_id_mappings`, عمود `old_id`
+  - الملف: `2026_06_17_120000_create_legacy_import_tracking_tables.php`
+  - التوصية: إضافة foreignId('old_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `legacy_import_id_mappings`, عمود `new_id`
+  - الملف: `2026_06_17_120000_create_legacy_import_tracking_tables.php`
+  - التوصية: إضافة foreignId('new_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `needs`, عمود `source_record_id`
+  - الملف: `2026_06_23_100000_create_needs_module_tables.php`
+  - التوصية: إضافة foreignId('source_record_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `sessions`, عمود `user_id`
+  - الملف: `0001_01_01_000000_create_users_table.php`
+  - التوصية: إضافة foreignId('user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainee_registration_requests`, عمود `national_id`
+  - الملف: `2026_04_19_175843_create_trainee_registration_requests_table.php`
+  - التوصية: إضافة foreignId('national_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainee_registration_requests`, عمود `guardian_national_id`
+  - الملف: `2026_04_19_175843_create_trainee_registration_requests_table.php`
+  - التوصية: إضافة foreignId('guardian_national_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainee_registration_requests`, عمود `submitted_by_user_id`
+  - الملف: `2026_04_19_175843_create_trainee_registration_requests_table.php`
+  - التوصية: إضافة foreignId('submitted_by_user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainee_registration_requests`, عمود `reviewed_by_user_id`
+  - الملف: `2026_04_19_175843_create_trainee_registration_requests_table.php`
+  - التوصية: إضافة foreignId('reviewed_by_user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainee_registration_requests`, عمود `approved_trainee_id`
+  - الملف: `2026_04_19_175843_create_trainee_registration_requests_table.php`
+  - التوصية: إضافة foreignId('approved_trainee_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainees`, عمود `national_id`
+  - الملف: `2026_04_09_131329_create_trainees_table.php`
+  - التوصية: إضافة foreignId('national_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainer_profiles`, عمود `trainer_id`
+  - الملف: `2026_04_18_085542_create_trainer_profiles_table.php`
+  - التوصية: إضافة foreignId('trainer_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainer_registration_requests`, عمود `training_center_id`
+  - الملف: `2026_04_19_175813_create_trainer_registration_requests_table.php`
+  - التوصية: إضافة foreignId('training_center_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainer_registration_requests`, عمود `national_id`
+  - الملف: `2026_04_19_175813_create_trainer_registration_requests_table.php`
+  - التوصية: إضافة foreignId('national_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainer_registration_requests`, عمود `submitted_by_user_id`
+  - الملف: `2026_04_19_175813_create_trainer_registration_requests_table.php`
+  - التوصية: إضافة foreignId('submitted_by_user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainer_registration_requests`, عمود `reviewed_by_user_id`
+  - الملف: `2026_04_19_175813_create_trainer_registration_requests_table.php`
+  - التوصية: إضافة foreignId('reviewed_by_user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainer_registration_requests`, عمود `approved_trainer_id`
+  - الملف: `2026_04_19_175813_create_trainer_registration_requests_table.php`
+  - التوصية: إضافة foreignId('approved_trainer_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainer_training_kit`, عمود `trainer_id`
+  - الملف: `2026_04_09_131439_create_trainer_training_kit_table.php`
+  - التوصية: إضافة foreignId('trainer_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainer_training_kit`, عمود `training_kit_id`
+  - الملف: `2026_04_09_131439_create_trainer_training_kit_table.php`
+  - التوصية: إضافة foreignId('training_kit_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `trainers`, عمود `training_center_id`
+  - الملف: `2026_04_09_131255_create_trainers_table.php`
+  - التوصية: إضافة foreignId('training_center_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_center_platforms`, عمود `training_center_id`
+  - الملف: `2026_04_09_131216_create_training_center_platforms_table.php`
+  - التوصية: إضافة foreignId('training_center_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_center_registration_requests`, عمود `submitted_by_user_id`
+  - الملف: `2026_04_19_175352_create_training_center_registration_requests_table.php`
+  - التوصية: إضافة foreignId('submitted_by_user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_center_registration_requests`, عمود `reviewed_by_user_id`
+  - الملف: `2026_04_19_175352_create_training_center_registration_requests_table.php`
+  - التوصية: إضافة foreignId('reviewed_by_user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_center_registration_requests`, عمود `approved_training_center_id`
+  - الملف: `2026_04_19_175352_create_training_center_registration_requests_table.php`
+  - التوصية: إضافة foreignId('approved_training_center_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_centers`, عمود `supervisor_id`
+  - الملف: `2026_04_09_131124_create_training_centers_table.php`
+  - التوصية: إضافة foreignId('supervisor_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_course_trainee`, عمود `training_course_id`
+  - الملف: `2026_04_09_131657_create_training_course_trainee_table.php`
+  - التوصية: إضافة foreignId('training_course_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_course_trainee`, عمود `trainee_id`
+  - الملف: `2026_04_09_131657_create_training_course_trainee_table.php`
+  - التوصية: إضافة foreignId('trainee_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_courses`, عمود `training_center_id`
+  - الملف: `2026_04_09_131622_create_training_courses_table.php`
+  - التوصية: إضافة foreignId('training_center_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_courses`, عمود `trainer_id`
+  - الملف: `2026_04_09_131622_create_training_courses_table.php`
+  - التوصية: إضافة foreignId('trainer_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_courses`, عمود `training_kit_id`
+  - الملف: `2026_04_09_131622_create_training_courses_table.php`
+  - التوصية: إضافة foreignId('training_kit_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_courses`, عمود `training_program_id`
+  - الملف: `2026_04_09_131622_create_training_courses_table.php`
+  - التوصية: إضافة foreignId('training_program_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_kit_nominations`, عمود `trainer_id`
+  - الملف: `2026_04_18_101403_create_training_kit_nominations_table.php`
+  - التوصية: إضافة foreignId('trainer_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_kit_nominations`, عمود `training_kit_id`
+  - الملف: `2026_04_18_101403_create_training_kit_nominations_table.php`
+  - التوصية: إضافة foreignId('training_kit_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_program_service_links`, عمود `service_reference_id`
+  - الملف: `2026_06_24_100001_create_program_bank_supporting_tables.php`
+  - التوصية: إضافة foreignId('service_reference_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_program_training_kit`, عمود `training_program_id`
+  - الملف: `2026_04_09_131547_create_training_program_training_kit_table.php`
+  - التوصية: إضافة foreignId('training_program_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `training_program_training_kit`, عمود `training_kit_id`
+  - الملف: `2026_04_09_131547_create_training_program_training_kit_table.php`
+  - التوصية: إضافة foreignId('training_kit_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `users`, عمود `parent_user_id`
+  - الملف: `0001_01_01_000000_create_users_table.php`
+  - التوصية: إضافة foreignId('parent_user_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `users`, عمود `training_center_id`
+  - الملف: `0001_01_01_000000_create_users_table.php`
+  - التوصية: إضافة foreignId('training_center_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `users`, عمود `trainer_id`
+  - الملف: `0001_01_01_000000_create_users_table.php`
+  - التوصية: إضافة foreignId('trainer_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `users`, عمود `trainee_id`
+  - الملف: `0001_01_01_000000_create_users_table.php`
+  - التوصية: إضافة foreignId('trainee_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `users`, عمود `training_supervisor_id`
+  - الملف: `0001_01_01_000000_create_users_table.php`
+  - التوصية: إضافة foreignId('training_supervisor_id')->constrained() في migration
+- ***_id بدون Foreign Key** — جدول `workforces`, عمود `trainee_id`
+  - الملف: `2026_04_15_124127_create_workforces_table.php`
+  - التوصية: إضافة foreignId('trainee_id')->constrained() في migration
+- **جدول في SQL dump غير موجود في migrations** — جدول `model_has_permissions`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: جدول legacy أو تم حذف migration — مراجعة يدوية
+- **جدول في SQL dump غير موجود في migrations** — جدول `model_has_roles`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: جدول legacy أو تم حذف migration — مراجعة يدوية
+- **جدول في SQL dump غير موجود في migrations** — جدول `roles`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: جدول legacy أو تم حذف migration — مراجعة يدوية
+- **جدول في SQL dump غير موجود في migrations** — جدول `role_has_permissions`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: جدول legacy أو تم حذف migration — مراجعة يدوية
+
+### منخفضة (34)
+
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_categories`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_offices`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_office_specializations`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_requests`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_request_attachments`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_offers`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_contracts`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_messages`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_reports`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_reviews`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `consulting_office_violations`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `notifications`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `inbox_messages`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `inbox_message_reads`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `incubators`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `incubation_programs`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `incubation_applications`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `incubated_projects`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `mentoring_sessions`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `incubation_progress_reports`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `success_stories`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `news`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `entrepreneur_profiles`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `executive_signer_profiles`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `document_electronic_signatures`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `user_electronic_signatures`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `training_program_modules`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `training_program_outcomes`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `training_program_service_links`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `training_program_approval_logs`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `training_program_executions`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `syria_locations`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `status_histories`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية
+- **جدول في migrations غير موجود في SQL dump** — جدول `training_supervisors`
+  - الملف: `SQL dump: u142331648_authority32 (2).sql`
+  - التوصية: الـ dump قديم — migrations تمثل البنية الحالية

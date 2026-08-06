@@ -1,0 +1,3 @@
+gov_name_en,gov_name_ar,gov_pcode,district_name_en,district_name_ar,district_pcode,subdistrict_name_en,subdistrict_name_ar,subdistrict_pcode,community_name_en,community_name_ar,community_pcode,,,latitude,longitude
+CSV Test Gov,محافظة CSV,CS01,CSV District,منطقة CSV,CS0101,CSV Sub,ناحية CSV,CS010101,CSV Community One,تجمع CSV ١,CSV001,,,34.500000,36.100000
+CSV Test Gov,محافظة CSV,CS01,CSV District,منطقة CSV,CS0101,CSV Sub,ناحية CSV,CS010101,CSV Community Two,تجمع CSV ٢,CSV002,,,34.510000,36.110000

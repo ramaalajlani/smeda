@@ -1,0 +1,148 @@
+.site-footer {
+  background: #fff;
+  padding-top: 5rem;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 20px;
+}
+
+.footer-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-brand-text strong {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #223658;
+}
+
+.footer-brand-text span {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.footer-title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+.footer-links,
+.footer-contact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li,
+.footer-contact li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+  color: #374151;
+  font-weight: 700;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
+
+.footer-contact li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: #374151;
+  font-weight: 700;
+}
+
+.footer-contact i {
+  color: #77bae6;
+  font-size: 1.05rem;
+  margin-top: 0.2rem;
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.social-links a {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--white);
+  font-size: 1.1rem;
+}
+
+.social-links a:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.footer-bottom {
+  margin-top: 3rem;
+  background: linear-gradient(180deg, #d9edf8 0%, #c8e5f5 100%);
+  text-align: center;
+  padding: 1rem;
+  font-weight: 700;
+  color: #2f3f58;
+}
+
+@media (max-width: 767.98px) {
+  .site-footer {
+    padding-top: 3rem;
+  }
+
+  .footer-brand {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .footer-brand-text {
+    align-items: center;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .footer-title {
+    margin-top: 1.5rem;
+  }
+
+  .footer-bottom {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .site-footer {
+    padding-top: 2rem;
+  }
+
+  .footer-brand-text strong {
+    font-size: 1rem;
+  }
+
+  .footer-contact li {
+    font-size: 0.9rem;
+  }
+}

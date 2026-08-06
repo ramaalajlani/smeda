@@ -1,0 +1,36 @@
+.header-book-btn,
+.btn-brand {
+  background: linear-gradient(
+    135deg,
+    #17947B,
+    #06AA89
+  );
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  min-width: 170px;
+  height: 48px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(23, 148, 123, 0.35);
+  border: none;
+  transition: all 0.25s ease;
+}
+
+.header-book-btn:hover,
+.btn-brand:hover {
+  background: linear-gradient(
+    135deg,
+    #137864,
+    #059678
+  );
+  color: #fff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(23, 148, 123, 0.45);
+}
+
+.btn-brand.w-100 {
+  width: 100%;
+}

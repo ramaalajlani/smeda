@@ -1,0 +1,41 @@
+:root {
+  /* ===== Brand (من اللوغو) ===== */
+  --primary: #0B3D2E;           /* أخضر داكن (أساسي) */
+  --primary-dark: #072A20;      /* أغمق */
+  --primary-light: #2FAF8F;     /* أخضر مائل للتركواز */
+
+  /* ===== Backgrounds ===== */
+  --dark: #0f172a;
+  --dark-2: #1e293b;
+
+  --light: #f4fbf8;             /* خلفية خفيفة مائلة للأخضر */
+  --light-green: #e6f5ef;
+
+  /* ===== Text ===== */
+  --text: #0f172a;
+  --muted: #64748b;
+
+  --white: #ffffff;
+
+  /* ===== Borders ===== */
+  --border: rgba(11, 61, 46, 0.08);
+
+  /* ===== Shadows (متناسق مع الأخضر) ===== */
+  --shadow-sm: 0 10px 25px rgba(11, 61, 46, 0.08);
+  --shadow-md: 0 20px 45px rgba(11, 61, 46, 0.12);
+
+  /* ===== Radius ===== */
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+
+  /* ===== Transition ===== */
+  --transition: 0.3s ease;
+
+  /* ===== Container ===== */
+  --container-max: 1240px;
+
+  /* ===== Extra Brand Tokens ===== */
+  --brand-green-dark: #0B3D2E;
+  --brand-green-accent: #2FAF8F;
+}

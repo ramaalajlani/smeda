@@ -1,0 +1,8 @@
+# Copy this file to public_html/api2/.htaccess if Laravel core lives inside public_html.
+# Blocks direct web access to .env, storage, vendor, etc.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Deny from all
+</IfModule>

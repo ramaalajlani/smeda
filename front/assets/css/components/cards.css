@@ -1,0 +1,153 @@
+.feature-image {
+  border-radius: 36px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  background: #fff;
+}
+
+.feature-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: 480px;
+}
+
+.feature-image-large img {
+  min-height: 540px;
+}
+
+/* ===== Cards ===== */
+.service-card,
+.info-card,
+.news-card,
+.mini-card,
+.login-card {
+  background: var(--white);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(6, 40, 36, 0.08);
+}
+
+.service-card {
+  height: 100%;
+  padding: 2rem 1.5rem;
+}
+
+/* ===== Icon ===== */
+.service-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    135deg,
+    rgba(23, 148, 123, 0.14),
+    rgba(6, 170, 137, 0.24)
+  );
+  color: #062824;
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  transition: 0.3s ease;
+}
+
+/* Hover effect */
+.service-card:hover .service-icon {
+  color: #06AA89;
+  transform: scale(1.08);
+}
+
+/* ===== Titles ===== */
+.service-card h3,
+.info-card h3,
+.mini-card h3,
+.news-body h3,
+.login-card h3 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  color: #062824;
+}
+
+/* ===== Text ===== */
+.service-card p,
+.info-card p,
+.mini-card p,
+.news-body p {
+  color: #5b6473;
+  margin-bottom: 0;
+}
+
+/* ===== Layout Cards ===== */
+.info-card,
+.mini-card {
+  height: 100%;
+  padding: 1.8rem 1.35rem;
+}
+
+.white-card h3 {
+  color: #062824;
+}
+
+/* ===== Feature List ===== */
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 1.75rem;
+}
+
+.feature-list li {
+  position: relative;
+  padding-right: 1.75rem;
+  margin-bottom: 0.85rem;
+  color: #354052;
+  font-weight: 700;
+}
+
+.feature-list li::before {
+  content: "\F26A";
+  font-family: "bootstrap-icons";
+  position: absolute;
+  right: 0;
+  top: 0.15rem;
+  color: #17947B;
+  font-size: 1rem;
+}
+
+/* ===== News ===== */
+.news-card {
+  overflow: hidden;
+  height: 100%;
+}
+
+.news-image img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.news-body {
+  padding: 1.5rem;
+}
+
+.news-date {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #17947B;
+}
+
+.news-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  color: #062824;
+  font-weight: 800;
+  transition: var(--transition);
+}
+
+.news-link:hover {
+  color: #06AA89;
+}

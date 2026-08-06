@@ -1,0 +1,95 @@
+/* ===== Login Section ===== */
+.login-section {
+  background: linear-gradient(
+    180deg,
+    #f4fbf9 0%,
+    #eaf6f3 100%
+  );
+}
+
+.login-card {
+  padding: 2rem;
+}
+
+/* Labels */
+.form-label {
+  font-weight: 800;
+  color: #062824;
+}
+
+/* Inputs */
+.form-control-custom {
+  min-height: 54px;
+  border-radius: 14px;
+  border: 1px solid rgba(23, 148, 123, 0.18);
+  padding: 0.85rem 1rem;
+  box-shadow: none;
+  transition: 0.25s ease;
+}
+
+/* Focus */
+.form-control-custom:focus {
+  border-color: #17947B;
+  box-shadow: 0 0 0 0.2rem rgba(23, 148, 123, 0.15);
+}
+
+/* Row */
+.login-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Forgot */
+.forgot-link {
+  color: #17947B;
+  font-weight: 800;
+  transition: 0.2s;
+}
+
+.forgot-link:hover {
+  color: #06AA89;
+}
+
+/* ===== Contact Section ===== */
+.contact-section {
+  background: linear-gradient(
+    135deg,
+    #062824,
+    #0f4f47
+  );
+}
+
+.contact-form-wrap {
+  max-width: 780px;
+  margin: 2rem auto 0;
+}
+
+.contact-form {
+  background: transparent;
+}
+
+/* Dark Input */
+.dark-input {
+  min-height: 56px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  box-shadow: none;
+  transition: 0.25s ease;
+}
+
+.dark-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dark-input:focus {
+  background: transparent;
+  color: #ffffff;
+  border-color: #06AA89;
+  box-shadow: 0 0 0 0.2rem rgba(6, 170, 137, 0.25);
+}

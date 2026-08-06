@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خريطة الاحتياجات — سوريا | SMEDA</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sidebar-w:360px;
+  --shadow:0 2px 12px rgba(0,0,0,.12);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.18);
+}
+html,body{height:100%;font-family:'Tajawal',sans-serif;direction:rtl;overflow:hidden;background:#e8eaed}
+#app{display:flex;height:100vh;position:relative}
+#map{flex:1;height:100%;z-index:1}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:#fff;display:flex;flex-direction:column;height:100%;
+  z-index:400;overflow:hidden;
+  box-shadow:-4px 0 20px rgba(0,0,0,.12);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+#sidebar.hidden{transform:translateX(calc(-1 * var(--sidebar-w)))}
+
+/* Head */
+.sb-head{
+  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);
+  padding:18px 18px 14px;flex-shrink:0;position:relative;overflow:hidden;
+}
+.sb-head::before{content:'';position:absolute;top:-40px;left:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.04)}
+.sb-head-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sb-head-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#1a73e8,#0d47a1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#fff;flex-shrink:0;box-shadow:0 3px 10px rgba(26,115,232,.4)}
+.sb-head-title{color:#fff;font-size:.95rem;font-weight:900;line-height:1.2}
+.sb-head-sub{color:rgba(255,255,255,.55);font-size:.73rem;margin-top:2px}
+.sb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sb-stat{background:rgba(255,255,255,.08);border-radius:10px;padding:9px 8px;text-align:center;border:1px solid rgba(255,255,255,.1)}
+.sb-stat-val{font-size:1.15rem;font-weight:900;color:#fff;line-height:1}
+.sb-stat-lbl{font-size:.62rem;color:rgba(255,255,255,.55);margin-top:3px}
+
+/* Search */
+.sb-search{padding:14px 14px 0;flex-shrink:0}
+.search-wrap{position:relative}
+.search-wrap input{width:100%;padding:11px 42px 11px 14px;border:2px solid #e8eaed;border-radius:50px;font-family:'Tajawal',sans-serif;font-size:.88rem;background:#f8f9fa;color:#202124;transition:all .2s}
+.search-wrap input:focus{outline:none;border-color:#1a73e8;background:#fff;box-shadow:0 0 0 3px rgba(26,115,232,.12)}
+.search-wrap .s-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#9aa0a6;font-size:1rem;pointer-events:none}
+
+/* Filters */
+.sb-filters{padding:10px 14px 0;flex-shrink:0}
+.filter-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.f-sel{width:100%;padding:9px 28px 9px 12px;border:1.5px solid #e8eaed;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:.81rem;color:#202124;background:#f8f9fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239aa0a6' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat left 10px center;transition:all .2s;appearance:none;cursor:pointer}
+.f-sel:focus{outline:none;border-color:#1a73e8;background-color:#fff}
+.btn-filter{width:100%;padding:10px;border-radius:10px;border:none;background:#1a73e8;color:#fff;font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px;transition:background .15s}
+.btn-filter:hover{background:#1557b0}
+
+.sb-divider{height:1px;background:#f1f3f4;margin:0 14px}
+
+/* Results */
+.sb-results{flex:1;overflow-y:auto;padding:10px}
+.sb-results::-webkit-scrollbar{width:4px}
+.sb-results::-webkit-scrollbar-thumb{background:#dadce0;border-radius:4px}
+.result-label{font-size:.72rem;font-weight:800;color:#9aa0a6;letter-spacing:.5px;padding:6px 4px 8px;text-transform:uppercase}
+.loc-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:background .15s;position:relative;margin-bottom:2px}
+.loc-item:hover{background:#f8f9fa}
+.loc-item.active{background:#e8f0fe}
+.loc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.loc-info{flex:1;min-width:0}
+.loc-name{font-size:.87rem;font-weight:700;color:#202124;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc-sub{font-size:.73rem;color:#9aa0a6;margin-top:1px}
+.loc-badge{display:flex;align-items:center;gap:3px;flex-shrink:0;font-size:.68rem;font-weight:800;padding:2px 7px;border-radius:20px}
+.no-results{text-align:center;padding:40px 20px;color:#9aa0a6}
+.no-results i{font-size:2.5rem;display:block;margin-bottom:10px;opacity:.3}
+
+/* Add btn */
+.btn-add{margin:10px 14px;padding:11px;border-radius:12px;border:none;background:linear-gradient(135deg,#34a853,#1e8449);color:#fff;font-family:'Tajawal',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;flex-shrink:0;transition:opacity .15s;box-shadow:0 2px 10px rgba(52,168,83,.35)}
+.btn-add:hover{opacity:.9}
+
+/* Sidebar toggle */
+#toggleBtn{position:absolute;right:var(--sidebar-w);top:50%;transform:translateY(-50%);z-index:500;background:#fff;border:none;border-radius:0 8px 8px 0;width:20px;height:56px;cursor:pointer;color:#5f6368;display:flex;align-items:center;justify-content:center;box-shadow:2px 0 8px rgba(0,0,0,.15);transition:right .3s cubic-bezier(.4,0,.2,1);font-size:.8rem}
+
+/* Legend */
+.map-legend{position:absolute;bottom:30px;left:20px;z-index:400;background:#fff;border-radius:14px;padding:12px 16px;box-shadow:var(--shadow-lg)}
+.map-legend h4{font-size:.72rem;font-weight:900;color:#5f6368;margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase}
+.legend-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.legend-row:last-child{margin:0}
+.legend-row span{font-size:.78rem;font-weight:700;color:#202124}
+.wifi-mini{display:flex;align-items:flex-end;gap:2px;height:16px}
+.wm-bar{border-radius:2px;width:5px}
+.wm-b1{height:5px}.wm-b2{height:9px}.wm-b3{height:14px}
+.wm-off{opacity:.15}
+
+/* Leaflet overrides */
+.leaflet-control-zoom{border:none!important;box-shadow:var(--shadow)!important;border-radius:10px!important;overflow:hidden}
+.leaflet-control-zoom a{border:none!important;color:#5f6368!important;font-size:1.1rem!important;width:32px!important;height:32px!important;line-height:32px!important}
+.leaflet-control-zoom a:hover{background:#f8f9fa!important}
+.leaflet-popup-content-wrapper{border-radius:14px!important;box-shadow:var(--shadow-lg)!important;border:none!important;padding:0!important;overflow:hidden}
+.leaflet-popup-content{margin:0!important;width:232px!important}
+.leaflet-popup-tip-container{display:none}
+.leaflet-container{font-family:'Tajawal',sans-serif!important}
+.custom-cluster{background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.25),0 0 0 3px rgba(255,255,255,.8)}
+
+/* Popup */
+.map-popup{direction:rtl;font-family:'Tajawal',sans-serif}
+.pp-head{background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;padding:12px 14px}
+.pp-gov{font-size:.67rem;font-weight:700;opacity:.6;margin-bottom:2px}
+.pp-name{font-size:.93rem;font-weight:900}
+.pp-sub{font-size:.71rem;opacity:.55;margin-top:2px}
+.pp-body{padding:10px 14px 12px}
+.pp-row{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:.79rem;color:#5f6368}
+.pp-row i{font-size:.83rem;color:#9aa0a6}
+.pp-need{display:inline-flex;align-items:center;gap:5px;margin-top:4px;border-radius:20px;padding:3px 10px;font-size:.73rem;font-weight:800}
+.pp-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.pp-btn{padding:8px 6px;border-radius:10px;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px}
+.pp-btn-add{background:#34a853;color:#fff}
+.pp-btn-view{background:#e8f0fe;color:#1a73e8}
+
+/* Wifi pulse animation */
+@keyframes pulse-ring{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+
+/* Governorate boundary tooltip */
+.gov-tooltip{background:#fff;border:none;border-radius:8px;padding:4px 10px;font-family:'Tajawal',sans-serif;font-size:.82rem;font-weight:800;color:#202124;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:20px;width:100%;max-width:660px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.modal-box::-webkit-scrollbar{width:4px}
+.modal-box::-webkit-scrollbar-thumb{background:#dadce0;border-radius:4px}
+.modal-head{position:sticky;top:0;background:#fff;z-index:1;padding:16px 20px;border-bottom:1px solid #f1f3f4;display:flex;align-items:center;justify-content:space-between;border-radius:20px 20px 0 0}
+.modal-head h2{font-size:1rem;font-weight:900;display:flex;align-items:center;gap:8px;color:#202124}
+.modal-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#34a853,#1e8449);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95rem}
+.modal-close{background:none;border:none;font-size:1.1rem;color:#9aa0a6;cursor:pointer;padding:5px 8px;border-radius:8px;transition:background .15s}
+.modal-close:hover{background:#f1f3f4}
+.modal-body{padding:20px}
+
+/* Location chip */
+.loc-chip{display:flex;align-items:center;gap:10px;background:#e8f0fe;border-radius:12px;padding:12px 14px;margin-bottom:18px}
+.lc-icon{width:36px;height:36px;background:#1a73e8;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;flex-shrink:0}
+.lc-name{font-size:.9rem;font-weight:900;color:#1a1a2e}
+.lc-sub{font-size:.75rem;color:#5f6368;margin-top:2px}
+
+/* Form */
+.form-sec{margin-bottom:20px}
+.form-sec-title{font-size:.78rem;font-weight:900;color:#5f6368;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #f1f3f4;display:flex;align-items:center;gap:6px}
+.form-sec-title i{color:#1a73e8}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.form-row{grid-template-columns:1fr}}
+.form-group{margin-bottom:14px}
+.form-group label{font-size:.8rem;font-weight:700;display:block;margin-bottom:5px;color:#3c4043}
+.form-group label .req{color:#ea4335}
+.f-input,.f-sel2,.f-ta{width:100%;padding:10px 13px;border:1.5px solid #e8eaed;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:.87rem;color:#202124;background:#fff;transition:all .2s}
+.f-input:focus,.f-sel2:focus,.f-ta:focus{outline:none;border-color:#1a73e8;box-shadow:0 0 0 3px rgba(26,115,232,.1)}
+.f-ta{resize:vertical;min-height:85px}
+
+/* Priority WiFi buttons */
+.pri-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pri-card{padding:12px 6px;border-radius:12px;border:2px solid #e8eaed;background:#fff;cursor:pointer;text-align:center;transition:all .2s;user-select:none}
+.pri-card:hover{border-color:#dadce0;background:#f8f9fa}
+.pri-card.sel-l{border-color:#34a853;background:#e6f4ea}
+.pri-card.sel-m{border-color:#f9ab00;background:#fef7e0}
+.pri-card.sel-h{border-color:#ea4335;background:#fce8e6}
+.pri-card.sel-c{border-color:#9c27b0;background:#f3e5f5}
+.pri-wifi{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:20px;margin-bottom:6px;position:relative}
+.pri-bar{border-radius:2px;width:6px}
+.pb1{height:6px}.pb2{height:11px}.pb3{height:17px}
+.pb-off{opacity:.15}
+.pri-lbl{font-size:.73rem;font-weight:800}
+
+/* Targets */
+.tg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.tg-item{position:relative}
+.tg-item input{position:absolute;opacity:0;width:0;height:0}
+.tg-item label{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:10px;border:1.5px solid #e8eaed;cursor:pointer;font-size:.72rem;font-weight:700;color:#9aa0a6;transition:all .15s;text-align:center}
+.tg-item label i{font-size:1.1rem}
+.tg-item input:checked + label{border-color:#1a73e8;background:#e8f0fe;color:#1a73e8}
+
+/* Submit */
+.btn-sub{width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#34a853,#1e8449);color:#fff;font-family:'Tajawal',sans-serif;font-size:.95rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(52,168,83,.35);transition:opacity .15s}
+.btn-sub:hover{opacity:.9}
+
+/* Needs panel */
+#needsPanel{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);background:#fff;border-radius:18px;box-shadow:var(--shadow-lg);padding:16px 18px;min-width:340px;max-width:520px;z-index:450;display:none;max-height:380px;overflow-y:auto}
+#needsPanel::-webkit-scrollbar{width:4px}
+#needsPanel::-webkit-scrollbar-thumb{background:#dadce0;border-radius:4px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.panel-head h3{font-size:.9rem;font-weight:900;color:#202124}
+.p-close{background:none;border:none;color:#9aa0a6;cursor:pointer;font-size:1rem;padding:3px 7px;border-radius:8px}
+.p-close:hover{background:#f1f3f4}
+.need-card{background:#fafafa;border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1px solid #f1f3f4}
+.nc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.nc-sector{font-size:.78rem;font-weight:800;color:#202124}
+.nc-p{font-size:.7rem;font-weight:800;padding:2px 8px;border-radius:20px}
+.p-l{background:#e6f4ea;color:#137333}.p-m{background:#fef7e0;color:#b06000}
+.p-h{background:#fce8e6;color:#c5221f}.p-c{background:#f3e5f5;color:#6a1b9a}
+.nc-title{font-size:.85rem;font-weight:700;color:#202124;margin-bottom:3px}
+.nc-desc{font-size:.79rem;color:#5f6368;line-height:1.5}
+.nc-meta{font-size:.7rem;color:#bdc1c6;margin-top:6px;display:flex;align-items:center;gap:10px}
+
+/* Loading */
+#loadOverlay{position:absolute;inset:0;background:rgba(255,255,255,.97);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.loader-ring{width:50px;height:50px;border-radius:50%;border:4px solid #e8eaed;border-top-color:#1a73e8;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{font-size:.9rem;font-weight:700;color:#5f6368}
+.loader-sub{font-size:.78rem;color:#9aa0a6;margin-top:-10px}
+
+/* Toast */
+#toast{position:fixed;bottom:28px;right:24px;z-index:3000;background:#202124;color:#fff;border-radius:12px;padding:12px 18px;font-size:.85rem;font-weight:700;display:none;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+#toast.show{display:flex}
+#toast.ok{background:#137333}
+#toast.err{background:#c5221f}
+
+/* Mobile */
+#mobileBtn{display:none;position:absolute;top:14px;right:14px;z-index:500;background:#fff;border:none;border-radius:12px;width:44px;height:44px;align-items:center;justify-content:center;font-size:1.2rem;color:#5f6368;box-shadow:var(--shadow);cursor:pointer}
+@media(max-width:700px){
+  #sidebar{position:fixed;right:0;top:0;bottom:0;z-index:500;transform:translateX(100%)!important;width:88vw!important}
+  #sidebar.mob-open{transform:translateX(0)!important}
+  #toggleBtn{display:none}
+  #mobileBtn{display:flex!important}
+}
+
+/* ── TABS ── */
+.sb-tabs{display:flex;border-bottom:2px solid #f1f3f4;flex-shrink:0;margin-top:2px}
+.sb-tab{flex:1;padding:10px 6px;font-size:.78rem;font-weight:800;color:#9aa0a6;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;font-family:'Tajawal',sans-serif}
+.sb-tab.active{color:#1a73e8;border-bottom-color:#1a73e8}
+
+/* ── GOV STATS ── */
+.gov-list{padding:10px}
+.gov-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:background .15s;margin-bottom:2px}
+.gov-row:hover{background:#f8f9fa}
+.gov-row.active-gov{background:#e8f0fe}
+.gov-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.gov-ar{font-size:.85rem;font-weight:800;color:#202124;flex:1}
+.gov-en{font-size:.7rem;color:#9aa0a6}
+.gov-count{font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:20px;background:#f1f3f4;color:#5f6368;white-space:nowrap}
+.gov-need-dot{width:7px;height:7px;border-radius:50%;background:#ea4335;flex-shrink:0}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="map"></div>
+
+  <button id="mobileBtn" onclick="document.getElementById('sidebar').classList.toggle('mob-open')"><i class="bi bi-list"></i></button>
+  <button id="toggleBtn" title="إخفاء / إظهار"><i class="bi bi-chevron-left" id="toggleIcon"></i></button>
+
+  <!-- ── SIDEBAR ── -->
+  <div id="sidebar">
+    <div class="sb-head">
+      <div class="sb-head-brand">
+        <div class="sb-head-logo"><i class="bi bi-geo-alt-fill"></i></div>
+        <div>
+          <div class="sb-head-title">خريطة الاحتياجات</div>
+          <div class="sb-head-sub">سوريا — 14 محافظة</div>
+        </div>
+      </div>
+      <div class="sb-stats">
+        <div class="sb-stat"><div class="sb-stat-val" id="stTotal">7,241</div><div class="sb-stat-lbl">موقع</div></div>
+        <div class="sb-stat"><div class="sb-stat-val" id="stFiltered">—</div><div class="sb-stat-lbl">محدّد</div></div>
+        <div class="sb-stat"><div class="sb-stat-val" id="stNeeds" style="color:#fbbf24">0</div><div class="sb-stat-lbl">احتياج</div></div>
+      </div>
+    </div>
+
+    <div class="sb-search" style="padding-bottom:10px">
+      <div class="search-wrap">
+        <input type="text" id="fSearch" placeholder="ابحث عن مجتمع، ناحية، منطقة...">
+        <i class="bi bi-search s-icon"></i>
+      </div>
+    </div>
+
+    <div class="sb-filters">
+      <div class="filter-row">
+        <select id="fGov" class="f-sel"><option value="">كل المحافظات</option></select>
+        <select id="fDist" class="f-sel" disabled><option value="">كل المناطق</option></select>
+      </div>
+      <div class="filter-row" style="margin-bottom:10px">
+        <select id="fSub" class="f-sel" disabled><option value="">كل النواحي</option></select>
+        <select id="fNeed" class="f-sel">
+          <option value="">جميع المواقع</option>
+          <option value="has">لها احتياجات</option>
+          <option value="critical">احتياج حرج</option>
+        </select>
+      </div>
+      <button class="btn-filter" onclick="applyFilters()"><i class="bi bi-funnel-fill"></i> تطبيق الفلتر</button>
+    </div>
+
+    <div class="sb-divider"></div>
+    <button class="btn-add" onclick="openForm()"><i class="bi bi-plus-circle-fill"></i> تسجيل احتياج ميداني جديد</button>
+
+    <!-- TABS -->
+    <div class="sb-tabs">
+      <button class="sb-tab active" id="tabLocs" onclick="switchTab('locs')"><i class="bi bi-list-ul"></i> المواقع</button>
+      <button class="sb-tab" id="tabGovs" onclick="switchTab('govs')"><i class="bi bi-map-fill"></i> المحافظات</button>
+    </div>
+
+    <!-- Tab: Locations list -->
+    <div id="paneLocs" class="sb-results">
+      <div class="result-label" id="resultLabel">جاري التحميل...</div>
+      <div id="resultsList"></div>
+    </div>
+
+    <!-- Tab: Governorates -->
+    <div id="paneGovs" style="display:none;flex:1;overflow-y:auto">
+      <div class="gov-list" id="govList"></div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="map-legend">
+    <h4><i class="bi bi-wifi" style="color:#1a73e8"></i> مستوى الاحتياج</h4>
+    <div class="legend-row">
+      <div class="wifi-mini">
+        <div class="wm-bar wm-b1" style="background:#34a853"></div>
+        <div class="wm-bar wm-b2 wm-off" style="background:#34a853"></div>
+        <div class="wm-bar wm-b3 wm-off" style="background:#34a853"></div>
+      </div>
+      <span>منخفض</span>
+    </div>
+    <div class="legend-row">
+      <div class="wifi-mini">
+        <div class="wm-bar wm-b1" style="background:#f9ab00"></div>
+        <div class="wm-bar wm-b2" style="background:#f9ab00"></div>
+        <div class="wm-bar wm-b3 wm-off" style="background:#f9ab00"></div>
+      </div>
+      <span>متوسط / عالي</span>
+    </div>
+    <div class="legend-row">
+      <div class="wifi-mini">
+        <div class="wm-bar wm-b1" style="background:#9c27b0"></div>
+        <div class="wm-bar wm-b2" style="background:#9c27b0"></div>
+        <div class="wm-bar wm-b3" style="background:#9c27b0"></div>
+      </div>
+      <span>حرج</span>
+    </div>
+    <div style="margin-top:8px;padding-top:8px;border-top:1px solid #f1f3f4">
+      <div style="font-size:.68rem;font-weight:900;color:#9aa0a6;margin-bottom:6px;letter-spacing:.5px">المحافظات</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        <div style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;color:#202124"><div style="width:8px;height:8px;border-radius:50%;background:#e53935;border:1.5px solid #fff"></div>الحسكة</div>
+        <div style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;color:#202124"><div style="width:8px;height:8px;border-radius:50%;background:#8e24aa;border:1.5px solid #fff"></div>حلب</div>
+        <div style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;color:#202124"><div style="width:8px;height:8px;border-radius:50%;background:#f4511e;border:1.5px solid #fff"></div>دمشق</div>
+        <div style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;color:#202124"><div style="width:8px;height:8px;border-radius:50%;background:#43a047;border:1.5px solid #fff"></div>حمص</div>
+        <div style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;color:#202124"><div style="width:8px;height:8px;border-radius:50%;background:#039be5;border:1.5px solid #fff"></div>حماة</div>
+        <div style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;color:#202124"><div style="width:8px;height:8px;border-radius:50%;background:#fb8c00;border:1.5px solid #fff"></div>دير الزور</div>
+        <div style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;color:#202124"><div style="width:8px;height:8px;border-radius:50%;background:#d81b60;border:1.5px solid #fff"></div>إدلب</div>
+        <div style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;color:#202124"><div style="width:8px;height:8px;border-radius:50%;background:#00acc1;border:1.5px solid #fff"></div>اللاذقية</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Needs panel -->
+  <div id="needsPanel">
+    <div class="panel-head">
+      <h3 id="panelTitle">الاحتياجات</h3>
+      <button class="p-close" onclick="document.getElementById('needsPanel').style.display='none'"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div id="panelContent"></div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loadOverlay">
+    <div class="loader-ring"></div>
+    <div class="loader-text">تحميل الخريطة...</div>
+    <div class="loader-sub">7,241 موقع سوري</div>
+  </div>
+</div>
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="needModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2><div class="modal-icon"><i class="bi bi-clipboard2-plus-fill"></i></div> تسجيل احتياج ميداني</h2>
+      <button class="modal-close" onclick="closeForm()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="loc-chip">
+        <div class="lc-icon"><i class="bi bi-geo-alt-fill"></i></div>
+        <div style="flex:1">
+          <div class="lc-name" id="chipName">—</div>
+          <div class="lc-sub" id="chipSub">—</div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="form-sec">
+        <div class="form-sec-title"><i class="bi bi-info-circle-fill"></i> معلومات الاحتياج</div>
+        <div class="form-group">
+          <label>عنوان الاحتياج <span class="req">*</span></label>
+          <input type="text" id="f_title" class="f-input" placeholder="وصف موجز وواضح...">
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="margin:0">
+            <label>القطاع <span class="req">*</span></label>
+            <select id="f_sector" class="f-sel2">
+              <option value="">— اختر القطاع —</option>
+              <option value="food">🌾 الأمن الغذائي</option>
+              <option value="health">🏥 الصحة</option>
+              <option value="education">📚 التعليم</option>
+              <option value="shelter">🏠 المأوى والإسكان</option>
+              <option value="water">💧 المياه والصرف الصحي</option>
+              <option value="protection">🛡️ الحماية</option>
+              <option value="livelihoods">💼 سبل العيش</option>
+              <option value="cash">💵 المساعدات النقدية</option>
+              <option value="infrastructure">🏗️ البنية التحتية</option>
+              <option value="agriculture">🌿 الزراعة</option>
+              <option value="nfi">📦 مواد غير غذائية</option>
+              <option value="other">📋 أخرى</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label>عدد المستفيدين المقدَّر</label>
+            <input type="number" id="f_bene" class="f-input" placeholder="0" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Priority WiFi -->
+      <div class="form-sec">
+        <div class="form-sec-title"><i class="bi bi-wifi"></i> مستوى الأولوية</div>
+        <div class="pri-grid">
+          <div class="pri-card" id="pc_low" onclick="setPri('low')">
+            <div class="pri-wifi">
+              <div class="pri-bar pb1" style="background:#34a853"></div>
+              <div class="pri-bar pb2 pb-off" style="background:#34a853"></div>
+              <div class="pri-bar pb3 pb-off" style="background:#34a853"></div>
+            </div>
+            <div class="pri-lbl" style="color:#137333">منخفض</div>
+          </div>
+          <div class="pri-card" id="pc_medium" onclick="setPri('medium')">
+            <div class="pri-wifi">
+              <div class="pri-bar pb1" style="background:#f9ab00"></div>
+              <div class="pri-bar pb2" style="background:#f9ab00"></div>
+              <div class="pri-bar pb3 pb-off" style="background:#f9ab00"></div>
+            </div>
+            <div class="pri-lbl" style="color:#b06000">متوسط</div>
+          </div>
+          <div class="pri-card" id="pc_high" onclick="setPri('high')">
+            <div class="pri-wifi">
+              <div class="pri-bar pb1" style="background:#ea4335"></div>
+              <div class="pri-bar pb2" style="background:#ea4335"></div>
+              <div class="pri-bar pb3" style="background:#ea4335"></div>
+            </div>
+            <div class="pri-lbl" style="color:#c5221f">عالٍ</div>
+          </div>
+          <div class="pri-card" id="pc_critical" onclick="setPri('critical')">
+            <div class="pri-wifi" style="position:relative">
+              <div class="pri-bar pb1" style="background:#9c27b0"></div>
+              <div class="pri-bar pb2" style="background:#9c27b0"></div>
+              <div class="pri-bar pb3" style="background:#9c27b0"></div>
+              <span style="position:absolute;top:-3px;right:-3px;font-size:.6rem">🚨</span>
+            </div>
+            <div class="pri-lbl" style="color:#6a1b9a">حرج</div>
+          </div>
+        </div>
+        <input type="hidden" id="f_priority" value="medium">
+      </div>
+
+      <!-- Details -->
+      <div class="form-sec">
+        <div class="form-sec-title"><i class="bi bi-file-text-fill"></i> التفاصيل</div>
+        <div class="form-group">
+          <label>وصف الاحتياج <span class="req">*</span></label>
+          <textarea id="f_desc" class="f-ta" placeholder="اشرح الوضع الحالي، ما المطلوب بالضبط، ومن المتأثر..."></textarea>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label>الفئات المستهدفة</label>
+          <div class="tg-grid">
+            <div class="tg-item"><input type="checkbox" id="tg_w" value="women"><label for="tg_w"><i class="bi bi-gender-female"></i>النساء</label></div>
+            <div class="tg-item"><input type="checkbox" id="tg_c" value="children"><label for="tg_c"><i class="bi bi-emoji-smile"></i>الأطفال</label></div>
+            <div class="tg-item"><input type="checkbox" id="tg_e" value="elderly"><label for="tg_e"><i class="bi bi-person-fill"></i>كبار السن</label></div>
+            <div class="tg-item"><input type="checkbox" id="tg_d" value="disabled"><label for="tg_d"><i class="bi bi-wheelchair"></i>ذوو إعاقة</label></div>
+            <div class="tg-item"><input type="checkbox" id="tg_i" value="idp"><label for="tg_i"><i class="bi bi-house-x-fill"></i>النازحون</label></div>
+            <div class="tg-item"><input type="checkbox" id="tg_r" value="returnees"><label for="tg_r"><i class="bi bi-arrow-return-right"></i>العائدون</label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Response -->
+      <div class="form-sec">
+        <div class="form-sec-title"><i class="bi bi-building-fill-check"></i> الاستجابة والمصدر</div>
+        <div class="form-row">
+          <div class="form-group" style="margin:0">
+            <label>المنظمة / الجهة</label>
+            <input type="text" id="f_org" class="f-input" placeholder="اسم المنظمة...">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label>تاريخ التقرير</label>
+            <input type="date" id="f_date" class="f-input">
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:14px">
+          <div class="form-group" style="margin:0">
+            <label>حالة الاستجابة</label>
+            <select id="f_resp" class="f-sel2">
+              <option value="unmet">غير مستجاب له</option>
+              <option value="partial">استجابة جزئية</option>
+              <option value="met">تمت الاستجابة</option>
+              <option value="ongoing">استجابة جارية</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label>مصدر المعلومات</label>
+            <select id="f_src" class="f-sel2">
+              <option value="field_visit">زيارة ميدانية</option>
+              <option value="community">اتصال مجتمعي</option>
+              <option value="key_informant">مخبر رئيسي</option>
+              <option value="survey">مسح ميداني</option>
+              <option value="remote">تحقق عن بعد</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:14px;margin-bottom:0">
+          <label>ملاحظات إضافية</label>
+          <textarea id="f_notes" class="f-ta" rows="2" placeholder="أي معلومات تكميلية..."></textarea>
+        </div>
+      </div>
+
+      <button class="btn-sub" onclick="submitNeed()"><i class="bi bi-send-fill"></i> حفظ الاحتياج</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><i class="bi bi-check-circle-fill" id="toastIcon"></i><span id="toastMsg"></span></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+// ════ STATE ════
+let ALL=[], NEEDS=JSON.parse(localStorage.getItem('smeda_needs')||'[]');
+let selectedLoc=null, filteredLocs=[];
+let map, clusters, needLayer;
+let mMap={};
+let activePri='medium';
+
+const PC={
+  low:     {color:'#34a853',bars:[1,0,0],lbl:'منخفض', cls:'p-l'},
+  medium:  {color:'#f9ab00',bars:[1,1,0],lbl:'متوسط', cls:'p-m'},
+  high:    {color:'#ea4335',bars:[1,1,1],lbl:'عالٍ',  cls:'p-h'},
+  critical:{color:'#9c27b0',bars:[1,1,1],lbl:'حرج',   cls:'p-c', pulse:true}
+};
+const SC={food:'الأمن الغذائي',health:'الصحة',education:'التعليم',shelter:'المأوى',water:'المياه',protection:'الحماية',livelihoods:'سبل العيش',cash:'مساعدات نقدية',infrastructure:'بنية تحتية',agriculture:'الزراعة',nfi:'مواد غير غذائية',other:'أخرى'};
+
+// ════ GOVERNORATE COLORS & ARABIC NAMES ════
+const GOV_COLOR={
+  'Al-Hasakeh'    :'#e53935','Aleppo'        :'#8e24aa',
+  'Ar-Raqqa'      :'#1e88e5','As-Sweida'     :'#00897b',
+  'Damascus'      :'#f4511e','Dar\'a'         :'#c0ca33',
+  'Deir-ez-Zor'   :'#fb8c00','Hama'          :'#039be5',
+  'Homs'          :'#43a047','Idleb'         :'#d81b60',
+  'Lattakia'      :'#00acc1','Quneitra'      :'#6d4c41',
+  'Rural Damascus':'#546e7a','Tartous'       :'#7cb342'
+};
+const GOV_AR={
+  'Al-Hasakeh':'الحسكة','Aleppo':'حلب','Ar-Raqqa':'الرقة',
+  'As-Sweida':'السويداء','Damascus':'دمشق','Dar\'a':'درعا',
+  'Deir-ez-Zor':'دير الزور','Hama':'حماة','Homs':'حمص',
+  'Idleb':'إدلب','Lattakia':'اللاذقية','Quneitra':'القنيطرة',
+  'Rural Damascus':'ريف دمشق','Tartous':'طرطوس'
+};
+
+// ════ SYRIA BOUNDS ════
+const SYRIA_BOUNDS = L.latLngBounds([32.31,35.71],[37.33,42.38]);
+
+// ════ MAP ════
+map = L.map('map', {
+  center:[34.8,38.5], zoom:7,
+  zoomControl:false,
+  maxBounds: SYRIA_BOUNDS,
+  maxBoundsViscosity: 1.0,   // hard lock — لا يخرج خارج سوريا
+  minZoom: 6,
+  maxZoom: 17
+});
+
+// CartoDB Positron — نظيفة جداً، بدون API key
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+  attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+  subdomains:'abcd', maxZoom:19
+}).addTo(map);
+
+// ════ OUTSIDE-SYRIA MASK (كل شيء خارج سوريا يصبح رمادي مظلم) ════
+const WORLD_RING = [[-90,-180],[-90,180],[90,180],[90,-180],[-90,-180]];
+// مستطيل سوريا كـ "ثقب" في الـ mask
+const SYRIA_BOX  = [[32.31,35.71],[32.31,42.38],[37.33,42.38],[37.33,35.71],[32.31,35.71]];
+L.polygon([WORLD_RING, SYRIA_BOX], {
+  color:'none', fillColor:'#c8d0da', fillOpacity:0.72,
+  interactive:false, pane:'overlayPane'
+}).addTo(map);
+
+// ════ SYRIA GOVERNORATE BOUNDARIES ════
+fetch('https://raw.githubusercontent.com/wmgeolab/geoBoundaries/main/releaseData/CGAZ/SYR/ADM1/geoBoundaries-SYR-ADM1.geojson')
+  .then(r=>r.json())
+  .then(geojson=>{
+    L.geoJSON(geojson,{
+      style: feature => {
+        const name = (feature.properties.shapeName||feature.properties.NAME_1||'').toLowerCase();
+        const KEY  = Object.keys(GOV_COLOR).find(k=>
+          name.includes(k.toLowerCase().split('-')[0]) ||
+          k.toLowerCase().includes(name.split(' ')[0])
+        );
+        const color = KEY ? GOV_COLOR[KEY] : '#607d8b';
+        return { color, weight:1.8, opacity:.85, fillColor:color, fillOpacity:.07, dashArray:'5 3' };
+      },
+      onEachFeature:(feature,layer)=>{
+        const name = (feature.properties.shapeName||feature.properties.NAME_1||'').toLowerCase();
+        const KEY  = Object.keys(GOV_AR).find(k=>
+          name.includes(k.toLowerCase().split('-')[0]) ||
+          k.toLowerCase().includes(name.split(' ')[0])
+        );
+        layer.bindTooltip(KEY ? GOV_AR[KEY] : (feature.properties.shapeName||''),
+          {permanent:false, direction:'center', className:'gov-tooltip'});
+      }
+    }).addTo(map);
+
+    // بعد تحميل الحدود — اضبط الـ view على سوريا بالضبط
+    map.fitBounds(SYRIA_BOUNDS, {padding:[20,20]});
+  })
+  .catch(()=>{ map.fitBounds(SYRIA_BOUNDS); });
+
+L.control.zoom({position:'topleft'}).addTo(map);
+
+// ════ WIFI ICON ════
+function wifiIcon(priority) {
+  const p=PC[priority]||PC.medium;
+  const [b1,b2,b3]=p.bars;
+  const C=p.color;
+  const pulse=p.pulse?`<div style="position:absolute;inset:-5px;border-radius:11px;border:2px solid ${C};animation:pulse-ring 1.5s ease-out infinite;pointer-events:none"></div>`:'';
+  return L.divIcon({
+    className:'',
+    html:`<style>@keyframes pulse-ring{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.7);opacity:0}}</style>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <div style="background:#fff;border-radius:10px;padding:5px 6px 4px;
+           box-shadow:0 3px 14px rgba(0,0,0,.28),0 0 0 2px rgba(255,255,255,.95);
+           display:flex;align-items:flex-end;gap:2.5px;position:relative;">
+        ${pulse}
+        <div style="width:5.5px;height:6px;border-radius:2px;background:${C};opacity:${b1?1:.15}"></div>
+        <div style="width:5.5px;height:11px;border-radius:2px;background:${C};opacity:${b2?1:.15}"></div>
+        <div style="width:5.5px;height:17px;border-radius:2px;background:${C};opacity:${b3?1:.15}"></div>
+      </div>
+      <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid #fff;margin-top:-1px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.15))"></div>
+    </div>`,
+    iconSize:[26,34],iconAnchor:[13,34]
+  });
+}
+
+function dotIcon(color='#1a73e8',r=4) {
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25)"></div>`,
+    iconSize:[r*2,r*2],iconAnchor:[r,r]
+  });
+}
+
+// ════ LOAD — GeoJSON (Arabic) ════
+fetch('../../assets/data/syria_locations.geojson')
+  .then(r=>r.json())
+  .then(geojson=>{
+    // Normalize GeoJSON features to flat objects the rest of the code uses
+    ALL = geojson.features.map(f=>({
+      lat:       f.geometry.coordinates[1],
+      lon:       f.geometry.coordinates[0],
+      gov_en:    f.properties['gov_en']    || '',
+      gov_ar:    f.properties['محافظة']    || '',
+      dist_ar:   f.properties['منطقة']     || '',
+      sub_ar:    f.properties['ناحية']     || '',
+      com_ar:    f.properties['مجتمع']     || '',
+      ref_ar:    f.properties['الاسم']     || '',
+      com_code:  f.properties['رمز_مجتمع'] || '',
+      gov_code:  f.properties['رمز_محافظة']|| '',
+      dist_code: f.properties['رمز_منطقة'] || '',
+      sub_code:  f.properties['رمز_ناحية'] || '',
+    }));
+    buildSelects(ALL);
+    renderAll(ALL);
+    document.getElementById('stFiltered').textContent=fmt(ALL.length);
+    document.getElementById('stTotal').textContent=fmt(ALL.length);
+    updateCount();
+    renderList(ALL.slice(0,120));
+    buildGovStats(ALL);
+    document.getElementById('resultLabel').textContent=`عرض 120 من ${fmt(ALL.length)} موقع`;
+    document.getElementById('loadOverlay').style.display='none';
+  })
+  .catch(()=>{
+    document.getElementById('loadOverlay').innerHTML=`<div style="color:#c5221f;text-align:center;font-weight:800"><i class="bi bi-exclamation-triangle" style="font-size:2rem;display:block;margin-bottom:8px"></i>فشل تحميل بيانات المواقع</div>`;
+  });
+
+// ════ RENDER MARKERS ════
+function renderAll(data){
+  if(clusters){map.removeLayer(clusters);clusters=null}
+  if(needLayer){map.removeLayer(needLayer);needLayer=null}
+  mMap={};
+
+  clusters=L.markerClusterGroup({
+    chunkedLoading:true,maxClusterRadius:50,disableClusteringAtZoom:13,
+    iconCreateFunction:cl=>{
+      const n=cl.getChildCount(),sz=n>500?44:n>100?36:28;
+      return L.divIcon({
+        html:`<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:#1a73e8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:${sz>36?'.82':'.7'}rem;box-shadow:0 2px 8px rgba(26,115,232,.45),0 0 0 3px rgba(255,255,255,.9)">${n>999?'999+':n}</div>`,
+        className:'',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]
+      });
+    }
+  });
+
+  needLayer=L.layerGroup();
+
+  data.forEach(loc=>{
+    const locNeeds=NEEDS.filter(n=>n.com_code===loc.com_code);
+    const govColor=GOV_COLOR[loc.gov_en]||'#1a73e8';
+    if(locNeeds.length===0){
+      const m=L.marker([loc.lat,loc.lon],{icon:dotIcon(govColor,4)});
+      m.bindPopup(()=>popup(loc),{maxWidth:250,closeButton:false});
+      m.on('click',()=>highlight(loc.com_code));
+      mMap[loc.com_code]=m;
+      clusters.addLayer(m);
+    } else {
+      const top=topPri(locNeeds);
+      const m=L.marker([loc.lat,loc.lon],{icon:wifiIcon(top),zIndexOffset:200});
+      m.bindPopup(()=>popup(loc),{maxWidth:250,closeButton:false});
+      m.on('click',()=>highlight(loc.com_code));
+      mMap[loc.com_code]=m;
+      needLayer.addLayer(m);
+    }
+  });
+
+  map.addLayer(clusters);
+  map.addLayer(needLayer);
+}
+
+function topPri(needs){
+  for(const p of ['critical','high','medium','low'])
+    if(needs.some(n=>n.priority===p))return p;
+  return 'medium';
+}
+
+// ════ POPUP ════
+function popup(loc){
+  const ln=NEEDS.filter(n=>n.com_code===loc.com_code);
+  const crit=ln.some(n=>n.priority==='critical');
+  const govColor=GOV_COLOR[loc.gov_en]||'#1a73e8';
+  const govAr=GOV_AR[loc.gov_en]||loc.gov_en;
+  let badge='';
+  if(ln.length){
+    const bg=crit?'#f3e5f5':'#fef7e0',cl=crit?'#6a1b9a':'#b06000';
+    badge=`<div class="pp-need" style="background:${bg};color:${cl}"><i class="bi bi-wifi"></i>${ln.length} احتياج مسجل</div>`;
+  }
+  return `<div class="map-popup">
+    <div class="pp-head" style="background:linear-gradient(135deg,${govColor}dd,${govColor}99)">
+      <div class="pp-gov" style="opacity:.85">${govAr} ‹ ${loc.dist_ar||loc.dist_en}</div>
+      <div class="pp-name">${loc.ref_ar||loc.ref_en||loc.com_en}</div>
+      <div class="pp-sub" style="opacity:.7">${loc.sub_ar||loc.sub_en} — ${loc.com_ar||loc.com_en}</div>
+    </div>
+    <div class="pp-body">
+      <div class="pp-row"><i class="bi bi-pin-map-fill" style="color:${govColor}"></i>${loc.lat.toFixed(4)}°N, ${loc.lon.toFixed(4)}°E</div>
+      <div class="pp-row"><i class="bi bi-geo-fill" style="color:${govColor}"></i><span style="color:${govColor};font-weight:800">${govAr}</span> › ${loc.dist_ar||loc.dist_en}</div>
+      ${badge}
+      <div class="pp-btns">
+        <button class="pp-btn pp-btn-add" onclick="openFormFor('${loc.com_code}')"><i class="bi bi-plus-circle-fill"></i>تسجيل احتياج</button>
+        ${ln.length?`<button class="pp-btn pp-btn-view" onclick="showPanel('${loc.com_code}')"><i class="bi bi-list-check"></i>الاحتياجات</button>`:'<div></div>'}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ════ GOVERNORATE STATS TAB ════
+function buildGovStats(data){
+  const el=document.getElementById('govList');
+  const govs=[...new Set(data.map(d=>d.gov_en))].sort();
+  el.innerHTML=govs.map(g=>{
+    const locs=data.filter(d=>d.gov_en===g);
+    const needsCount=NEEDS.filter(n=>locs.some(l=>l.com_code===n.com_code)).length;
+    const color=GOV_COLOR[g]||'#1a73e8';
+    const ar=GOV_AR[g]||g;
+    return `<div class="gov-row" onclick="filterByGov('${g}')" title="اضغط للتصفية">
+      <div class="gov-dot" style="background:${color}"></div>
+      <div style="flex:1;min-width:0">
+        <div class="gov-ar">${ar}</div>
+        <div class="gov-en">${g}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px">
+        ${needsCount?`<span style="display:flex;align-items:center;gap:3px;font-size:.68rem;font-weight:800;color:#ea4335"><i class="bi bi-wifi" style="font-size:.65rem"></i>${needsCount}</span>`:''}
+        <div class="gov-count">${locs.length.toLocaleString('ar')} موقع</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterByGov(gov){
+  document.getElementById('fGov').value=gov;
+  // trigger district reset
+  const evt=new Event('change');
+  document.getElementById('fGov').dispatchEvent(evt);
+  applyFilters();
+  switchTab('locs');
+}
+
+// ════ TAB SWITCHER ════
+function switchTab(tab){
+  const isLocs=tab==='locs';
+  document.getElementById('paneLocs').style.display=isLocs?'':'none';
+  document.getElementById('paneGovs').style.display=isLocs?'none':'block';
+  document.getElementById('tabLocs').classList.toggle('active',isLocs);
+  document.getElementById('tabGovs').classList.toggle('active',!isLocs);
+}
+
+// ════ SELECTS ════
+function buildSelects(data){
+  const gSel=document.getElementById('fGov');
+  [...new Set(data.map(d=>d.gov_en))].sort().forEach(g=>gSel.add(new Option(g,g)));
+
+  gSel.addEventListener('change',()=>{
+    const dS=document.getElementById('fDist'),sS=document.getElementById('fSub');
+    dS.innerHTML='<option value="">كل المناطق</option>';
+    sS.innerHTML='<option value="">كل النواحي</option>';sS.disabled=true;
+    if(!gSel.value){dS.disabled=true;return}
+    [...new Set(data.filter(d=>d.gov_en===gSel.value).map(d=>d.dist_en))].sort().forEach(v=>dS.add(new Option(v,v)));
+    dS.disabled=false;
+  });
+
+  document.getElementById('fDist').addEventListener('change',()=>{
+    const dv=document.getElementById('fDist').value,sS=document.getElementById('fSub');
+    sS.innerHTML='<option value="">كل النواحي</option>';
+    if(!dv){sS.disabled=true;return}
+    [...new Set(data.filter(d=>d.gov_en===document.getElementById('fGov').value&&d.dist_en===dv).map(d=>d.sub_en))].sort().forEach(v=>sS.add(new Option(v,v)));
+    sS.disabled=false;
+  });
+
+  let t;
+  document.getElementById('fSearch').addEventListener('input',()=>{clearTimeout(t);t=setTimeout(applyFilters,320)});
+}
+
+// ════ FILTERS ════
+function applyFilters(){
+  const q=document.getElementById('fSearch').value.trim().toLowerCase();
+  const gov=document.getElementById('fGov').value;
+  const dist=document.getElementById('fDist').value;
+  const sub=document.getElementById('fSub').value;
+  const need=document.getElementById('fNeed').value;
+
+  filteredLocs=ALL.filter(d=>{
+    if(gov&&d.gov_en!==gov)return false;
+    if(dist&&d.dist_en!==dist)return false;
+    if(sub&&d.sub_en!==sub)return false;
+    if(need==='has'&&!NEEDS.some(n=>n.com_code===d.com_code))return false;
+    if(need==='critical'&&!NEEDS.some(n=>n.com_code===d.com_code&&n.priority==='critical'))return false;
+    if(q){const h=`${d.com_en} ${d.sub_en} ${d.dist_en} ${d.gov_en} ${d.ref_en||''}`.toLowerCase();if(!h.includes(q))return false}
+    return true;
+  });
+
+  renderAll(filteredLocs);
+  renderList(filteredLocs.slice(0,150));
+  buildGovStats(filteredLocs);
+  document.getElementById('stFiltered').textContent=fmt(filteredLocs.length);
+  document.getElementById('resultLabel').textContent=`${fmt(filteredLocs.length)} موقع مطابق`;
+
+  if(filteredLocs.length&&filteredLocs.length<ALL.length){
+    const lt=filteredLocs.map(d=>d.lat),ln=filteredLocs.map(d=>d.lon);
+    map.fitBounds([[Math.min(...lt),Math.min(...ln)],[Math.max(...lt),Math.max(...ln)]],{padding:[40,40],maxZoom:13});
+  }
+}
+
+// ════ LIST ════
+function renderList(locs){
+  const el=document.getElementById('resultsList');
+  if(!locs.length){el.innerHTML='<div class="no-results"><i class="bi bi-search"></i>لا توجد نتائج</div>';return}
+  el.innerHTML=locs.map(loc=>{
+    const ln=NEEDS.filter(n=>n.com_code===loc.com_code);
+    const tp=ln.length?topPri(ln):null;
+    const pc=tp?PC[tp]:null;
+    const govColor=GOV_COLOR[loc.gov_en]||'#1a73e8';
+    const dot=pc?pc.color:govColor;
+    const nameAr=loc.ref_ar||loc.com_ar||loc.ref_en||loc.com_en;
+    const govAr=GOV_AR[loc.gov_en]||loc.gov_en;
+    const badge=pc?`<div class="loc-badge" style="background:${pc.color}18;color:${pc.color}"><i class="bi bi-wifi" style="font-size:.7rem"></i>${ln.length}</div>`:'';
+    return `<div class="loc-item" id="item_${loc.com_code}" onclick="focusLoc('${loc.com_code}')">
+      <div class="loc-dot" style="background:${dot}"></div>
+      <div class="loc-info">
+        <div class="loc-name">${nameAr}</div>
+        <div class="loc-sub"><span style="color:${govColor};font-weight:700">${govAr}</span> › ${loc.dist_ar||loc.dist_en}</div>
+      </div>${badge}
+    </div>`;
+  }).join('');
+}
+
+function focusLoc(code){
+  const loc=ALL.find(d=>d.com_code===code);if(!loc)return;
+  selectedLoc=loc;
+  map.setView([loc.lat,loc.lon],14);
+  setTimeout(()=>{if(mMap[code])mMap[code].openPopup()},300);
+  highlight(code);
+  if(window.innerWidth<700)document.getElementById('sidebar').classList.remove('mob-open');
+}
+
+function highlight(code){
+  document.querySelectorAll('.loc-item').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById('item_'+code);
+  if(el){el.classList.add('active');el.scrollIntoView({behavior:'smooth',block:'nearest'})}
+}
+
+// ════ FORM ════
+function openForm(){
+  if(!selectedLoc){showToast('اختر موقعاً من الخريطة أولاً','');return}
+  document.getElementById('chipName').textContent=selectedLoc.ref_en||selectedLoc.com_en;
+  document.getElementById('chipSub').textContent=`${selectedLoc.gov_en} › ${selectedLoc.dist_en} › ${selectedLoc.sub_en}`;
+  document.getElementById('f_date').value=new Date().toISOString().split('T')[0];
+  setPri('medium');
+  document.getElementById('needModal').classList.add('open');
+}
+
+window.openFormFor=function(code){
+  const loc=ALL.find(d=>d.com_code===code);
+  if(loc){selectedLoc=loc;openForm()}
+  if(map._popup)map.closePopup();
+};
+
+function closeForm(){
+  document.getElementById('needModal').classList.remove('open');
+  ['f_title','f_desc','f_bene','f_org','f_notes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  document.getElementById('f_sector').value='';
+  document.querySelectorAll('.tg-grid input').forEach(cb=>cb.checked=false);
+}
+
+document.getElementById('needModal').addEventListener('click',e=>{if(e.target.id==='needModal')closeForm()});
+
+function setPri(p){
+  activePri=p;
+  document.getElementById('f_priority').value=p;
+  const map_={'low':'sel-l','medium':'sel-m','high':'sel-h','critical':'sel-c'};
+  ['low','medium','high','critical'].forEach(k=>{
+    const el=document.getElementById('pc_'+k);
+    el.classList.remove('sel-l','sel-m','sel-h','sel-c');
+    if(k===p)el.classList.add(map_[k]);
+  });
+}
+setPri('medium');
+
+function submitNeed(){
+  const title=document.getElementById('f_title').value.trim();
+  const sector=document.getElementById('f_sector').value;
+  const desc=document.getElementById('f_desc').value.trim();
+  if(!title){showToast('يرجى إدخال عنوان الاحتياج','err');return}
+  if(!sector){showToast('يرجى اختيار القطاع','err');return}
+  if(!desc){showToast('يرجى كتابة وصف الاحتياج','err');return}
+
+  const targets=[...document.querySelectorAll('.tg-grid input:checked')].map(c=>c.value);
+  const need={
+    id:Date.now(),com_code:selectedLoc.com_code,
+    com_en:selectedLoc.ref_en||selectedLoc.com_en,
+    gov_en:selectedLoc.gov_en,dist_en:selectedLoc.dist_en,sub_en:selectedLoc.sub_en,
+    lat:selectedLoc.lat,lon:selectedLoc.lon,
+    title,sector,description:desc,priority:activePri,
+    beneficiaries:parseInt(document.getElementById('f_bene').value)||0,
+    targets,org:document.getElementById('f_org').value.trim(),
+    date:document.getElementById('f_date').value,
+    response_status:document.getElementById('f_resp').value,
+    source:document.getElementById('f_src').value,
+    notes:document.getElementById('f_notes').value.trim(),
+    created_at:new Date().toISOString()
+  };
+
+  NEEDS.push(need);
+  localStorage.setItem('smeda_needs',JSON.stringify(NEEDS));
+  updateCount();
+
+  // Update marker
+  const tp=topPri(NEEDS.filter(n=>n.com_code===selectedLoc.com_code));
+  if(mMap[selectedLoc.com_code]){
+    mMap[selectedLoc.com_code].setIcon(wifiIcon(tp));
+    mMap[selectedLoc.com_code].setPopupContent(popup(selectedLoc));
+  }
+
+  const src=filteredLocs.length?filteredLocs:ALL;
+  renderList(src.slice(0,150));
+  closeForm();
+  showToast('تم تسجيل الاحتياج بنجاح','ok');
+}
+
+// ════ NEEDS PANEL ════
+window.showPanel=function(code){
+  const loc=ALL.find(d=>d.com_code===code);
+  const needs=NEEDS.filter(n=>n.com_code===code);
+  document.getElementById('panelTitle').textContent=`${loc?.ref_en||code} — ${needs.length} احتياج`;
+  document.getElementById('panelContent').innerHTML=needs.map(n=>{
+    const pc=PC[n.priority]||PC.medium;
+    return `<div class="need-card">
+      <div class="nc-top"><span class="nc-sector">${SC[n.sector]||n.sector}</span><span class="nc-p ${pc.cls}">${pc.lbl}</span></div>
+      <div class="nc-title">${n.title}</div>
+      <div class="nc-desc">${n.description}</div>
+      <div class="nc-meta">
+        ${n.org?`<span><i class="bi bi-building"></i>${n.org}</span>`:''}
+        ${n.date?`<span><i class="bi bi-calendar3"></i>${n.date}</span>`:''}
+        ${n.beneficiaries?`<span><i class="bi bi-people-fill"></i>${fmt(n.beneficiaries)} مستفيد</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('needsPanel').style.display='block';
+  if(map._popup)map.closePopup();
+};
+
+// ════ TOGGLE ════
+const toggleBtn=document.getElementById('toggleBtn');
+const toggleIcon=document.getElementById('toggleIcon');
+const sidebar=document.getElementById('sidebar');
+toggleBtn.addEventListener('click',()=>{
+  sidebar.classList.toggle('hidden');
+  const h=sidebar.classList.contains('hidden');
+  toggleBtn.style.right=h?'0':'var(--sidebar-w)';
+  toggleIcon.className=h?'bi bi-chevron-right':'bi bi-chevron-left';
+});
+
+// ════ UTILS ════
+function fmt(n){return Number(n).toLocaleString('ar')}
+function updateCount(){document.getElementById('stNeeds').textContent=NEEDS.length}
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  const ic=document.getElementById('toastIcon');
+  document.getElementById('toastMsg').textContent=msg;
+  ic.className=type==='ok'?'bi bi-check-circle-fill':type==='err'?'bi bi-exclamation-circle-fill':'bi bi-info-circle-fill';
+  t.className='show'+(type?' '+type:'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',3200);
+}
+</script>
+</body>
+</html>

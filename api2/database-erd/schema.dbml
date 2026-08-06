@@ -1,0 +1,1749 @@
+// SMEDC Authority Database Schema
+// Generated from Laravel migrations — DO NOT EXECUTE
+
+Table administrative_units {
+  Note: 'جدول: administrative units'
+  id bigint [pk, increment, not null]
+  governorate_id bigint [not null]
+  branch_id bigint
+  district_name varchar
+  unit_name varchar [not null]
+  countryside_name varchar
+  locality_name varchar
+  is_active boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table agreements {
+  Note: 'جدول: agreements'
+  id bigint [pk, increment, not null]
+  title varchar [not null]
+  partner_name varchar [not null]
+  agreement_type varchar [not null, default: 'general']
+  status varchar [not null, default: 'draft']
+  start_date date
+  end_date date
+  amount decimal
+  notes text
+  created_by bigint
+  approved_by bigint
+  created_at timestamp
+  updated_at timestamp
+  scope_type varchar [not null, default: 'national']
+  governorate_id bigint
+  branch_id bigint
+}
+
+Table audit_logs {
+  Note: 'سجل التدقيق'
+  id bigint [pk, increment, not null]
+  user_id bigint
+  action varchar [not null]
+  auditable_type varchar
+  auditable_id bigint
+  ip_address varchar
+  user_agent text
+  old_values json
+  new_values json
+  metadata json
+  created_at timestamp [not null]
+  module varchar
+  description varchar
+}
+
+Table branches {
+  Note: 'فروع الهيئة'
+  id bigint [pk, increment, not null]
+  governorate_id bigint [not null]
+  name varchar [not null]
+  code varchar [not null]
+  is_active boolean [not null, default: 'true']
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  manager_user_id bigint
+}
+
+Table cache {
+  Note: 'جدول: cache'
+  key varchar [not null]
+  value mediumtext [not null]
+  expiration int [not null]
+}
+
+Table cache_locks {
+  Note: 'جدول: cache locks'
+  key varchar [not null]
+  owner varchar [not null]
+  expiration int [not null]
+}
+
+Table certificate_approvals {
+  Note: 'جدول: certificate approvals'
+  id bigint [pk, increment, not null]
+  certificate_id bigint [not null]
+  approved_by bigint [not null]
+  decision_at timestamp
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table certificates {
+  Note: 'الشهادات الصادرة'
+  id bigint [pk, increment, not null]
+  trainee_id bigint [not null]
+  training_center_id bigint [not null]
+  trainer_id bigint [not null]
+  training_kit_id bigint [not null]
+  training_program_id bigint [not null]
+  training_course_id bigint [not null]
+  certificate_number varchar [not null]
+  reference_number varchar
+  verification_code varchar
+  score decimal
+  issue_date date
+  certificate_date date
+  qr_code_path varchar
+  certificate_file_path varchar
+  is_verified boolean [not null, default: 'false']
+  verified_at timestamp
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+  security_hash varchar
+  certificate_code varchar
+  center_code varchar
+  trainer_code varchar
+  kit_code varchar
+  course_code varchar
+  trainee_code varchar
+  qr_url varchar
+  issued_at timestamp
+}
+
+Table consultant_assignments {
+  Note: 'جدول: consultant assignments'
+  id bigint [pk, increment, not null]
+  funding_application_id bigint [not null]
+  consultant_office_id bigint [not null]
+  assigned_by bigint [not null]
+  assigned_at timestamp [not null]
+  status varchar [not null, default: 'assigned', note: 'ENUM: assigned, accepted, rejected, in_progress, completed, cancelled']
+  price_offer_amount decimal
+  price_offer_currency varchar
+  price_offer_status varchar [note: 'ENUM: pending, submitted, approved, rejected']
+  consultant_notes text
+  completed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consultant_offices {
+  Note: 'جدول: consultant offices'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  license_number varchar
+  governorate_id bigint
+  branch_id bigint
+  specialization varchar
+  sectors json
+  contact_person varchar
+  phone varchar
+  email varchar
+  address varchar
+  status varchar [not null, default: 'active', note: 'ENUM: active, inactive, suspended']
+  created_by bigint [not null]
+  created_at timestamp
+  updated_at timestamp
+  approved_by bigint
+  approved_at timestamp
+  supervised_by_type varchar [not null, default: 'consultant_union']
+  updated_by bigint
+}
+
+Table consultant_reports {
+  Note: 'جدول: consultant reports'
+  id bigint [pk, increment, not null]
+  funding_application_id bigint [not null]
+  consultant_office_id bigint [not null]
+  consultant_user_id bigint [not null]
+  risk_level varchar [note: 'ENUM: low, medium, high']
+  recommended_amount decimal
+  recommendation varchar [note: 'ENUM: approve, reject, needs_adjustment']
+  report_summary text
+  strengths text
+  weaknesses text
+  conditions text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_categories {
+  Note: 'جدول: consulting categories'
+  id bigint [pk, increment, not null]
+  code varchar [not null]
+  name_ar varchar [not null]
+  name_en varchar
+  description text
+  applicable_sectors json
+  requires_isic4 boolean [not null, default: 'false']
+  is_active boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_contracts {
+  Note: 'جدول: consulting contracts'
+  id bigint [pk, increment, not null]
+  contract_code varchar
+  request_id bigint [not null]
+  offer_id bigint [not null]
+  office_id bigint [not null]
+  client_user_id bigint [not null]
+  signed_by_client_at timestamp
+  signed_by_office_at timestamp
+  start_date date
+  expected_end_date date
+  actual_end_date date
+  total_value decimal [not null]
+  payment_status varchar [not null, default: 'unpaid', note: 'ENUM: unpaid, partial, paid']
+  contract_pdf_path varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_messages {
+  Note: 'جدول: consulting messages'
+  id bigint [pk, increment, not null]
+  contract_id bigint [not null]
+  sender_id bigint [not null]
+  sender_role varchar
+  message_text text [not null]
+  attachment_path varchar
+  is_read boolean [not null, default: 'false']
+  read_at timestamp
+  sent_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_offers {
+  Note: 'جدول: consulting offers'
+  id bigint [pk, increment, not null]
+  request_id bigint [not null]
+  office_id bigint [not null]
+  methodology_text text [not null]
+  price decimal [not null]
+  sample_attachments varchar
+  status varchar [not null, default: 'pending', note: 'ENUM: pending, accepted, rejected']
+  submitted_at timestamp
+  seen_by_client_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_office_specializations {
+  Note: 'جدول: consulting office specializations'
+  id bigint [pk, increment, not null]
+  office_id bigint [not null]
+  category_code varchar [not null]
+  sector varchar
+  sample_work_url varchar
+  is_verified boolean [not null, default: 'false']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_office_violations {
+  Note: 'جدول: consulting office violations'
+  id bigint [pk, increment, not null]
+  office_id bigint [not null]
+  reported_by bigint [not null]
+  violation_type varchar [not null]
+  description text
+  status varchar [not null, default: 'open', note: 'ENUM: open, resolved']
+  action_taken text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_offices {
+  Note: 'مكاتب الاستشارات'
+  id bigint [pk, increment, not null]
+  user_id bigint
+  governorate_id bigint
+  name varchar [not null]
+  code varchar
+  license_number varchar
+  license_date date
+  license_expiry date
+  address varchar
+  phone varchar
+  email varchar
+  website varchar
+  status varchar [not null, default: 'pending', note: 'ENUM: pending, active, suspended, revoked']
+  accreditation_date date
+  overall_rating decimal [not null, default: '0']
+  on_time_rate decimal [not null, default: '0']
+  report_accept_rate decimal [not null, default: '0']
+  bio text
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table consulting_reports {
+  Note: 'جدول: consulting reports'
+  id bigint [pk, increment, not null]
+  contract_id bigint [not null]
+  request_id bigint [not null]
+  report_pdf_path varchar [not null]
+  submission_date timestamp
+  review_status varchar [not null, default: 'pending', note: 'ENUM: pending, approved, returned']
+  reviewer_id bigint
+  review_date timestamp
+  reviewer_notes text
+  recommendation_details text
+  isic4_recommendation varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_request_attachments {
+  Note: 'جدول: consulting request attachments'
+  id bigint [pk, increment, not null]
+  request_id bigint [not null]
+  uploader_id bigint [not null]
+  file_name varchar [not null]
+  file_path varchar [not null]
+  file_type varchar
+  file_size bigint
+  upload_stage varchar [not null, default: 'request', note: 'ENUM: request, execution, report']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table consulting_requests {
+  Note: 'طلبات الاستشارات'
+  id bigint [pk, increment, not null]
+  request_code varchar
+  user_id bigint [not null]
+  governorate_id bigint
+  branch_id bigint
+  branch_manager_id bigint
+  category_code varchar [not null]
+  request_type varchar [not null, default: 'existing', note: 'ENUM: new_project, existing, financing, classification']
+  title varchar [not null]
+  description text [not null]
+  project_name varchar
+  economic_activity varchar
+  isic4_code varchar
+  budget_min decimal
+  budget_max decimal
+  branch_notes text
+  submitted_at timestamp
+  completed_at timestamp
+  offers_deadline timestamp
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table consulting_reviews {
+  Note: 'جدول: consulting reviews'
+  id bigint [pk, increment, not null]
+  contract_id bigint [not null]
+  office_id bigint [not null]
+  reviewer_id bigint [not null]
+  comment text
+  is_published boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table course_registration_request_members {
+  Note: 'جدول: course registration request members'
+  id bigint [pk, increment, not null]
+  course_registration_request_id bigint [not null]
+  trainee_id bigint
+  full_name varchar [not null]
+  national_id varchar
+  phone varchar
+  email varchar
+  birth_date date
+  gender varchar [note: 'ENUM: male, female']
+  education_level varchar
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table course_registration_requests {
+  Note: 'جدول: course registration requests'
+  id bigint [pk, increment, not null]
+  request_number varchar [not null]
+  training_course_id bigint [not null]
+  submitted_by_user_id bigint [not null]
+  submitted_by_type varchar
+  applicant_name varchar [not null]
+  applicant_phone varchar
+  applicant_email varchar
+  guardian_name varchar
+  guardian_phone varchar
+  guardian_national_id varchar
+  notes text
+  guardian_confirmed_at timestamp
+  completed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table document_electronic_signatures {
+  Note: 'جدول: document electronic signatures'
+  id bigint [pk, increment, not null]
+  signable_type varchar [not null]
+  signable_id bigint [not null]
+  role_key varchar [not null]
+  signed_by_user_id bigint [not null]
+  signer_name varchar [not null]
+  signer_title varchar [not null]
+  document_hash varchar [not null]
+  signature_hmac varchar [not null]
+  verification_code varchar [not null]
+  signed_at timestamp [not null]
+  created_at timestamp
+  updated_at timestamp
+  user_electronic_signature_id bigint [not null]
+  signature_image_path varchar
+  signature_image_hash varchar
+}
+
+Table entrepreneur_profiles {
+  Note: 'ملفات رواد الأعمال'
+  id bigint [pk, increment, not null]
+  user_id bigint
+  full_name varchar [not null]
+  governorate varchar
+  phone varchar
+  email varchar
+  education_level varchar
+  specialization varchar
+  project_name varchar [not null]
+  project_field varchar
+  project_field_other varchar
+  founding_year year
+  executive_summary text
+  elevator_pitch text
+  readiness_stage varchar
+  has_prototype boolean [not null, default: 'false']
+  tested_with_users boolean [not null, default: 'false']
+  testing_results text
+  problem_description text
+  target_customers text
+  differentiation text
+  competitive_advantages json
+  team_size_range varchar
+  team_roles json
+  technologies json
+  market_validation_methods json
+  target_market varchar
+  current_users_range varchar
+  current_customers_range varchar
+  has_revenue boolean [not null, default: 'false']
+  revenue_sources json
+  funding_sources json
+  seeking_investment boolean [not null, default: 'false']
+  investment_needed_range varchar
+  challenges json
+  jobs_3years_range varchar
+  scalability_outside_syria varchar
+  support_needed json
+  previous_participation json
+  additional_notes text
+  status varchar [not null, default: 'draft', note: 'ENUM: draft, submitted, under_review, approved, rejected']
+  reviewer_notes text
+  reviewed_by bigint
+  reviewed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table executive_signer_profiles {
+  Note: 'جدول: executive signer profiles'
+  id bigint [pk, increment, not null]
+  role_key varchar [not null]
+  user_id bigint
+  signer_name varchar [not null]
+  signer_title varchar [not null]
+  signature_image_path varchar
+  is_active boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table failed_jobs {
+  Note: 'جدول: failed jobs'
+  id bigint [pk, increment, not null]
+  uuid varchar [not null]
+  connection text [not null]
+  queue text [not null]
+  payload longtext [not null]
+  exception longtext [not null]
+  failed_at timestamp [not null]
+}
+
+Table financial_records {
+  Note: 'جدول: financial records'
+  id bigint [pk, increment, not null]
+  record_type varchar [not null]
+  title varchar [not null]
+  amount decimal [not null, default: '0']
+  currency varchar [not null, default: 'SYP']
+  status varchar [not null, default: 'draft']
+  branch_id bigint
+  governorate_id bigint
+  notes text
+  created_by bigint
+  approved_by bigint
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table funded_loans {
+  Note: 'جدول: funded loans'
+  id bigint [pk, increment, not null]
+  funding_application_id bigint [not null]
+  funding_partner_id bigint
+  loan_number varchar [not null]
+  approved_amount decimal [not null]
+  currency varchar [not null, default: 'SYP']
+  interest_type varchar [not null, default: 'interest', note: 'ENUM: interest, free, profit_margin']
+  interest_rate decimal
+  profit_margin decimal
+  installment_amount decimal
+  start_date date
+  end_date date
+  status varchar [not null, default: 'active', note: 'ENUM: active, paid, defaulted, restructured, closed']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table funding_application_details {
+  Note: 'جدول: funding application details'
+  id bigint [pk, increment, not null]
+  funding_application_id bigint [not null]
+  owner_experience text
+  monthly_revenue decimal
+  monthly_expenses decimal
+  existing_debts decimal
+  assets_description text
+  market_description text
+  challenges text
+  requested_support text
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table funding_applications {
+  Note: 'طلبات التمويل'
+  id bigint [pk, increment, not null]
+  application_number varchar [not null]
+  applicant_user_id bigint
+  applicant_name varchar [not null]
+  national_id varchar
+  phone varchar
+  email varchar
+  governorate_id bigint [not null]
+  branch_id bigint [not null]
+  project_name varchar [not null]
+  project_type varchar
+  project_sector varchar
+  project_size varchar [not null, default: 'small', note: 'ENUM: micro, small, medium']
+  business_stage varchar [not null, default: 'startup', note: 'ENUM: idea, startup, existing, expansion']
+  requested_amount decimal [not null]
+  currency varchar [not null, default: 'SYP']
+  financing_type varchar [not null, default: 'capital', note: 'ENUM: capital, working_capital, mixed']
+  purpose text
+  description text
+  current_stage varchar
+  submitted_at timestamp
+  created_by bigint [not null]
+  updated_by bigint
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table funding_documents {
+  Note: 'جدول: funding documents'
+  id bigint [pk, increment, not null]
+  funding_application_id bigint [not null]
+  document_type varchar [not null]
+  file_path varchar [not null]
+  original_name varchar [not null]
+  mime_type varchar
+  size bigint [not null]
+  uploaded_by bigint [not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table funding_partner_assignments {
+  Note: 'جدول: funding partner assignments'
+  id bigint [pk, increment, not null]
+  funding_application_id bigint [not null]
+  funding_partner_id bigint [not null]
+  assigned_by bigint [not null]
+  assigned_at timestamp [not null]
+  status varchar [not null, default: 'sent', note: 'ENUM: sent, under_review, approved, rejected, funded']
+  approved_amount decimal
+  approved_currency varchar
+  decision_notes text
+  decision_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table funding_partners {
+  Note: 'جدول: funding partners'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  partner_type varchar [not null, default: 'bank', note: 'ENUM: bank, fund, guarantee_company, donor, other']
+  contact_person varchar
+  phone varchar
+  email varchar
+  status varchar [not null, default: 'active', note: 'ENUM: active, inactive']
+  created_by bigint [not null]
+  created_at timestamp
+  updated_at timestamp
+  license_number varchar
+  approved_by bigint
+  approved_at timestamp
+  supervised_by_type varchar [not null, default: 'central_bank']
+  updated_by bigint
+}
+
+Table governorates {
+  Note: 'المحافظات السورية'
+  id bigint [pk, increment, not null]
+  name_ar varchar [not null]
+  name_en varchar
+  code varchar [not null]
+  is_active boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table inbox_message_reads {
+  Note: 'جدول: inbox message reads'
+  id bigint [pk, increment, not null]
+  message_id bigint [not null]
+  user_id bigint [not null]
+  read_at timestamp [not null]
+}
+
+Table inbox_messages {
+  Note: 'صندوق الوارد الداخلي'
+  id bigint [pk, increment, not null]
+  sender_id bigint [not null]
+  sender_role varchar [not null, default: 'admin']
+  recipient_id bigint
+  is_broadcast boolean [not null, default: 'false']
+  broadcast_role varchar
+  subject varchar [not null]
+  body text [not null]
+  requires_reply boolean [not null, default: 'false']
+  priority varchar [not null, default: 'normal', note: 'ENUM: normal, high, urgent']
+  attachments json
+  parent_id bigint
+  is_read boolean [not null, default: 'false']
+  read_at timestamp
+  deleted_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table incubated_projects {
+  Note: 'جدول: incubated projects'
+  id bigint [pk, increment, not null]
+  application_id bigint [not null]
+  incubator_id bigint [not null]
+  owner_user_id bigint [not null]
+  mentor_user_id bigint
+  project_name varchar [not null]
+  stage varchar [not null, default: 'seed', note: 'ENUM: seed, early, growth, exit']
+  start_date date [not null]
+  expected_end_date date
+  actual_end_date date
+  status varchar [not null, default: 'active', note: 'ENUM: active, graduated, withdrawn, terminated']
+  current_revenue decimal
+  current_employees int [not null, default: '0']
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table incubation_applications {
+  Note: 'طلبات الاحتضان'
+  id bigint [pk, increment, not null]
+  application_number varchar [not null]
+  incubator_id bigint [not null]
+  program_id bigint
+  applicant_user_id bigint [not null]
+  project_name varchar [not null]
+  project_sector varchar
+  business_stage varchar [not null, default: 'idea', note: 'ENUM: idea, pre_seed, seed, early, growth']
+  project_description text [not null]
+  problem_statement text
+  target_market text
+  team_size int [not null, default: '1']
+  has_prototype boolean [not null, default: 'false']
+  has_revenue boolean [not null, default: 'false']
+  status varchar [not null, default: 'pending', note: 'ENUM: pending, under_review, accepted, rejected, withdrawn']
+  reviewer_notes text
+  reviewed_by bigint
+  reviewed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+  tech_readiness_level tinyint
+  revenue_model varchar
+  demo_url varchar
+  github_url varchar
+  has_ip boolean [not null, default: 'false']
+  ip_description varchar
+  tech_stack json
+  target_platform varchar
+  funding_needed decimal
+  funding_stage varchar
+  competitive_advantage text
+}
+
+Table incubation_programs {
+  Note: 'جدول: incubation programs'
+  id bigint [pk, increment, not null]
+  incubator_id bigint [not null]
+  name varchar [not null]
+  description text
+  duration_months int [not null, default: '12']
+  seats int [not null, default: '10']
+  start_date date
+  end_date date
+  status varchar [not null, default: 'open', note: 'ENUM: open, closed, completed']
+  requirements text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table incubation_progress_reports {
+  Note: 'جدول: incubation progress reports'
+  id bigint [pk, increment, not null]
+  project_id bigint [not null]
+  submitted_by bigint [not null]
+  period_type varchar [not null, default: 'monthly', note: 'ENUM: monthly, quarterly']
+  period_label varchar [not null]
+  revenue decimal
+  employees int
+  customers int
+  achievements text
+  challenges text
+  next_steps text
+  overall_rating int
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table incubators {
+  Note: 'حاضنات الأعمال'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  code varchar [not null]
+  description text
+  sector varchar
+  location varchar
+  governorate_id bigint
+  branch_id bigint
+  manager_user_id bigint
+  phone varchar
+  email varchar
+  capacity int [not null, default: '20']
+  status varchar [not null, default: 'active', note: 'ENUM: active, inactive, suspended']
+  created_by bigint
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table job_applications {
+  Note: 'جدول: job applications'
+  id bigint [pk, increment, not null]
+  job_posting_id bigint
+  user_id bigint
+  applicant_name varchar [not null]
+  phone varchar
+  email varchar
+  specialty varchar
+  city varchar
+  experience_years varchar
+  summary text
+  cv_path varchar
+  status varchar [not null, default: 'pending', note: 'ENUM: pending, reviewed, accepted, rejected']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table job_batches {
+  Note: 'جدول: job batches'
+  id varchar [not null]
+  name varchar [not null]
+  total_jobs int [not null]
+  pending_jobs int [not null]
+  failed_jobs int [not null]
+  failed_job_ids longtext [not null]
+  options mediumtext
+  cancelled_at int
+  created_at int [not null]
+  finished_at int
+}
+
+Table job_postings {
+  Note: 'إعلانات الوظائف'
+  id bigint [pk, increment, not null]
+  user_id bigint
+  organization_name varchar [not null]
+  title varchar [not null]
+  city varchar
+  governorate_id bigint
+  employment_type varchar [not null, default: 'full_time']
+  sector varchar
+  description text
+  skills text
+  status varchar [not null, default: 'published', note: 'ENUM: draft, published, closed']
+  contact_email varchar
+  contact_phone varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table jobs {
+  Note: 'جدول: jobs'
+  id bigint [pk, increment, not null]
+  queue varchar [not null]
+  payload longtext [not null]
+}
+
+Table legacy_import_id_mappings {
+  Note: 'جدول: legacy import id mappings'
+  id bigint [pk, increment, not null]
+  source varchar [not null]
+  entity varchar [not null]
+  old_id bigint [not null]
+  new_id bigint [not null]
+  dedupe_key varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table legacy_import_runs {
+  Note: 'جدول: legacy import runs'
+  id bigint [pk, increment, not null]
+  source varchar [not null]
+  dry_run boolean [not null, default: 'true']
+  status varchar [not null, default: 'pending']
+  report json
+  started_at timestamp
+  finished_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table loan_payments {
+  Note: 'جدول: loan payments'
+  id bigint [pk, increment, not null]
+  funded_loan_id bigint [not null]
+  due_date date [not null]
+  paid_date date
+  amount_due decimal [not null]
+  amount_paid decimal [not null, default: '0']
+  status varchar [not null, default: 'pending', note: 'ENUM: pending, paid, late, partial, defaulted']
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table mentoring_sessions {
+  Note: 'جدول: mentoring sessions'
+  id bigint [pk, increment, not null]
+  project_id bigint [not null]
+  mentor_user_id bigint [not null]
+  session_date date [not null]
+  duration_minutes int [not null, default: '60']
+  topic varchar [not null]
+  notes text
+  action_items text
+  rating int
+  status varchar [not null, default: 'scheduled', note: 'ENUM: scheduled, completed, cancelled']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table need_action_logs {
+  Note: 'جدول: need action logs'
+  id bigint [pk, increment, not null]
+  need_id bigint [not null]
+  action varchar [not null]
+  from_status varchar
+  to_status varchar
+  performed_by bigint
+  note text
+  payload json
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table need_lookups {
+  Note: 'جدول: need lookups'
+  id bigint [pk, increment, not null]
+  lookup_type varchar [not null]
+  value varchar [not null]
+  label varchar
+  is_active boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table needs {
+  Note: 'احتياجات/طلبات الدعم'
+  id bigint [pk, increment, not null]
+  need_code varchar [not null]
+  title varchar [not null]
+  description text
+  summary text
+  need_owner_type varchar [not null, default: 'citizen', note: 'ENUM: citizen, state']
+  need_scope varchar [not null, default: 'individual', note: 'ENUM: individual, project, local, governorate, national, sectoral']
+  need_type varchar
+  need_category varchar
+  need_complexity varchar [not null, default: 'specific', note: 'ENUM: general, specific']
+  source_platform varchar [not null, default: 'gis', note: 'ENUM: gis, legacy_gis, training, finance, incubator, workforce, manual, other']
+  source_module varchar
+  source_record_id bigint
+  governorate_id bigint
+  branch_id bigint
+  district_name varchar
+  administrative_unit_name varchar
+  countryside_name varchar
+  locality_name varchar
+  village_or_neighborhood varchar
+  address_details text
+  latitude decimal
+  longitude decimal
+  location_source varchar
+  sector varchar
+  economic_sector varchar
+  syrsic_section varchar
+  syrsic_division varchar
+  syrsic_group varchar
+  syrsic_class varchar
+  syrsic_activity varchar
+  priority varchar [not null, default: 'medium']
+  status varchar [not null, default: 'pending_governorate_review']
+  approval_status varchar
+  state_need_level varchar
+  citizen_need_profile varchar
+  responsible_entity varchar
+  proposed_intervention varchar
+  applicant_name varchar
+  applicant_phone varchar
+  applicant_email varchar
+  applicant_type varchar
+  organization_name varchar
+  impact_level varchar
+  urgency_level varchar
+  expected_duration varchar
+  available_partners text
+  obstacles text
+  requirements text
+  notes text
+  metadata json
+  funding_application_id bigint
+  training_course_id bigint
+  created_by bigint
+  updated_by bigint
+  reviewed_by bigint
+  approved_by bigint
+  rejected_by bigint
+  classified_by bigint
+  returned_by bigint
+  resolved_by bigint
+  reviewer_note text
+  approval_note text
+  rejection_reason text
+  return_reason text
+  classification_note text
+  reviewed_at timestamp
+  approved_at timestamp
+  rejected_at timestamp
+  classified_at timestamp
+  returned_at timestamp
+  resolved_at timestamp
+  is_public boolean [not null, default: 'false']
+  is_mapped boolean [not null, default: 'false']
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table news {
+  Note: 'الأخبار'
+  id bigint [pk, increment, not null]
+  title varchar [not null]
+  slug varchar [not null]
+  summary text [not null]
+  body longtext [not null]
+  image_url varchar
+  category varchar
+  branch_id bigint
+  status varchar [not null, default: 'draft', note: 'ENUM: draft, published, archived']
+  is_pinned boolean [not null, default: 'false']
+  published_at timestamp
+  created_by bigint
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table notifications {
+  Note: 'إشعارات المستخدمين'
+  id bigint [pk, increment, not null]
+  user_id bigint [not null]
+  type varchar [not null]
+  title varchar [not null]
+  body text
+  action_url varchar
+  action_label varchar
+  icon varchar [not null, default: 'bi-bell-fill']
+  color varchar [not null, default: 'primary']
+  reference_type varchar
+  reference_id bigint
+  is_read boolean [not null, default: 'false']
+  read_at timestamp
+  created_at timestamp [not null]
+}
+
+Table password_reset_tokens {
+  Note: 'جدول: password reset tokens'
+  email varchar [not null]
+  token varchar [not null]
+  created_at timestamp
+}
+
+Table permissions {
+  Note: 'صلاحيات Spatie Permission'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  guard_name varchar [not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table personal_access_tokens {
+  Note: 'رموز Sanctum API'
+  id bigint [pk, increment, not null]
+  tokenable_type varchar [not null]
+  tokenable_id bigint [not null]
+  name text [not null]
+  token varchar [not null]
+  abilities text
+  last_used_at timestamp
+  expires_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table sessions {
+  Note: 'جلسات Laravel'
+  id varchar [not null]
+  user_id bigint
+  ip_address varchar
+  user_agent text
+  payload longtext [not null]
+}
+
+Table staff_training_requests {
+  Note: 'جدول: staff training requests'
+  id bigint [pk, increment, not null]
+  user_id bigint
+  organization_name varchar [not null]
+  training_field varchar
+  city varchar
+  details text
+  status varchar [not null, default: 'pending', note: 'ENUM: pending, reviewed, scheduled, closed']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table status_histories {
+  Note: 'جدول: status histories'
+  id bigint [pk, increment, not null]
+  model_type varchar [not null]
+  model_id bigint [not null]
+  from_status varchar
+  to_status varchar [not null]
+  changed_by bigint
+  reason text
+  created_at timestamp [not null]
+}
+
+Table success_stories {
+  Note: 'جدول: success stories'
+  id bigint [pk, increment, not null]
+  title varchar [not null]
+  slug varchar [not null]
+  summary text [not null]
+  body longtext [not null]
+  incubated_project_id bigint
+  incubator_id bigint
+  branch_id bigint
+  hero_name varchar [not null]
+  hero_title varchar
+  hero_photo_url varchar
+  project_name varchar
+  sector varchar
+  revenue_achieved decimal
+  jobs_created int
+  years_in_incubator int
+  current_stage varchar
+  featured_quote text
+  cover_image_url varchar
+  video_url varchar
+  gallery json
+  status varchar [not null, default: 'draft', note: 'ENUM: draft, published, archived']
+  is_featured boolean [not null, default: 'false']
+  published_at timestamp
+  created_by bigint
+  approved_by bigint
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table syria_locations {
+  Note: 'جدول: syria locations'
+  id bigint [pk, increment, not null]
+  gov_pcode varchar [not null]
+  gov_name_en varchar [not null]
+  gov_name_ar varchar [not null]
+  district_pcode varchar [not null]
+  district_name_en varchar [not null]
+  district_name_ar varchar [not null]
+  subdistrict_pcode varchar [not null]
+  subdistrict_name_en varchar [not null]
+  subdistrict_name_ar varchar [not null]
+  community_pcode varchar [not null]
+  community_name_en varchar [not null]
+  community_name_ar varchar [not null]
+  latitude decimal [not null]
+  longitude decimal [not null]
+}
+
+Table trainee_registration_requests {
+  Note: 'جدول: trainee registration requests'
+  id bigint [pk, increment, not null]
+  request_number varchar [not null]
+  full_name varchar [not null]
+  national_id varchar
+  phone varchar
+  email varchar
+  city varchar
+  address varchar
+  birth_date date
+  gender varchar [note: 'ENUM: male, female']
+  education_level varchar
+  guardian_name varchar
+  guardian_phone varchar
+  guardian_national_id varchar
+  group_name varchar
+  submitted_by_user_id bigint [not null]
+  reviewed_by_user_id bigint [not null]
+  review_notes text
+  approved_trainee_id bigint [not null]
+  approved_at timestamp
+  rejected_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table trainees {
+  Note: 'المتدربون'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  trainee_code varchar [not null]
+  national_id varchar
+  phone varchar
+  email varchar
+  city varchar
+  address varchar
+  birth_date date
+  gender varchar [note: 'ENUM: male, female']
+  education_level varchar
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+  governorate varchar
+  district varchar
+  location_visibility varchar [not null, note: 'ENUM: public, internal, private']
+}
+
+Table trainer_profiles {
+  Note: 'جدول: trainer profiles'
+  id bigint [pk, increment, not null]
+  trainer_id bigint [not null]
+  headline varchar
+  bio text
+  skills text
+  special_interests text
+  linkedin_summary text
+  cv_file varchar
+  profile_image varchar
+  visibility varchar [not null, default: 'internal', note: 'ENUM: internal, public']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table trainer_registration_requests {
+  Note: 'جدول: trainer registration requests'
+  id bigint [pk, increment, not null]
+  request_number varchar [not null]
+  training_center_id bigint [not null]
+  full_name varchar [not null]
+  national_id varchar
+  phone varchar
+  email varchar
+  specialization varchar
+  classification_requested varchar
+  has_tot boolean [not null, default: 'false']
+  tot_certificate_number varchar
+  tot_certificate_source varchar
+  tot_issue_date date
+  tot_expiry_date date
+  cv_file varchar
+  certificate_file varchar
+  submitted_by_user_id bigint [not null]
+  reviewed_by_user_id bigint [not null]
+  review_notes text
+  approved_trainer_id bigint [not null]
+  approved_at timestamp
+  rejected_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table trainer_training_kit {
+  Note: 'جدول: trainer training kit'
+  id bigint [pk, increment, not null]
+  trainer_id bigint [not null]
+  training_kit_id bigint [not null]
+  is_authorized boolean [not null, default: 'true']
+  authorized_from date
+  authorized_to date
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table trainers {
+  Note: 'المدربون'
+  id bigint [pk, increment, not null]
+  training_center_id bigint [not null]
+  name varchar [not null]
+  trainer_code varchar [not null]
+  phone varchar
+  email varchar
+  specialization varchar
+  classification varchar
+  has_tot boolean [not null, default: 'false']
+  tot_certificate_number varchar
+  tot_certificate_source varchar
+  tot_issue_date date
+  tot_expiry_date date
+  can_train boolean [not null, default: 'false']
+  can_evaluate boolean [not null, default: 'false']
+  accreditation_start_date date
+  accreditation_end_date date
+  bio text
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+  governorate varchar
+  city varchar
+  district varchar
+  service_areas json
+  location_visibility varchar [not null, note: 'ENUM: public, internal, private']
+}
+
+Table training_center_platforms {
+  Note: 'جدول: training center platforms'
+  id bigint [pk, increment, not null]
+  training_center_id bigint [not null]
+  platform_name varchar [not null]
+  platform_url varchar
+  approved_at date
+  expires_at date
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_center_registration_requests {
+  Note: 'جدول: training center registration requests'
+  id bigint [pk, increment, not null]
+  request_number varchar [not null]
+  center_name varchar [not null]
+  city varchar [not null]
+  address varchar
+  phone varchar
+  email varchar
+  classification_requested varchar
+  supports_offline_training boolean [not null, default: 'true']
+  supports_online_training boolean [not null, default: 'false']
+  latitude decimal
+  longitude decimal
+  license_number varchar
+  license_issue_date date
+  license_issued_by varchar
+  license_image_path varchar
+  license_file varchar
+  accreditation_file varchar
+  notes text
+  submitted_by_user_id bigint
+  reviewed_by_user_id bigint
+  review_notes text
+  decision_notes text
+  approved_training_center_id bigint
+  reviewed_at timestamp
+  approved_at timestamp
+  rejected_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_centers {
+  Note: 'مراكز التدريب المعتمدة'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  code varchar [not null]
+  city varchar [not null]
+  address varchar
+  phone varchar
+  email varchar
+  classification varchar
+  supports_offline_training boolean [not null, default: 'true']
+  supports_online_training boolean [not null, default: 'false']
+  accreditation_start_date date
+  accreditation_end_date date
+  is_active boolean [not null, default: 'true']
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+  governorate varchar
+  district varchar
+  latitude decimal
+  longitude decimal
+  location_visibility varchar [not null, note: 'ENUM: public, internal, private']
+  license_number varchar
+  license_issue_date date
+  license_expiry_date date
+  license_issued_by varchar
+  license_image_path varchar
+  supervisor_id bigint [not null]
+}
+
+Table training_course_trainee {
+  Note: 'جدول: training course trainee'
+  id bigint [pk, increment, not null]
+  training_course_id bigint [not null]
+  trainee_id bigint [not null]
+  score decimal
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_courses {
+  Note: 'الدورات التدريبية'
+  id bigint [pk, increment, not null]
+  training_center_id bigint [not null]
+  trainer_id bigint [not null]
+  training_kit_id bigint [not null]
+  training_program_id bigint [not null]
+  course_code varchar [not null]
+  title varchar [not null]
+  delivery_mode varchar [not null, default: 'offline', note: 'ENUM: online, offline']
+  approved_platform varchar
+  start_date date
+  end_date date
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+  venue_name varchar
+  governorate varchar
+  city varchar
+  district varchar
+  address varchar
+  latitude decimal
+  longitude decimal
+  location_visibility varchar [not null, note: 'ENUM: public, internal, private']
+  online_platform varchar
+  online_url varchar
+}
+
+Table training_kit_nominations {
+  Note: 'جدول: training kit nominations'
+  id bigint [pk, increment, not null]
+  trainer_id bigint [not null]
+  training_kit_id bigint [not null]
+  proposed_name varchar
+  description text
+  sector varchar
+  category varchar
+  hours int
+  decision_notes text
+  decided_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_kit_public_requests {
+  Note: 'جدول: training kit public requests'
+  id bigint [pk, increment, not null]
+  applicant_name varchar [not null]
+  applicant_email varchar [not null]
+  proposed_name varchar [not null]
+  city varchar
+  notes text
+  status varchar [not null, default: 'pending', note: 'ENUM: pending, reviewed, closed']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_kits {
+  Note: 'حقائب التدريب (Training Kits)'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  code varchar [not null]
+  sector varchar
+  category varchar
+  type varchar
+  material_code varchar
+  level varchar
+  objective text
+  description text
+  is_active boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table training_program_approval_logs {
+  Note: 'جدول: training program approval logs'
+  id bigint [pk, increment, not null]
+  program_id bigint [not null]
+  from_status varchar
+  to_status varchar [not null]
+  action varchar [not null]
+  notes text
+  user_id bigint
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_program_executions {
+  Note: 'جدول: training program executions'
+  id bigint [pk, increment, not null]
+  program_id bigint [not null]
+  course_id bigint [not null]
+  created_by bigint
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_program_modules {
+  Note: 'جدول: training program modules'
+  id bigint [pk, increment, not null]
+  program_id bigint [not null]
+  title varchar [not null]
+  description text
+  objectives text
+  activities text
+  required_tools text
+  evaluation_method varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_program_outcomes {
+  Note: 'جدول: training program outcomes'
+  id bigint [pk, increment, not null]
+  program_id bigint [not null]
+  title varchar [not null]
+  description text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_program_service_links {
+  Note: 'جدول: training program service links'
+  id bigint [pk, increment, not null]
+  program_id bigint [not null]
+  service_reference_id bigint
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_program_training_kit {
+  Note: 'جدول: training program training kit'
+  id bigint [pk, increment, not null]
+  training_program_id bigint [not null]
+  training_kit_id bigint [not null]
+  is_required boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table training_programs {
+  Note: 'البرامج التدريبية'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  code varchar [not null]
+  description text
+  is_active boolean [not null, default: 'true']
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+  title varchar
+  slug varchar
+  sector varchar
+  target_audience varchar
+  level varchar [not null, note: 'ENUM: beginner, intermediate, advanced']
+  delivery_mode varchar [not null, note: 'ENUM: in_person, online, blended']
+  prerequisites text
+  outcomes_summary text
+  grants_certificate boolean [not null, default: 'false']
+  requires_final_exam boolean [not null, default: 'false']
+  requires_project boolean [not null, default: 'false']
+  created_by bigint
+  approved_by bigint
+  approved_at timestamp
+  suspended_at timestamp
+  archived_at timestamp
+}
+
+Table training_supervisors {
+  Note: 'جدول: training supervisors'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  code varchar [not null]
+  type varchar [not null, default: 'directorate', note: 'ENUM: ministry, directorate, internal_entity']
+  parent_id bigint
+  governorate_id bigint
+  branch_id bigint
+  is_active boolean [not null, default: 'true']
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table user_electronic_signatures {
+  Note: 'جدول: user electronic signatures'
+  id bigint [pk, increment, not null]
+  user_id bigint [not null]
+  signature_path varchar [not null]
+  original_name varchar [not null]
+  mime_type varchar [not null]
+  file_hash varchar [not null]
+  is_active boolean [not null, default: 'true']
+  uploaded_by bigint
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table users {
+  Note: 'مستخدمي النظام (موظفون، مدربون، متدربون، مراكز تدريب)'
+  id bigint [pk, increment, not null]
+  name varchar [not null]
+  email varchar [not null]
+  email_verified_at timestamp
+  password varchar [not null]
+  entity_type varchar
+  parent_user_id bigint [not null]
+  is_active boolean [not null, default: 'true']
+  remember_token varchar
+  created_at timestamp
+  updated_at timestamp
+  training_center_id bigint [not null]
+  trainer_id bigint [not null]
+  trainee_id bigint [not null]
+  phone varchar
+  last_login_at timestamp
+  governorate_id bigint
+  branch_id bigint
+  consultant_office_id bigint
+  funding_partner_id bigint
+  training_supervisor_id bigint [not null]
+}
+
+Table workforces {
+  Note: 'القوى العاملة/الكادر'
+  id bigint [pk, increment, not null]
+  trainee_id bigint [not null]
+  workforce_code varchar [not null]
+  joined_at date
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Ref: administrative_units.governorate_id > governorates.id // on delete: restrict
+Ref: administrative_units.branch_id > branches.id // on delete: set null
+Ref: agreements.created_by > users.id // on delete: set null
+Ref: agreements.approved_by > users.id // on delete: set null
+Ref: agreements.governorate_id > governorates.id // on delete: set null
+Ref: agreements.branch_id > branches.id // on delete: set null
+Ref: audit_logs.user_id > users.id // on delete: set null
+Ref: branches.governorate_id > governorates.id // on delete: cascade
+Ref: branches.manager_user_id > users.id // on delete: set null
+Ref: consultant_assignments.funding_application_id > funding_applications.id // on delete: cascade
+Ref: consultant_assignments.consultant_office_id > consultant_offices.id // on delete: restrict
+Ref: consultant_assignments.assigned_by > users.id // on delete: restrict
+Ref: consultant_offices.governorate_id > governorates.id // on delete: set null
+Ref: consultant_offices.branch_id > branches.id // on delete: set null
+Ref: consultant_offices.created_by > users.id // on delete: restrict
+Ref: consultant_offices.approved_by > users.id // on delete: set null
+Ref: consultant_offices.updated_by > users.id // on delete: set null
+Ref: consultant_reports.funding_application_id > funding_applications.id // on delete: cascade
+Ref: consultant_reports.consultant_office_id > consultant_offices.id // on delete: restrict
+Ref: consultant_reports.consultant_user_id > users.id // on delete: restrict
+Ref: consulting_contracts.request_id > consulting_requests.id // on delete: cascade
+Ref: consulting_contracts.offer_id > consulting_offers.id // on delete: cascade
+Ref: consulting_contracts.office_id > consulting_offices.id // on delete: cascade
+Ref: consulting_contracts.client_user_id > users.id // on delete: cascade
+Ref: consulting_messages.contract_id > consulting_contracts.id // on delete: cascade
+Ref: consulting_messages.sender_id > users.id // on delete: cascade
+Ref: consulting_offers.request_id > consulting_requests.id // on delete: cascade
+Ref: consulting_offers.office_id > consulting_offices.id // on delete: cascade
+Ref: consulting_office_specializations.office_id > consulting_offices.id // on delete: cascade
+Ref: consulting_office_violations.office_id > consulting_offices.id // on delete: cascade
+Ref: consulting_office_violations.reported_by > users.id // on delete: cascade
+Ref: consulting_offices.user_id > users.id // on delete: set null
+Ref: consulting_offices.governorate_id > governorates.id // on delete: set null
+Ref: consulting_reports.contract_id > consulting_contracts.id // on delete: cascade
+Ref: consulting_reports.request_id > consulting_requests.id // on delete: cascade
+Ref: consulting_reports.reviewer_id > users.id // on delete: set null
+Ref: consulting_request_attachments.request_id > consulting_requests.id // on delete: cascade
+Ref: consulting_request_attachments.uploader_id > users.id // on delete: cascade
+Ref: consulting_requests.user_id > users.id // on delete: cascade
+Ref: consulting_requests.governorate_id > governorates.id // on delete: set null
+Ref: consulting_requests.branch_id > branches.id // on delete: set null
+Ref: consulting_requests.branch_manager_id > users.id // on delete: set null
+Ref: consulting_reviews.contract_id > consulting_contracts.id // on delete: cascade
+Ref: consulting_reviews.office_id > consulting_offices.id // on delete: cascade
+Ref: consulting_reviews.reviewer_id > users.id // on delete: cascade
+Ref: document_electronic_signatures.signed_by_user_id > users.id // on delete: cascade
+Ref: entrepreneur_profiles.user_id > users.id // on delete: set null
+Ref: entrepreneur_profiles.reviewed_by > users.id // on delete: set null
+Ref: executive_signer_profiles.user_id > users.id // on delete: set null
+Ref: financial_records.branch_id > branches.id // on delete: set null
+Ref: financial_records.governorate_id > governorates.id // on delete: set null
+Ref: financial_records.created_by > users.id // on delete: set null
+Ref: financial_records.approved_by > users.id // on delete: set null
+Ref: funded_loans.funding_application_id > funding_applications.id // on delete: restrict
+Ref: funded_loans.funding_partner_id > funding_partners.id // on delete: set null
+Ref: funding_application_details.funding_application_id > funding_applications.id // on delete: cascade
+Ref: funding_applications.applicant_user_id > users.id // on delete: set null
+Ref: funding_applications.governorate_id > governorates.id // on delete: restrict
+Ref: funding_applications.branch_id > branches.id // on delete: restrict
+Ref: funding_applications.created_by > users.id // on delete: restrict
+Ref: funding_applications.updated_by > users.id // on delete: set null
+Ref: funding_documents.funding_application_id > funding_applications.id // on delete: cascade
+Ref: funding_documents.uploaded_by > users.id // on delete: restrict
+Ref: funding_partner_assignments.funding_application_id > funding_applications.id // on delete: cascade
+Ref: funding_partner_assignments.funding_partner_id > funding_partners.id // on delete: restrict
+Ref: funding_partner_assignments.assigned_by > users.id // on delete: restrict
+Ref: funding_partners.created_by > users.id // on delete: restrict
+Ref: funding_partners.approved_by > users.id // on delete: set null
+Ref: funding_partners.updated_by > users.id // on delete: set null
+Ref: inbox_message_reads.message_id > inbox_messages.id // on delete: cascade
+Ref: inbox_message_reads.user_id > users.id // on delete: cascade
+Ref: inbox_messages.sender_id > users.id // on delete: cascade
+Ref: inbox_messages.recipient_id > users.id // on delete: set null
+Ref: inbox_messages.parent_id > inbox_messages.id // on delete: set null
+Ref: incubated_projects.application_id > incubation_applications.id // on delete: cascade
+Ref: incubated_projects.incubator_id > incubators.id // on delete: cascade
+Ref: incubated_projects.owner_user_id > users.id // on delete: cascade
+Ref: incubated_projects.mentor_user_id > users.id // on delete: set null
+Ref: incubation_applications.incubator_id > incubators.id // on delete: cascade
+Ref: incubation_applications.program_id > incubation_programs.id // on delete: set null
+Ref: incubation_applications.applicant_user_id > users.id // on delete: cascade
+Ref: incubation_applications.reviewed_by > users.id // on delete: set null
+Ref: incubation_programs.incubator_id > incubators.id // on delete: cascade
+Ref: incubation_progress_reports.project_id > incubated_projects.id // on delete: cascade
+Ref: incubation_progress_reports.submitted_by > users.id // on delete: cascade
+Ref: incubators.governorate_id > governorates.id // on delete: set null
+Ref: incubators.branch_id > branches.id // on delete: set null
+Ref: incubators.manager_user_id > users.id // on delete: set null
+Ref: incubators.created_by > users.id // on delete: set null
+Ref: job_applications.job_posting_id > job_postings.id // on delete: set null
+Ref: job_applications.user_id > users.id // on delete: set null
+Ref: job_postings.user_id > users.id // on delete: set null
+Ref: job_postings.governorate_id > governorates.id // on delete: set null
+Ref: loan_payments.funded_loan_id > funded_loans.id // on delete: cascade
+Ref: mentoring_sessions.project_id > incubated_projects.id // on delete: cascade
+Ref: mentoring_sessions.mentor_user_id > users.id // on delete: cascade
+Ref: need_action_logs.need_id > needs.id // on delete: cascade
+Ref: need_action_logs.performed_by > users.id // on delete: set null
+Ref: needs.governorate_id > governorates.id // on delete: set null
+Ref: needs.branch_id > branches.id // on delete: set null
+Ref: needs.funding_application_id > funding_applications.id // on delete: set null
+Ref: needs.training_course_id > training_courses.id // on delete: set null
+Ref: needs.created_by > users.id // on delete: set null
+Ref: needs.updated_by > users.id // on delete: set null
+Ref: needs.reviewed_by > users.id // on delete: set null
+Ref: needs.approved_by > users.id // on delete: set null
+Ref: needs.rejected_by > users.id // on delete: set null
+Ref: needs.classified_by > users.id // on delete: set null
+Ref: needs.returned_by > users.id // on delete: set null
+Ref: needs.resolved_by > users.id // on delete: set null
+Ref: news.branch_id > branches.id // on delete: set null
+Ref: news.created_by > users.id // on delete: set null
+Ref: notifications.user_id > users.id // on delete: cascade
+Ref: staff_training_requests.user_id > users.id // on delete: set null
+Ref: status_histories.changed_by > users.id // on delete: set null
+Ref: success_stories.incubated_project_id > incubated_projects.id // on delete: set null
+Ref: success_stories.incubator_id > incubators.id // on delete: set null
+Ref: success_stories.branch_id > branches.id // on delete: set null
+Ref: success_stories.created_by > users.id // on delete: set null
+Ref: success_stories.approved_by > users.id // on delete: set null
+Ref: training_program_approval_logs.program_id > training_programs.id // on delete: cascade
+Ref: training_program_approval_logs.user_id > users.id // on delete: set null
+Ref: training_program_executions.program_id > training_programs.id // on delete: cascade
+Ref: training_program_executions.course_id > training_courses.id // on delete: cascade
+Ref: training_program_executions.created_by > users.id // on delete: set null
+Ref: training_program_modules.program_id > training_programs.id // on delete: cascade
+Ref: training_program_outcomes.program_id > training_programs.id // on delete: cascade
+Ref: training_program_service_links.program_id > training_programs.id // on delete: cascade
+Ref: training_programs.created_by > users.id // on delete: set null
+Ref: training_programs.approved_by > users.id // on delete: set null
+Ref: training_supervisors.parent_id > training_supervisors.id // on delete: set null
+Ref: training_supervisors.governorate_id > governorates.id // on delete: set null
+Ref: training_supervisors.branch_id > branches.id // on delete: set null
+Ref: user_electronic_signatures.user_id > users.id // on delete: cascade
+Ref: user_electronic_signatures.uploaded_by > users.id // on delete: set null
+Ref: users.governorate_id > governorates.id // on delete: set null
+Ref: users.branch_id > branches.id // on delete: set null
+Ref: users.consultant_office_id > consultant_offices.id // on delete: set null
+Ref: users.funding_partner_id > funding_partners.id // on delete: set null

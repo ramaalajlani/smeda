@@ -1,0 +1,62 @@
+.dropdown-menu {
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(6, 40, 36, 0.12);
+  padding: 0.6rem;
+  text-align: right;
+}
+
+/* ===== Size ===== */
+.dropdown-menu-wide {
+  min-width: 360px;
+  max-width: 420px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* ===== Header ===== */
+.dropdown-header {
+  font-weight: 800;
+  color: #17947B;
+  font-size: 0.95rem;
+  padding: 0.6rem 0.9rem 0.35rem;
+}
+
+/* ===== Items ===== */
+.dropdown-item {
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  text-align: right;
+  white-space: normal;
+  line-height: 1.6;
+  color: #062824;
+  transition: 0.25s ease;
+}
+
+/* Hover */
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: rgba(23, 148, 123, 0.08);
+  color: #06AA89;
+}
+
+/* Divider */
+.dropdown-divider {
+  margin: 0.45rem 0;
+  opacity: 0.5;
+}
+
+/* ===== Scrollbar ===== */
+.dropdown-menu-wide::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown-menu-wide::-webkit-scrollbar-thumb {
+  background: rgba(23, 148, 123, 0.35);
+  border-radius: 999px;
+}
+
+.dropdown-menu-wide::-webkit-scrollbar-track {
+  background: transparent;
+}

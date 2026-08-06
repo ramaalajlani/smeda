@@ -1,0 +1,89 @@
+.section {
+  padding: 6rem 0;
+}
+
+.compact-top {
+  padding-top: 1rem;
+}
+
+.light-section {
+  background: #f2fbf8;
+}
+
+.light-alt-section {
+  background: #f7fcfa;
+}
+
+.dark-section {
+  background: linear-gradient(135deg, #062824, #0F4F47);
+  color: var(--white);
+}
+
+.dark-band-section {
+  background: linear-gradient(135deg, #17947B 0%, #06AA89 100%);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-band-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at top right,
+    rgba(255, 255, 255, 0.14),
+    transparent 35%
+  );
+  pointer-events: none;
+}
+
+.centered-content {
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.content-block h2,
+.section-copy h2,
+.section-heading h2 {
+  font-size: clamp(2rem, 3vw, 3.2rem);
+  line-height: 1.25;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.content-block p,
+.section-copy p,
+.section-heading p {
+  color: inherit;
+  font-size: 1.08rem;
+  opacity: 0.95;
+}
+
+.section-heading {
+  max-width: 780px;
+  margin: 0 auto 2.75rem;
+}
+
+.section-copy p {
+  margin-bottom: 1.5rem;
+}
+
+.section-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 42px !important;
+  padding: 0.55rem 1rem !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #17947B, #06AA89) !important;
+  color: var(--white) !important;
+  font-weight: 800 !important;
+  margin-bottom: 1rem !important;
+  box-shadow: 0 8px 18px rgba(23, 148, 123, 0.22) !important;
+}
+
+.feature-split {
+  background: #fff;
+}

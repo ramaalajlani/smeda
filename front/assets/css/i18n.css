@@ -1,0 +1,145 @@
+/* ═══════════════════════════════════════════════════════════
+   SMEDC i18n — RTL/LTR layout helpers (logical properties)
+   ═══════════════════════════════════════════════════════════ */
+
+html[dir="rtl"] { direction: rtl; }
+html[dir="ltr"] { direction: ltr; }
+
+body {
+  text-align: start;
+}
+
+/* Language dropdown */
+.lang-dropdown .lang-dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.2;
+  box-shadow: none;
+}
+.lang-dropdown .lang-dropdown-toggle::after {
+  margin-inline-start: 4px;
+  vertical-align: middle;
+}
+.lang-dropdown .lang-dropdown-toggle:hover,
+.lang-dropdown .lang-dropdown-toggle:focus,
+.lang-dropdown .lang-dropdown-toggle.show {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.lang-dropdown--light .lang-dropdown-toggle {
+  background: #fff;
+  border-color: rgba(23, 148, 123, 0.18);
+  color: #1a3530;
+  box-shadow: 0 4px 14px rgba(6, 40, 36, 0.06);
+}
+.lang-dropdown--light .lang-dropdown-toggle:hover,
+.lang-dropdown--light .lang-dropdown-toggle:focus,
+.lang-dropdown--light .lang-dropdown-toggle.show {
+  background: var(--c-soft, #f2fbf8);
+  color: var(--c-dark, #062824);
+}
+.lang-dropdown-menu {
+  min-width: 148px;
+  border-radius: 14px;
+  border: 1px solid rgba(23, 148, 123, 0.12);
+  box-shadow: 0 12px 32px rgba(6, 40, 36, 0.12);
+  padding: 6px;
+  text-align: start;
+}
+.lang-dropdown-item {
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.86rem;
+  padding: 8px 12px;
+}
+.lang-dropdown-item.active,
+.lang-dropdown-item:active {
+  background: linear-gradient(135deg, #17947B, #06AA89);
+  color: #fff;
+}
+.lang-dropdown--compact .lang-dropdown-label { display: none; }
+.lang-dropdown--compact .lang-dropdown-toggle { padding-inline: 10px; }
+
+/* Navbar mobile lang slot */
+.nav-lang-slot {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+@media (min-width: 1200px) {
+  .nav-lang-slot--mobile { display: none; }
+}
+@media (max-width: 1199.98px) {
+  .top-strip .lang-dropdown { display: none; }
+  .nav-lang-slot--mobile { display: flex; }
+}
+
+/* Direction-aware arrows */
+[dir="rtl"] .dir-aware-arrow.bi-arrow-left,
+[dir="rtl"] .arrow-icon .bi-arrow-left,
+[dir="rtl"] .btn-arrow .bi-arrow-left { transform: none; }
+[dir="ltr"] .dir-aware-arrow.bi-arrow-left,
+[dir="ltr"] .arrow-icon .bi-arrow-left,
+[dir="ltr"] .btn-arrow .bi-arrow-left { transform: scaleX(-1); }
+[dir="rtl"] .dir-aware-arrow.bi-arrow-right,
+[dir="rtl"] .bi-arrow-return-right { transform: scaleX(-1); }
+
+/* Dashboard sidebar — logical positioning */
+.dashboard-layout,
+.ds-sidebar,
+.dashboard-main {
+  direction: inherit;
+}
+.ds-nav-item,
+.ds-nav-label,
+.ds-brand-text,
+.ds-user-info {
+  text-align: start;
+}
+.ds-sidebar-footer .lang-dropdown {
+  margin-bottom: 10px;
+  width: 100%;
+}
+.ds-sidebar-footer .lang-dropdown-toggle {
+  width: 100%;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+.ds-sidebar-footer .lang-dropdown-menu {
+  width: 100%;
+}
+
+/* Tables & forms — prefer logical alignment */
+table th,
+table td,
+.form-label,
+.form-control,
+.form-select,
+.dropdown-item,
+.navbar-nav .nav-link {
+  text-align: start;
+}
+.text-start { text-align: start !important; }
+.text-end { text-align: end !important; }
+
+/* Bootstrap overrides for LTR dashboard */
+html[dir="ltr"] .ms-auto { margin-inline-start: auto !important; margin-left: 0 !important; }
+html[dir="ltr"] .me-auto { margin-inline-end: auto !important; margin-right: 0 !important; }
+html[dir="rtl"] .ms-auto { margin-inline-start: auto !important; }
+html[dir="rtl"] .me-auto { margin-inline-end: auto !important; }
+
+html[dir="ltr"] .dropdown-menu-end {
+  inset-inline-end: 0;
+  inset-inline-start: auto;
+}

@@ -1,0 +1,492 @@
+/* ============================================================
+   SMEDC — Site Header
+   ============================================================ */
+
+.site-header {
+  position: relative;
+  z-index: 1050;
+  background: #fff;
+  box-shadow: 0 2px 16px rgba(6,40,36,.07);
+}
+
+/* ── Top Strip ── */
+.top-strip {
+  background: var(--c-dark, #062824);
+  border-bottom: none;
+  font-size: .8rem;
+}
+
+.top-strip-inner {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: rgba(255,255,255,.65);
+  font-weight: 600;
+}
+
+.top-strip-inner > span { color: rgba(255,255,255,.50); }
+
+.top-strip-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.top-strip-link {
+  color: rgba(255,255,255,.75);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 7px;
+  transition: background .18s, color .18s;
+  font-size: .79rem;
+}
+
+.top-strip-link:hover {
+  background: rgba(255,255,255,.10);
+  color: #fff;
+}
+
+/* ── Main Navbar ── */
+.main-navbar {
+  min-height: 80px;
+  padding: 0;
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,.055);
+}
+
+.nav-shell {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+/* ── Brand / Logo ── */
+.brand {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  flex-shrink: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.brand-logo-img {
+  height: 58px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-logo-fallback {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #17947B, #06AA89);
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+/* ── Nav Links ── */
+.navbar-collapse { align-items: center; }
+
+.main-nav {
+  align-items: center;
+  gap: .1rem;
+  position: static;
+}
+
+.main-nav > .nav-item { position: static; }
+
+.main-nav .nav-link {
+  color: #1a3530;
+  font-weight: 700;
+  font-size: .95rem;
+  padding: 1.6rem .65rem 1.35rem;
+  position: relative;
+  white-space: nowrap;
+  transition: color .2s;
+}
+
+.main-nav .nav-link:hover,
+.main-nav .nav-link.active,
+.main-nav .nav-item.mega-open > .nav-link {
+  color: #17947B;
+}
+
+.main-nav .nav-link.active::after,
+.main-nav .nav-link:hover::after,
+.main-nav .nav-item.mega-open > .nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  right: .65rem;
+  left: .65rem;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #17947B, #06AA89);
+}
+
+/* ── Auth buttons ── */
+.nav-auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ghost "تسجيل الدخول" */
+.soft-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(23,148,123,.28);
+  color: #17947B;
+  font-weight: 700;
+  font-size: .88rem;
+  text-decoration: none;
+  background: #fff;
+  transition: background .18s, border-color .18s, color .18s;
+  white-space: nowrap;
+}
+
+.soft-btn:hover {
+  background: #f2fbf8;
+  border-color: #17947B;
+  color: #0f7d68;
+}
+
+/* "تسجيل الخروج" / "إنشاء حساب" solid btn */
+.btn-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #17947B, #06AA89);
+  color: #fff;
+  font-weight: 700;
+  font-size: .88rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity .18s, transform .18s;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(23,148,123,.22);
+}
+
+.btn-brand:hover { opacity: .88; transform: translateY(-1px); color: #fff; }
+
+/* إنشاء حساب outline */
+.btn-outline-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1.5px solid #d1d5db;
+  color: #374151;
+  font-weight: 700;
+  font-size: .88rem;
+  text-decoration: none;
+  background: #fff;
+  transition: background .18s, border-color .18s;
+  white-space: nowrap;
+}
+
+.btn-outline-secondary:hover { background: #f9fafb; border-color: #9ca3af; color: #111827; }
+
+/* ── CTA desktop (إضافة احتياج) ── */
+.header-cta-desktop { flex-shrink: 0; }
+
+.header-book-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #17947B, #06AA89);
+  color: #fff;
+  font-weight: 800;
+  font-size: .88rem;
+  min-width: 144px;
+  border: none;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(23,148,123,.22);
+  transition: opacity .2s, transform .2s;
+  white-space: nowrap;
+}
+
+.header-book-btn:hover { opacity: .88; transform: translateY(-1px); color: #fff; }
+
+/* ── Navbar toggler ── */
+.navbar-toggler {
+  border: 1.5px solid rgba(23,148,123,.22);
+  border-radius: 10px;
+  padding: .45rem .65rem;
+  box-shadow: none !important;
+  color: #17947B;
+  background: #fff;
+  transition: background .15s;
+}
+
+.navbar-toggler:focus { box-shadow: none !important; }
+.navbar-toggler:hover { background: #f2fbf8; }
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%2317947B' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ── Mega Menu ── */
+.mega-menu-item { position: static; }
+
+.mega-menu-panel {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  background: transparent;
+  padding: 8px 0 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+  z-index: 1200;
+  pointer-events: none;
+}
+
+.mega-menu-item:hover .mega-menu-panel,
+.mega-menu-item.mega-open .mega-menu-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.mega-menu-panel .container {
+  background: #fff;
+  border: 1px solid rgba(23,148,123,.10);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(6,40,36,.12);
+  padding: 22px;
+  max-height: min(78vh, 720px);
+  overflow-y: auto;
+}
+
+.mega-menu-panel .container::-webkit-scrollbar { width: 6px; }
+.mega-menu-panel .container::-webkit-scrollbar-thumb {
+  background: rgba(23,148,123,.20);
+  border-radius: 999px;
+}
+
+.mega-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.mega-col {
+  background: #f9fdfc;
+  border: 1px solid rgba(23,148,123,.08);
+  border-radius: 16px;
+  padding: 16px 14px 14px;
+  min-height: 100%;
+}
+
+.mega-col h6 {
+  font-size: .92rem;
+  font-weight: 900;
+  color: #062824;
+  margin-bottom: .85rem;
+  padding-bottom: .6rem;
+  border-bottom: 1px solid rgba(23,148,123,.10);
+}
+
+.mega-col a {
+  display: block;
+  color: #374151;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .87rem;
+  margin-bottom: .4rem;
+  padding: 5px 6px;
+  border-radius: 8px;
+  transition: background .15s, color .15s, padding-right .15s;
+}
+
+.mega-col a:last-child { margin-bottom: 0; }
+.mega-col a:hover { color: #17947B; background: #f0faf7; padding-right: 10px; }
+
+/* ────────────────────────────────────
+   DESKTOP — auth handled by top strip
+──────────────────────────────────── */
+@media (min-width: 1200px) {
+  /* auth buttons hidden on desktop — top strip has them */
+  .nav-auth-actions { display: none !important; }
+
+  .main-nav .nav-link {
+    font-size: .9375rem;
+    padding: 1.5rem .52rem 1.25rem;
+  }
+
+  .main-nav .nav-link.active::after,
+  .main-nav .nav-link:hover::after,
+  .main-nav .nav-item.mega-open > .nav-link::after {
+    right: .52rem; left: .52rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .main-nav .nav-link {
+    font-size: 1rem;
+    padding: 1.55rem .65rem 1.3rem;
+  }
+
+  .main-nav .nav-link.active::after,
+  .main-nav .nav-link:hover::after,
+  .main-nav .nav-item.mega-open > .nav-link::after {
+    right: .65rem; left: .65rem;
+  }
+}
+
+/* ────────────────────────────────────
+   RESPONSIVE
+──────────────────────────────────── */
+
+/* ── ≤ 1399px ── */
+@media (max-width: 1399.98px) {
+  .brand-logo-img       { height: 52px; }
+  .brand-logo-fallback  { width: 52px; height: 52px; }
+}
+
+/* ── ≤ 1199px — tablet / hamburger ── */
+@media (max-width: 1199.98px) {
+  .top-strip { display: none; }
+
+  .main-navbar  { padding: .65rem 0; min-height: auto; }
+  .nav-shell    { min-height: auto; justify-content: space-between; }
+
+  .brand-logo-img      { height: 50px; }
+  .brand-logo-fallback { width: 50px; height: 50px; }
+
+  /* hamburger يكون بين اللوغو والـ collapse */
+  .navbar-toggler { margin-right: auto; }
+
+  .navbar-collapse {
+    margin-top: .85rem;
+    padding: 1rem 0 .75rem;
+    border-top: 1px solid rgba(0,0,0,.06);
+    max-height: calc(100dvh - 100px);
+    overflow-y: auto;
+  }
+
+  .main-nav {
+    gap: 0;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .main-nav > .nav-item { width: 100%; }
+
+  .main-nav .nav-link {
+    padding: .9rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: .95rem;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+  }
+
+  .main-nav .nav-link.active::after,
+  .main-nav .nav-link:hover::after,
+  .main-nav .nav-item.mega-open > .nav-link::after {
+    right: 0; left: auto; width: 40px; bottom: 6px;
+  }
+
+  /* Auth buttons — stack neatly in mobile menu */
+  .nav-auth-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,.06);
+    width: 100%;
+  }
+
+  .soft-btn,
+  .btn-brand,
+  .btn-outline-secondary {
+    width: 100%;
+    height: 46px;
+    font-size: .93rem;
+    justify-content: center;
+  }
+
+  /* CTA desktop hidden, show inline in mobile */
+  .header-cta-desktop { display: none !important; }
+
+  .header-book-btn {
+    width: 100%;
+    min-width: 100%;
+    height: 46px;
+  }
+
+  /* Mega menu — inline (accordion-style) */
+  .mega-menu-panel {
+    position: static;
+    opacity: 1; visibility: visible;
+    transform: none;
+    display: none;
+    background: transparent;
+    padding: .35rem 0 0;
+    pointer-events: auto;
+    box-shadow: none;
+  }
+
+  .mega-menu-item.mega-open .mega-menu-panel { display: block; }
+
+  .mega-menu-panel .container {
+    background: #f8fcfb;
+    border: 1px solid rgba(23,148,123,.10);
+    box-shadow: none;
+    border-radius: 16px;
+    padding: 14px;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .mega-menu-grid { grid-template-columns: 1fr; gap: 10px; }
+  .mega-col { padding: 12px; }
+  .mega-col h6 { font-size: .9rem; margin-bottom: .65rem; }
+  .mega-col a   { font-size: .88rem; }
+}
+
+/* ── ≤ 767px ── */
+@media (max-width: 767.98px) {
+  .brand-logo-img      { height: 44px; }
+  .brand-logo-fallback { width: 44px; height: 44px; font-size: .95rem; }
+  .main-nav .nav-link  { font-size: .92rem; }
+  .mega-menu-panel .container { padding: 10px; border-radius: 14px; }
+  .mega-col a { font-size: .85rem; }
+}
+
+/* ── ≤ 399px ── */
+@media (max-width: 399.98px) {
+  .brand-logo-img { height: 40px; }
+  .soft-btn, .btn-brand, .btn-outline-secondary { font-size: .87rem; }
+}
