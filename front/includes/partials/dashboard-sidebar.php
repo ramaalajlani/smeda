@@ -29,7 +29,7 @@ $themes = [
   'incubator_manager'    => ['--ds-primary:#7c3aed','--ds-accent:#a78bfa','--ds-soft:#f5f3ff','--ds-border:rgba(124,58,237,.15)','--ds-accent-color:#a78bfa','--ds-sidebar-bg:linear-gradient(180deg,#1e1b4b 0%,#312e81 50%,#4c1d95 100%)'],
   'media_manager'        => ['--ds-primary:#0369a1','--ds-accent:#38bdf8','--ds-soft:#e0f2fe','--ds-border:rgba(3,105,161,.15)','--ds-accent-color:#38bdf8','--ds-sidebar-bg:linear-gradient(180deg,#0c1a2e 0%,#0f3460 50%,#0369a1 100%)'],
   'entrepreneur_manager' => ['--ds-primary:#d97706','--ds-accent:#f59e0b','--ds-soft:#fffbeb','--ds-border:rgba(217,119,6,.15)','--ds-accent-color:#f59e0b','--ds-sidebar-bg:linear-gradient(180deg,#1c0a00 0%,#451a03 50%,#92400e 100%)'],
-  'general_director'     => ['--ds-primary:#0f172a','--ds-accent:#3b82f6','--ds-soft:#eff6ff','--ds-border:rgba(59,130,246,.15)','--ds-accent-color:#3b82f6','--ds-sidebar-bg:linear-gradient(180deg,#020617 0%,#0f172a 50%,#1e3a5f 100%)'],
+  'general_director'     => ['--ds-primary:#17947B','--ds-accent:#06AA89','--ds-soft:#EAF8F4','--ds-border:rgba(23,148,123,.15)','--ds-accent-color:#06AA89','--ds-sidebar-bg:linear-gradient(180deg,#062824 0%,#0a3d35 50%,#17947B 100%)'],
   'training_manager'     => ['--ds-primary:#1a6b5a','--ds-accent:#10b981','--ds-soft:#e8f8f3','--ds-border:rgba(26,107,90,.15)','--ds-accent-color:#10b981','--ds-sidebar-bg:linear-gradient(180deg,#0a2e26 0%,#0d4d3f 50%,#1a6b5a 100%)'],
   'project_services_manager' => ['--ds-primary:#0f766e','--ds-accent:#14b8a6','--ds-soft:#effcfa','--ds-border:rgba(15,118,110,.15)','--ds-accent-color:#14b8a6','--ds-sidebar-bg:linear-gradient(180deg,#042f2e 0%,#0a4f4a 50%,#0f766e 100%)'],
 ];
@@ -165,6 +165,7 @@ $menus = [
     ['href' => $basePath.'services/admin/my-children.php',                'icon' => 'bi-people-fill',         'label' => 'حسابات المحافظين والمدخلين'],
     ['href' => $basePath.'services/admin/admin-branches.php',             'icon' => 'bi-building',            'label' => 'المحافظات والفروع'],
     ['group' => 'الاستشارات'],
+    ['href' => $basePath.'services/ai/advisor.php',                       'icon' => 'bi-robot',               'label' => 'المستشار الذكي'],
     ['href' => $basePath.'services/consulting/consulting-admin-dashboard.php','icon' => 'bi-clipboard-data-fill','label' => 'لوحة الاستشارات'],
     ['href' => $basePath.'services/consulting/consulting-requests-list.php',  'icon' => 'bi-chat-left-text-fill','label' => 'طلبات الاستشارة'],
     ['href' => $basePath.'services/consulting/consulting-offices-list.php',   'icon' => 'bi-building-fill',    'label' => 'المكاتب الاستشارية'],

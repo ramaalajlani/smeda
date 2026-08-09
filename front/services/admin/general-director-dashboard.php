@@ -7,7 +7,7 @@ $sidebarTitle   = 'SMEDA — الإدارة العامة';
 ?>
 <?php include __DIR__ . '/../../includes/layout/html-open.php'; ?>
 <head><?php include __DIR__ . '/../../includes/layout/head.php'; ?>
-<style>body{background:#eff6ff;margin:0;}</style>
+<style>body{background:#f7f5ec;margin:0;}</style>
 </head>
 <body>
 <div class="ds-layout">
@@ -26,7 +26,7 @@ $sidebarTitle   = 'SMEDA — الإدارة العامة';
   <div class="ds-content">
 
     <!-- Hero -->
-    <div style="background:linear-gradient(135deg,#020617,#0f172a,#1e3a5f);color:#fff;border-radius:20px;padding:22px 26px;margin-bottom:20px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div style="background:linear-gradient(135deg,#062824,#0F5F4F,#17947B);color:#fff;border-radius:20px;padding:22px 26px;margin-bottom:20px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
       <div style="position:absolute;font-size:12rem;opacity:.05;left:-10px;top:-30px;line-height:1;pointer-events:none">🛡️</div>
       <div style="position:relative;z-index:1">
         <div style="font-size:.75rem;font-weight:800;opacity:.65;letter-spacing:.5px;margin-bottom:4px">SMEDA — الإدارة العامة الوطنية</div>
@@ -35,21 +35,21 @@ $sidebarTitle   = 'SMEDA — الإدارة العامة';
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1">
         <a href="<?php echo $basePath;?>services/gis/needs-dashboard.php" style="display:inline-flex;align-items:center;gap:6px;padding:9px 15px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:11px;font-size:.82rem;font-weight:700;text-decoration:none"><i class="bi bi-signpost-split-fill"></i>منظومة الاحتياجات</a>
-        <a href="<?php echo $basePath;?>services/admin/admin-users.php" style="display:inline-flex;align-items:center;gap:6px;padding:9px 15px;background:#fff;color:#0f172a;border:none;border-radius:11px;font-size:.82rem;font-weight:800;text-decoration:none"><i class="bi bi-people-fill"></i>المستخدمون والصلاحيات</a>
+        <a href="<?php echo $basePath;?>services/admin/admin-users.php" style="display:inline-flex;align-items:center;gap:6px;padding:9px 15px;background:#fff;color:#0F5F4F;border:none;border-radius:11px;font-size:.82rem;font-weight:800;text-decoration:none"><i class="bi bi-people-fill"></i>المستخدمون والصلاحيات</a>
       </div>
     </div>
 
     <!-- KPIs -->
     <div class="ds-kpi-grid">
       <?php foreach([
-        ['kBranches','🏛️','الفروع',null],['kUsers','👤','المستخدمون',null],
-        ['kPrograms','📚','البرامج',null],['kCourses','🎓','الدورات',null],
-        ['kCenters','🏫','المراكز',null],['kKits','📦','حقائب معتمدة','#15803d'],
-        ['kTrainees','👥','المتدربون',null],['kConsulting','💬','طلبات استشارة',null],
-        ['kNeeds','📍','الاحتياجات',null],['kIncubators','🚀','الحاضنات',null],
+        ['kBranches','bi-bank','الفروع',null],['kUsers','bi-people-fill','المستخدمون',null],
+        ['kPrograms','bi-journal-bookmark-fill','البرامج',null],['kCourses','bi-mortarboard-fill','الدورات',null],
+        ['kCenters','bi-buildings-fill','المراكز',null],['kKits','bi-collection-fill','حقائب معتمدة','#15803d'],
+        ['kTrainees','bi-people','المتدربون',null],['kConsulting','bi-chat-left-text-fill','طلبات استشارة',null],
+        ['kNeeds','bi-geo-alt-fill','الاحتياجات',null],['kIncubators','bi-rocket-takeoff-fill','الحاضنات',null],
       ] as [$id,$ic,$lbl,$col]):?>
       <div class="ds-kpi">
-        <div class="ds-kpi-icon"><?php echo $ic;?></div>
+        <div class="ds-kpi-icon" style="color:var(--ds-primary)"><i class="bi <?php echo $ic;?>"></i></div>
         <div class="ds-kpi-val" id="<?php echo $id;?>" <?php echo $col?"style='color:$col'":'';?>>—</div>
         <div class="ds-kpi-lbl"><?php echo $lbl;?></div>
       </div>
@@ -85,7 +85,7 @@ $sidebarTitle   = 'SMEDA — الإدارة العامة';
           [$basePath.'services/incubation/incubated-projects.php','المشاريع'],
           [$basePath.'services/incubation/success-stories.php','قصص النجاح'],
         ]],
-        ['الإدارة والرقابة','bi-shield-lock-fill','#0f172a','المستخدمون والأدوار والتقارير والتدقيق',[
+        ["الإدارة والرقابة","bi-shield-lock-fill","#0F5F4F",'المستخدمون والأدوار والتقارير والتدقيق',[
           [$basePath.'services/admin/admin-users.php','المستخدمون'],
           [$basePath.'services/admin/admin-roles.php','الأدوار'],
           [$basePath.'services/admin/admin-activity-logs.php','سجل التدقيق'],

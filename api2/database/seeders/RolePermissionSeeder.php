@@ -102,6 +102,9 @@ class RolePermissionSeeder extends Seeder
             'view_users',
             'manage_user_access',
 
+            // المستشار الذكي — تدريب قاعدة المعرفة المشتركة
+            'manage_ai_knowledge',
+
             // National / Branch hierarchy
             'view_governorates',
             'view_branches',

@@ -678,6 +678,40 @@ window.APP_ROUTES = {
   needAiSuggest: (id) =>
     `${window.APP_CONFIG.API_BASE_URL}/needs/${id}/ai-suggest`,
 
+  // المستشار الذكي (بروكسي Laravel — لا اتصال مباشر بالخدمة الخارجية)
+  aiChat: () =>
+    `${window.APP_CONFIG.API_BASE_URL}/ai/chat`,
+
+  aiChatContinue: () =>
+    `${window.APP_CONFIG.API_BASE_URL}/ai/chat/continue`,
+
+  aiChatReset: () =>
+    `${window.APP_CONFIG.API_BASE_URL}/ai/chat/reset`,
+
+  aiConfig: () =>
+    `${window.APP_CONFIG.API_BASE_URL}/ai/config`,
+
+  aiIsic4Classify: () =>
+    `${window.APP_CONFIG.API_BASE_URL}/ai/isic4/classify`,
+
+  aiChatHistory: () =>
+    `${window.APP_CONFIG.API_BASE_URL}/ai/chat/history`,
+
+  aiChatHistoryMessages: (session) =>
+    `${window.APP_CONFIG.API_BASE_URL}/ai/chat/history/${encodeURIComponent(session)}/messages`,
+
+  aiChatHistoryResume: (session) =>
+        `${window.APP_CONFIG.API_BASE_URL}/ai/chat/history/${encodeURIComponent(session)}/resume`,
+
+  aiKnowledgeDepartments: () =>
+        `${window.APP_CONFIG.API_BASE_URL}/ai/knowledge/departments`,
+
+  aiKnowledgeItems: (department) =>
+        `${window.APP_CONFIG.API_BASE_URL}/ai/knowledge/${encodeURIComponent(department)}`,
+
+  aiKnowledgeIngest: () =>
+        `${window.APP_CONFIG.API_BASE_URL}/ai/knowledge/ingest`,
+
   needResolve: (id) =>
     `${window.APP_CONFIG.API_BASE_URL}/needs/${id}/resolve`,
 

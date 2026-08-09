@@ -168,5 +168,11 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('training-kit-public', function (Request $request) {
             return Limit::perMinute(5)->by('tk-public|' . $request->ip());
         });
+
+        RateLimiter::for('ai-chat', function (Request $request) {
+            $userId = (string) ($request->user()?->id ?? 'guest');
+
+            return Limit::perMinute(20)->by('ai-chat|' . $userId . '|' . $request->ip());
+        });
     }
 }

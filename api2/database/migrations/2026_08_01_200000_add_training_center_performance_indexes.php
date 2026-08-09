@@ -41,7 +41,9 @@ return new class extends Migration
         });
 
         // Backfill من وسم الملاحظات القديم [center:N]
-        if (Schema::hasColumn('trainees', 'owned_training_center_id')) {
+        // LOCATE/SUBSTRING خاصة بـ MySQL؛ نتخطاها على محركات أخرى (مثل sqlite في الاختبارات).
+        if (Schema::hasColumn('trainees', 'owned_training_center_id')
+            && in_array(DB::connection()->getDriverName(), ['mysql', 'mariadb'], true)) {
             DB::statement("
                 UPDATE trainees
                 SET owned_training_center_id = CAST(

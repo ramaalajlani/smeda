@@ -27,6 +27,10 @@
 <?php if (!empty($loadAuthMessaging)): ?>
 <script src="<?php echo $basePath ?? ''; ?>assets/js/modules/auth-messaging.js?v=1.0"></script>
 <?php endif; ?>
+<?php if (empty($disableAiChat)): ?>
+<script src="<?php echo $basePath ?? ''; ?>assets/js/modules/ai-chat-voice.js?v=1.1"></script>
+<script src="<?php echo $basePath ?? ''; ?>assets/js/modules/ai-chat-fab.js?v=3.4"></script>
+<?php endif; ?>
 <!-- ========================= -->
 <!-- MAIN -->
 <!-- ========================= -->

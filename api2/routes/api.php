@@ -383,6 +383,23 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/needs/{id}/classify', [\App\Http\Controllers\Api\NeedController::class, 'classify'])->whereNumber('id');
     Route::post('/needs/{id}/resolve', [\App\Http\Controllers\Api\NeedController::class, 'resolve'])->whereNumber('id');
 
+    /* ═══ المستشار الذكي (بروكسي محادثة AI) ═══ */
+    Route::middleware('throttle:ai-chat')->group(function () {
+        Route::post('/ai/chat', [\App\Http\Controllers\Api\AiChatController::class, 'chat']);
+        Route::post('/ai/chat/continue', [\App\Http\Controllers\Api\AiChatController::class, 'continueReply']);
+        Route::post('/ai/chat/reset', [\App\Http\Controllers\Api\AiChatController::class, 'reset']);
+        Route::post('/ai/isic4/classify', [\App\Http\Controllers\Api\AiChatController::class, 'isic4']);
+        Route::get('/ai/config', [\App\Http\Controllers\Api\AiChatController::class, 'config']);
+        Route::get('/ai/chat/history', [\App\Http\Controllers\Api\AiChatController::class, 'history']);
+        Route::get('/ai/chat/history/{session}/messages', [\App\Http\Controllers\Api\AiChatController::class, 'historyMessages']);
+        Route::post('/ai/chat/history/{session}/resume', [\App\Http\Controllers\Api\AiChatController::class, 'resume']);
+        Route::get('/ai/knowledge/departments', [\App\Http\Controllers\Api\AiChatController::class, 'knowledgeDepartments']);
+        Route::get('/ai/knowledge/{department}', [\App\Http\Controllers\Api\AiChatController::class, 'knowledgeItems'])
+            ->where('department', '[A-Za-z0-9_-]+');
+        Route::post('/ai/knowledge/ingest', [\App\Http\Controllers\Api\AiChatController::class, 'knowledgeIngest'])
+            ->middleware('permission:manage_ai_knowledge');
+    });
+
 
 
     /*
