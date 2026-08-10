@@ -39,6 +39,11 @@
       return 'http://127.0.0.1:8000/api';
     }
 
+    // new.smeda.gov.sy: Laravel تحت api2/public (وليس /api)
+    if (host === 'new.smeda.gov.sy') {
+      return `${frontendBase}/api2/public/api`;
+    }
+
     return `${frontendBase}/api/api`;
   }
 
@@ -50,6 +55,10 @@
 
     if (isLocal) {
       return 'http://127.0.0.1:8000';
+    }
+
+    if (host === 'new.smeda.gov.sy') {
+      return `${frontendBase}/api2/public`;
     }
 
     return `${frontendBase}/api`;

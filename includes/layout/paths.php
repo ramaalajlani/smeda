@@ -130,6 +130,12 @@ if (!function_exists('resolve_api_base_url')) {
             return $cached = 'http://127.0.0.1:8000/api';
         }
 
+        // new.smeda.gov.sy: Laravel تحت api2/public (وليس public_html/api)
+        $host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? '');
+        if (strcasecmp($host, 'new.smeda.gov.sy') === 0) {
+            return $cached = resolve_front_base_url().'/api2/public/api';
+        }
+
         return $cached = resolve_front_base_url().'/api/api';
     }
 }
@@ -150,6 +156,11 @@ if (!function_exists('resolve_backend_base_url')) {
 
         if (front_is_local_dev()) {
             return $cached = 'http://127.0.0.1:8000';
+        }
+
+        $host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? '');
+        if (strcasecmp($host, 'new.smeda.gov.sy') === 0) {
+            return $cached = resolve_front_base_url().'/api2/public';
         }
 
         return $cached = resolve_front_base_url().'/api';

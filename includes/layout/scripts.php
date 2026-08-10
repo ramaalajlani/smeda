@@ -7,7 +7,7 @@
 <!-- ========================= -->
 <!-- CORE (🔥 لازم أول شي) -->
 <!-- ========================= -->
-<script src="<?php echo $basePath ?? ''; ?>assets/js/core/config.js?v=2.1"></script>
+<script src="<?php echo $basePath ?? ''; ?>assets/js/core/config.js?v=2.2"></script>
 <script src="<?php echo $basePath ?? ''; ?>assets/js/core/routes.js?v=2.2"></script>
 <script src="<?php echo $basePath ?? ''; ?>assets/js/core/api.js?v=2.2"></script>
 <script src="<?php echo $basePath ?? ''; ?>assets/js/core/helpers.js?v=2.2"></script>
