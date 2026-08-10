@@ -52,9 +52,9 @@
         --aic-grad:linear-gradient(135deg,#5b8dff 0%,#7b5bff 100%);
         --aic-card:0 2px 10px rgba(0,0,0,.18),0 12px 28px rgba(0,0,0,.22);
         --aic-fab:60px;
-        /* النافذة ملء الشاشة: عمود المحتوى يبقى بعرض مقروء وسط الشاشة */
-        --aic-maxw:920px;
-        --aic-pad-x:max(16px,calc((100% - var(--aic-maxw)) / 2));
+        --aic-box-w:min(400px,calc(100vw - 28px));
+        --aic-box-h:min(620px,calc(100dvh - 110px));
+        --aic-pad-x:16px;
         position:fixed;left:26px;right:auto;
         bottom:calc(26px + env(safe-area-inset-bottom,0px));
         z-index:1085;font-family:inherit;text-align:start;
@@ -80,8 +80,8 @@
       #${ROOT_ID} .aic-fab:active{transform:translateY(0) scale(.98)}
       #${ROOT_ID} .aic-fab .aic-ico-open{display:grid;place-items:center;line-height:1;color:#fff}
       #${ROOT_ID} .aic-ico-close{display:none}
-      #${ROOT_ID}.aic-open .aic-ico-open{display:grid}
-      #${ROOT_ID}.aic-open .aic-ico-close{display:none}
+      #${ROOT_ID}.aic-open .aic-ico-open{display:none}
+      #${ROOT_ID}.aic-open .aic-ico-close{display:grid;place-items:center;line-height:1;color:#fff}
       #${ROOT_ID} .aic-fab i{color:#fff}
       #${ROOT_ID} .aic-tip{
         position:absolute;left:calc(100% + 12px);right:auto;top:50%;translate:0 -50%;
@@ -93,31 +93,24 @@
       #${ROOT_ID} .aic-fab:hover .aic-tip,#${ROOT_ID} .aic-fab:focus-visible .aic-tip{opacity:1}
       #${ROOT_ID}.aic-open .aic-tip{display:none}
 
-      /* ── النافذة: ملء الشاشة في كل الصفحات ── */
+      /* ── النافذة: chat box عائم (وليس واجهة كاملة) ── */
       #${ROOT_ID} .aic-panel{
-        position:fixed;inset:0;
-        width:auto;max-width:none;
-        /* dvh يتابع شريط العنوان المتحرك على الجوال */
-        height:100dvh;max-height:none;
+        position:absolute;left:0;right:auto;
+        bottom:calc(var(--aic-fab) + 14px);
+        width:var(--aic-box-w);height:var(--aic-box-h);max-height:var(--aic-box-h);
         display:none;flex-direction:column;overflow:hidden;
         background:var(--aic-surface);
-        border:0;border-radius:0;box-shadow:none
+        border:1px solid var(--aic-line);border-radius:20px;
+        box-shadow:0 18px 48px rgba(0,0,0,.45)
       }
       #${ROOT_ID}.aic-open .aic-panel{display:flex;animation:aicIn .28s cubic-bezier(.22,1,.36,1)}
-      /* أثناء الفتح: نخفي الزر العائم كي لا يطفو فوق النافذة */
-      #${ROOT_ID}.aic-open .aic-fab{display:none}
-      #${ROOT_ID}.aic-open.aic-min .aic-fab{display:flex}
-      /* التصغير: يبقى شريط الترويسة ملتصقاً بأسفل الشاشة */
-      #${ROOT_ID}.aic-min .aic-panel{
-        top:auto;bottom:0;inset-inline:0;height:auto;max-height:none
-      }
-      /* ‎.aic-view.active بنفس أولوية ‎.aic-min .aic-view، فنرفع الأولوية هنا */
+      #${ROOT_ID}.aic-open .aic-fab{display:flex}
+      #${ROOT_ID}.aic-min .aic-panel{display:none}
       #${ROOT_ID}.aic-min .aic-tabs,
       #${ROOT_ID}.aic-min .aic-view,
       #${ROOT_ID}.aic-min .aic-view.active{display:none}
       @keyframes aicIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
-      /* قفل تمرير الصفحة خلف النافذة */
-      body.aic-chat-lock{overflow:hidden}
+      body.aic-chat-lock{overflow:auto}
 
       /* ── الترويسة ── */
       #${ROOT_ID} .aic-head{
@@ -537,25 +530,17 @@
       #${ROOT_ID} .aic-btn-ghost:hover{background:rgba(255,255,255,.05);color:#fff}
       #${ROOT_ID} .aic-btn-solid{border:0;background:var(--aic-grad);color:#0b1f1a}
 
-      /* ── شاشات كبيرة: تكبير بسيط للخط يناسب ملء الشاشة ── */
-      @media (min-width:992px){
-        #${ROOT_ID} .aic-title{font-size:1.05rem}
-        #${ROOT_ID} .aic-tab{font-size:.88rem;padding:14px 16px}
-        #${ROOT_ID} .aic-msg{font-size:.92rem}
-        #${ROOT_ID} .aic-input{font-size:.92rem;min-height:44px;max-height:160px}
-        #${ROOT_ID} .aic-welcome-text{font-size:.95rem}
-        #${ROOT_ID} .aic-body{gap:15px;padding-block:24px}
-      }
-
-      /* ── موبايل: ملء الشاشة أيضاً ── */
+      /* ── موبايل: chat box بعرض الشاشة تقريباً ── */
       @media (max-width:575.98px){
         #${ROOT_ID},#${ROOT_ID}.aic-offset{
           --aic-fab:56px;--aic-pad-x:14px;
-          left:14px;right:auto;bottom:calc(18px + env(safe-area-inset-bottom,0px))
+          --aic-box-w:calc(100vw - 20px);
+          --aic-box-h:min(72dvh,calc(100dvh - 96px));
+          left:10px;right:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px))
         }
         #${ROOT_ID} .aic-fab{font-size:1.35rem}
         #${ROOT_ID} .aic-tip{display:none}
-        #${ROOT_ID}.aic-min .aic-panel{height:auto;max-height:none}
+        #${ROOT_ID} .aic-panel{border-radius:18px}
         #${ROOT_ID} .aic-call-ava{width:96px;height:96px;font-size:2.4rem}
       }
 
@@ -1283,11 +1268,11 @@
     root.querySelector('[data-aic-menu]').setAttribute('aria-expanded', 'false');
   }
 
-  /** النافذة ملء الشاشة، فنمنع تمرير الصفحة خلفها ما لم تكن مصغّرة. */
+  /** الـ chat box لا يقفل تمرير الصفحة. */
   function setPageLock(root) {
-    const lock = root.classList.contains('aic-open') && !root.classList.contains('aic-min');
-    document.body.classList.toggle('aic-chat-lock', lock);
-    root.querySelector('.aic-panel').setAttribute('aria-modal', lock ? 'true' : 'false');
+    document.body.classList.remove('aic-chat-lock');
+    const open = root.classList.contains('aic-open') && !root.classList.contains('aic-min');
+    root.querySelector('.aic-panel').setAttribute('aria-modal', open ? 'true' : 'false');
   }
 
   function openPanel(root) {
@@ -1451,12 +1436,6 @@
     const confirmBox = root.querySelector('.aic-confirm');
 
     root.querySelector('.aic-fab').addEventListener('click', () => {
-      // خارج بوابة المستشار: انقل المستخدم لواجهة البوابة ثم افتح المحادثة.
-      if (!document.body.classList.contains('aic-portal')) {
-        const base = (window.APP_CONFIG && window.APP_CONFIG.FRONTEND_BASE_URL) || '';
-        window.location.href = `${String(base).replace(/\/$/, '')}/services/ai/advisor.php?open=1`;
-        return;
-      }
       if (root.classList.contains('aic-open')) closePanel(root);
       else openPanel(root);
     });
@@ -1578,6 +1557,12 @@
     const prefetch = () => loadCapabilities().then(() => applyCapabilities(root)).catch(() => {});
     if (window.requestIdleCallback) window.requestIdleCallback(prefetch, { timeout: 2500 });
     else setTimeout(prefetch, 800);
+
+    window.AiChatFab = {
+      open: () => openPanel(root),
+      close: () => closePanel(root),
+      toggle: () => (root.classList.contains('aic-open') ? closePanel(root) : openPanel(root)),
+    };
   }
 
   if (document.readyState === 'loading') {

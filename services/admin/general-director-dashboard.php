@@ -156,7 +156,7 @@ $sidebarTitle   = 'SMEDA — الإدارة العامة';
 </div>
 
 <?php include __DIR__ . '/../../includes/layout/scripts.php'; ?>
-<script src="<?php echo $basePath;?>assets/js/modules/dashboard-sidebar.js?v=2.1"></script>
+<script src="<?php echo $basePath;?>assets/js/modules/dashboard-sidebar.js?v=2.5"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   const ok = await window.AppBootstrapAuth.init({ requireAuth: true });

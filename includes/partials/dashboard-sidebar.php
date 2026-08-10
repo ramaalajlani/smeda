@@ -165,7 +165,7 @@ $menus = [
     ['href' => $basePath.'services/admin/my-children.php',                'icon' => 'bi-people-fill',         'label' => 'حسابات المحافظين والمدخلين'],
     ['href' => $basePath.'services/admin/admin-branches.php',             'icon' => 'bi-building',            'label' => 'المحافظات والفروع'],
     ['group' => 'الاستشارات'],
-    ['href' => $basePath.'services/ai/advisor.php',                       'icon' => 'bi-robot',               'label' => 'المستشار الذكي'],
+    ['href' => '#ai-chat', 'icon' => 'bi-robot', 'label' => 'المستشار الذكي', 'open_ai_chat' => true],
     ['href' => $basePath.'services/consulting/consulting-admin-dashboard.php','icon' => 'bi-clipboard-data-fill','label' => 'لوحة الاستشارات'],
     ['href' => $basePath.'services/consulting/consulting-requests-list.php',  'icon' => 'bi-chat-left-text-fill','label' => 'طلبات الاستشارة'],
     ['href' => $basePath.'services/consulting/consulting-offices-list.php',   'icon' => 'bi-building-fill',    'label' => 'المكاتب الاستشارية'],
@@ -222,7 +222,8 @@ $roleLabel = __($roleKeys[$dr] ?? 'role_supervisor');
           <div class="ds-nav-label"><?php echo htmlspecialchars(isset($item['group_key']) ? __($item['group_key']) : ($item['group'] ?? '')); ?></div>
         <?php else: ?>
           <a href="<?php echo htmlspecialchars($item['href']); ?>"
-             class="ds-nav-item <?php echo ($activePage ?? '') === basename($item['href'], '.php') ? 'active' : ''; ?>">
+             class="ds-nav-item <?php echo ($activePage ?? '') === basename($item['href'], '.php') ? 'active' : ''; ?>"
+             <?php if (!empty($item['open_ai_chat'])): ?>data-open-ai-chat="1"<?php endif; ?>>
             <i class="bi <?php echo $item['icon']; ?>"></i>
             <?php echo htmlspecialchars(ds_menu_label($item)); ?>
             <?php if (!empty($item['badge'])): ?>

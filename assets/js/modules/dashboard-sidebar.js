@@ -32,7 +32,12 @@
 
     /* Close on nav click (mobile) */
     sidebar.querySelectorAll('.ds-nav-item').forEach(link => {
-      link.addEventListener('click', () => {
+      link.addEventListener('click', (e) => {
+        if (link.getAttribute('data-open-ai-chat') === '1') {
+          e.preventDefault();
+          if (window.AiChatFab?.open) window.AiChatFab.open();
+          else document.querySelector('#aiChatFabRoot .aic-fab')?.click();
+        }
         if (window.innerWidth < 1024) close();
       });
     });
