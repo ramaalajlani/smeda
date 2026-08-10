@@ -529,7 +529,7 @@ window.AppAuth = (() => {
       has('admin')
     ) {
       return (
-        `${base}/services/admin/general-director-dashboard.php`
+        `${base}/dashboard.php`
       );
     }
 
