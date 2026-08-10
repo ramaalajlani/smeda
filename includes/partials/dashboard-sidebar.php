@@ -100,10 +100,6 @@ $menus = [
   'general_director' => [
     ['group_key' => 'ds_group_main'],
     ['href' => $basePath.'dashboard.php',                                          'icon' => 'bi-speedometer2',    'label' => 'اللوحة الرئيسية'],
-    ['href' => $basePath.'services/admin/branch-manager-dashboard.php',            'icon' => 'bi-speedometer2',    'label_key' => 'ds_branch_dashboard'],
-    ['href' => $basePath.'services/admin/incubator-manager-dashboard.php',         'icon' => 'bi-building',        'label_key' => 'ds_incubator_dashboard'],
-    ['href' => $basePath.'services/admin/media-manager-dashboard.php',             'icon' => 'bi-newspaper',       'label_key' => 'ds_media_dashboard'],
-    ['href' => $basePath.'services/admin/entrepreneur-manager-dashboard.php',      'icon' => 'bi-rocket-fill',     'label_key' => 'ds_entrepreneur_dashboard'],
     ['group_key' => 'ds_portals'],
     ['href' => $basePath.'services/incubation/entrepreneurship-hub.php',           'icon' => 'bi-rocket-takeoff-fill','label_key' => 'ds_entrepreneurship_hub'],
     ['href' => $basePath.'services/incubation/incubators.php',                     'icon' => 'bi-search',          'label_key' => 'ds_incubators'],

@@ -795,8 +795,8 @@ $pageTitle = 'طلب تمويل';
     <div class="container">
       <h1>طلب تمويل</h1>
       <p>
-        صُممت هذه الرحلة ليقوم مقدم الطلب بإدخال بياناته وبيانات مشروعه واحتياجه التمويلي فقط،
-        ثم تتولى المنظومة بعد الإرسال مراجعة الملف وإحالته للمسار الاستشاري والتمويلي المناسب دون أن يختار المستخدم المكتب بنفسه.
+        صُممت هذه الرحلة ليقوم مقدم الطلب بإدخال بياناته وبيانات مشروعه واحتياجه التمويلي،
+        ثم تتولى المنظومة بعد الإرسال مراجعة الملف ومتابعته ضمن مسار التمويل المعتمد.
       </p>
     </div>
   </section>
@@ -833,7 +833,7 @@ $pageTitle = 'طلب تمويل';
           <aside class="roadmap-card">
             <div class="roadmap-title">خارطة الرحلة</div>
             <p class="roadmap-note">
-              كل مرحلة تشرح المطلوب من مقدم الطلب فقط. أما إحالة الملف للمكتب الاستشاري وتحديد عرض السعر فتتم لاحقاً بعد الإرسال والمراجعة.
+              أكمل المراحل بالترتيب. الحقول الأساسية مطلوبة قبل حفظ المسودة أو إرسال الطلب.
             </p>
 
             <ul class="roadmap-list" id="roadmapList">
@@ -849,7 +849,7 @@ $pageTitle = 'طلب تمويل';
                 <div class="roadmap-badge">2</div>
                 <div class="roadmap-text">
                   <strong>بيانات مقدم الطلب</strong>
-                  <span>الاسم، الصفة القانونية، المهنة، وبيانات التواصل.</span>
+                  <span>الاسم، المحافظة، وبيانات التواصل.</span>
                 </div>
               </li>
 
@@ -861,11 +861,11 @@ $pageTitle = 'طلب تمويل';
                 </div>
               </li>
 
-              <li class="roadmap-item locked" data-step="4" data-title="المكاتب الاستشارية">
+              <li class="roadmap-item locked" data-step="4" data-title="مرحلة المشروع والخبرة">
                 <div class="roadmap-badge">4</div>
                 <div class="roadmap-text">
-                  <strong>المكاتب الاستشارية</strong>
-                  <span>بعد الإرسال تُحال المعاملة لمكتب استشاري مؤهل حسب القطاع والاختصاص — دون اختيار يدوي من المستخدم.</span>
+                  <strong>مرحلة المشروع والخبرة</strong>
+                  <span>مرحلة العمل، الخبرة، السوق والتحديات.</span>
                 </div>
               </li>
 
@@ -1001,117 +1001,32 @@ $pageTitle = 'طلب تمويل';
                 <div class="col-md-6">
                   <label class="form-label">رمز النشاط الاقتصادي SYRSIC</label>
                   <input type="text" name="syrsic_activity_code" id="syrsicActivityCode" class="form-control" placeholder="مثال: 011303 أو 620101">
-                  <span class="field-hint">يفضل إدخال الرمز السداسي للنشاط عند توفره حتى تتم مطابقة الطلب مع المكاتب بدقة.</span>
+                  <span class="field-hint">يفضل إدخال الرمز السداسي للنشاط عند توفره لتصنيف الطلب بدقة.</span>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">اسم المشروع / النشاط <span class="text-danger">*</span></label>
+                  <input type="text" name="project_name" id="projectName" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">حجم المشروع</label>
+                  <select name="project_size" id="projectSize" class="form-select">
+                    <option value="micro">متناهي الصغر</option>
+                    <option value="small" selected>صغير</option>
+                    <option value="medium">متوسط</option>
+                  </select>
                 </div>
 
                 <div class="col-12">
-                  <div class="syrsic-sector-note">
-                    <strong>ملاحظة تصنيف:</strong>
-                    القطاعات المعتمدة في هذه الواجهة هي القطاعات الأربعة المرتبطة بعائدية النشاط في SYRSIC، وليس قطاعات عامة مثل سياحي أو صحي أو رقمي.
-                    التفاصيل مثل السياحة، التعليم، الصحة، التقنية أو غيرها تُحدد من خلال رمز النشاط الاقتصادي.
-                    <div class="syrsic-sector-pills">
-                      <span class="syrsic-sector-pill"><i class="fa-solid fa-seedling"></i> زراعي</span>
-                      <span class="syrsic-sector-pill"><i class="fa-solid fa-industry"></i> صناعي</span>
-                      <span class="syrsic-sector-pill"><i class="fa-solid fa-store"></i> تجاري</span>
-                      <span class="syrsic-sector-pill"><i class="fa-solid fa-briefcase"></i> خدمي</span>
-                    </div>
-                  </div>
+                  <label class="form-label">وصف موجز للمشروع</label>
+                  <textarea name="description" id="projectDescription" class="form-control" rows="3" placeholder="صف النشاط والهدف من التمويل باختصار"></textarea>
                 </div>
 
                 <div class="col-md-6">
                   <label class="form-label">ملخص المسار المتوقع</label>
                   <input type="text" id="expectedPathSummary" class="form-control" value="سيتم توليده لاحقًا وفق الاختيارات" readonly>
                   <span class="field-hint">مثال: تمويل إسلامي أو تقليدي أو معاً / مشروع قائم / نشاط صناعي / رمز SYRSIC.</span>
-                </div>
-
-                <div class="col-12">
-                  <div class="consultant-link-card">
-                    <div class="consultant-link-head">
-                      <div>
-                        <div class="consultant-link-title">
-                          <i class="fa-solid fa-building-columns"></i>
-                          <span>ماذا يحدث بعد إرسال طلب التمويل؟</span>
-                        </div>
-                        <p class="consultant-link-desc">
-                          في هذه المرحلة لا يختار مقدم الطلب أي مكتب استشاري. المطلوب فقط هو إدخال بيانات الطلب والنشاط والتمويل.
-                          بعد الإرسال تقوم المنظومة بمراجعة الملف أولياً، ثم تحيله إلى المكاتب الاستشارية المؤهلة حسب القطاع ورمز النشاط والاختصاص المطلوب.
-                        </p>
-                      </div>
-
-                      <span class="status-chip neutral">
-                        <i class="fa-solid fa-circle-info"></i>
-                        معلومة للمستخدم
-                      </span>
-                    </div>
-
-                    <input type="hidden" name="needs_consultant_office" id="needsConsultantOffice" value="yes">
-                    <input type="hidden" name="required_study_phase" id="requiredStudyPhase" value="auto_after_submission">
-                    <input type="hidden" name="required_office_specialization" id="requiredOfficeSpecialization" value="auto_by_syrsic">
-                    <input type="hidden" name="office_offer_mode" id="officeOfferMode" value="admin_review_then_offer">
-                    <input type="hidden" name="max_consultant_offices" id="maxConsultantOffices" value="8">
-                    <input type="hidden" name="office_offer_deadline" id="officeOfferDeadline" value="48">
-                    <input type="hidden" name="show_client_name_to_offices" id="showClientNameToOffices" value="after_client_acceptance">
-
-                    <div class="row g-3">
-                      <div class="col-md-6">
-                        <label class="form-label">مسار المكاتب الاستشارية</label>
-                        <input type="text" class="form-control" value="يتم تحديد المكتب لاحقاً من قبل المنظومة والإدارة" readonly>
-                        <span class="field-hint">المستخدم لا يختار المكتب من هذه الصفحة، ولا تظهر له قائمة مكاتب في بداية الطلب.</span>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label class="form-label">حالة الإحالة المتوقعة</label>
-                        <input type="text" name="office_link_status_label" id="officeLinkStatusLabel" class="form-control" value="بعد الإرسال تتم المراجعة ثم الإحالة للمكاتب المؤهلة" readonly>
-                        <span class="field-hint">تتغير الحالة لاحقاً داخل لوحة الإدارة بعد اكتمال المراجعة الأولية.</span>
-                      </div>
-                    </div>
-
-                    <div class="office-rule-box">
-                      <strong>السيناريو المعتمد:</strong>
-                      مقدم الطلب يملأ بياناته وبيانات المشروع والتمويل فقط. بعد الإرسال، تمر المعاملة بمراجعة أولية،
-                      ثم تُحال إلى مكتب استشاري مناسب لإعداد الدراسة أو ملف التمويل. بعدها يصل للمستخدم عرض سعر أو إشعار متابعة،
-                      ويمكنه القبول أو طلب المراجعة حسب السياسة المعتمدة.
-                    </div>
-
-                    <div class="office-match-grid">
-                      <div class="office-match-card">
-                        <strong>1. إدخال الطلب</strong>
-                        <span>المستخدم يحدد نوع التمويل وطبيعة المشروع والقطاع ورمز SYRSIC دون اختيار أي مكتب.</span>
-                      </div>
-
-                      <div class="office-match-card">
-                        <strong>2. مراجعة أولية</strong>
-                        <span>الإدارة أو المنظومة تتحقق من اكتمال البيانات الأساسية والمرفقات المطلوبة.</span>
-                      </div>
-
-                      <div class="office-match-card">
-                        <strong>3. ترشيح مكتب مناسب</strong>
-                        <span>يتم اختيار المكتب حسب القطاع، الرمز، الاختصاص، المحافظة، والجاهزية.</span>
-                      </div>
-
-                      <div class="office-match-card">
-                        <strong>4. عرض السعر والمتابعة</strong>
-                        <span>يرسل المكتب تكلفة الدراسة والمتطلبات، ثم ينتقل الطلب إلى مرحلة القبول والمتابعة.</span>
-                      </div>
-                    </div>
-
-                    <div class="office-status-line">
-                      <span class="status-chip neutral">
-                        <i class="fa-solid fa-user-shield"></i>
-                        لا اختيار يدوي للمكتب
-                      </span>
-
-                      <span class="status-chip pending">
-                        <i class="fa-solid fa-file-circle-check"></i>
-                        مراجعة بعد الإرسال
-                      </span>
-
-                      <span class="status-chip ready">
-                        <i class="fa-solid fa-handshake"></i>
-                        عرض سعر لاحقاً
-                      </span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </section>
@@ -1134,13 +1049,37 @@ $pageTitle = 'طلب تمويل';
 
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">الاسم الثلاثي لطالب التمويل</label>
-                  <input type="text" name="full_name" class="form-control">
+                  <label class="form-label">الاسم الثلاثي لطالب التمويل <span class="text-danger">*</span></label>
+                  <input type="text" name="applicant_name" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
                   <label class="form-label">رقم التواصل</label>
                   <input type="text" name="phone" class="form-control">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">البريد الإلكتروني</label>
+                  <input type="email" name="email" class="form-control">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">الرقم الوطني</label>
+                  <input type="text" name="national_id" class="form-control">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">المحافظة <span class="text-danger">*</span></label>
+                  <select name="governorate_id" id="governorateId" class="form-select" required>
+                    <option value="">اختر المحافظة</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">الفرع</label>
+                  <select name="branch_id" id="branchId" class="form-select">
+                    <option value="">يُحدَّد تلقائياً حسب المحافظة</option>
+                  </select>
                 </div>
 
                 <div class="col-md-6">
@@ -1188,21 +1127,29 @@ $pageTitle = 'طلب تمويل';
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label">الغاية من التمويل</label>
-                  <input type="text" name="finance_purpose" class="form-control" placeholder="تشغيل - توسعة - تجهيز - شراء أصول ...">
+                  <input type="text" name="purpose" class="form-control" placeholder="تشغيل - توسعة - تجهيز - شراء أصول ...">
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">سقف التمويل المطلوب</label>
-                  <input type="number" name="finance_amount" class="form-control">
+                  <label class="form-label">سقف التمويل المطلوب <span class="text-danger">*</span></label>
+                  <input type="number" name="requested_amount" class="form-control" min="0" step="0.01" required>
                 </div>
 
                 <div class="col-md-6">
                   <label class="form-label">عملة التمويل</label>
-                  <select name="finance_currency" class="form-select">
-                    <option value="">اختر العملة</option>
-                    <option value="SYP">ليرة سورية</option>
+                  <select name="currency" class="form-select">
+                    <option value="SYP" selected>ليرة سورية</option>
                     <option value="USD">دولار أمريكي</option>
                     <option value="EUR">يورو</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">نوع التمويل التشغيلي</label>
+                  <select name="financing_type" class="form-select">
+                    <option value="capital">رأسمالي</option>
+                    <option value="working_capital">رأس مال عامل</option>
+                    <option value="mixed">مختلط</option>
                   </select>
                 </div>
 
@@ -1213,8 +1160,8 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">مدة السداد المقترحة</label>
-                  <input type="text" name="proposed_repayment_period" class="form-control" placeholder="مثال: 24 شهر">
+                  <label class="form-label">مدة السداد المقترحة (بالأشهر)</label>
+                  <input type="number" name="repayment_period_months" class="form-control" min="1" placeholder="مثال: 24">
                 </div>
 
                 <div class="col-md-6">
@@ -1248,70 +1195,46 @@ $pageTitle = 'طلب تمويل';
             <section class="step-pane" data-step-pane="4">
               <div class="step-head">
                 <div class="step-overline">الخطوة 4 من 9</div>
-                <h2 class="step-title">المكاتب الاستشارية</h2>
+                <h2 class="step-title">مرحلة المشروع والخبرة</h2>
                 <p class="step-desc">
-                  في هذه المرحلة لا يُطلب منك اختيار مكتب استشاري. المطلوب فقط التأكد من فهمك لمسار الإحالة:
-                  بعد إرسال الطلب، تُراجع الهيئة الملف أولياً، ثم تُحال المعاملة تلقائياً إلى مكتب استشاري مؤهل
-                  حسب قطاع النشاط ورمز SYRSIC والاختصاص والمحافظة.
+                  وضّح مرحلة المشروع وخبرتك في المجال وأي تحديات أو دعم مطلوب. هذه البيانات تُحفظ مع تفاصيل الطلب للمراجعة.
                 </p>
                 <ul class="step-checklist">
-                  <li>لا اختيار يدوي للمكتب — المنظومة والإدارة يحددان المكتب المناسب.</li>
-                  <li>يُرسل المكتب لاحقاً عرض سعر لإعداد الدراسة أو ملف التمويل.</li>
-                  <li>يمكنك قبول العرض أو طلب مراجعة حسب السياسة المعتمدة.</li>
+                  <li>حدد مرحلة العمل الحالية.</li>
+                  <li>اذكر خبرة مالك المشروع إن وجدت.</li>
+                  <li>أضف ملاحظات عن السوق أو التحديات عند توفرها.</li>
                 </ul>
               </div>
 
-              <div class="consultant-link-card">
-                <div class="consultant-link-head">
-                  <div>
-                    <div class="consultant-link-title">
-                      <i class="fa-solid fa-building-columns"></i>
-                      <span>مسار الإحالة للمكاتب الاستشارية</span>
-                    </div>
-                    <p class="consultant-link-desc">
-                      مقدم الطلب يكمل بياناته في هذه الصفحة فقط. الإحالة للمكتب الاستشاري تتم بعد الإرسال والمراجعة الأولية،
-                      وليس أثناء تعبئة النموذج.
-                    </p>
-                  </div>
-                  <span class="status-chip neutral">
-                    <i class="fa-solid fa-circle-info"></i>
-                    إحالة تلقائية
-                  </span>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">مرحلة المشروع</label>
+                  <select name="business_stage" class="form-select">
+                    <option value="idea">فكرة</option>
+                    <option value="startup">ناشئ</option>
+                    <option value="existing">قائم</option>
+                    <option value="expansion">توسعة</option>
+                  </select>
                 </div>
 
-                <div class="office-match-grid">
-                  <div class="office-match-card">
-                    <strong>1. مراجعة أولية</strong>
-                    <span>الهيئة تتحقق من اكتمال البيانات والمرفقات الأساسية.</span>
-                  </div>
-                  <div class="office-match-card">
-                    <strong>2. ترشيح مكتب مناسب</strong>
-                    <span>حسب القطاع، رمز SYRSIC، الاختصاص، والمحافظة.</span>
-                  </div>
-                  <div class="office-match-card">
-                    <strong>3. إعداد الدراسة</strong>
-                    <span>المكتب الاستشاري يُعد ملف التمويل أو الدراسة المطلوبة.</span>
-                  </div>
-                  <div class="office-match-card">
-                    <strong>4. عرض السعر والمتابعة</strong>
-                    <span>يصلك عرض السعر ويمكنك القبول أو المتابعة.</span>
-                  </div>
+                <div class="col-md-6">
+                  <label class="form-label">خبرة مالك المشروع</label>
+                  <input type="text" name="owner_experience" class="form-control" placeholder="سنوات الخبرة / مجال التخصص">
                 </div>
 
-                <div class="office-rule-box mt-3">
-                  <strong>ملاحظة:</strong>
-                  لا حاجة لإدخال اسم محاسب أو كود — المسار الاستشاري المعتمد يحل محل الربط اليدوي القديم.
+                <div class="col-md-12">
+                  <label class="form-label">وصف السوق / العملاء</label>
+                  <textarea name="market_description" class="form-control" rows="3"></textarea>
                 </div>
-              </div>
 
-              <div class="mt-4">
-                <div class="form-check-wrap">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="acknowledgeConsultingPath" name="acknowledge_consulting_path">
-                    <label class="form-check-label" for="acknowledgeConsultingPath">
-                      أفهم أن طلبي سيُحال لمكتب استشاري مؤهل بعد الإرسال والمراجعة، وأن اختيار المكتب ليس من مسؤوليتي في هذه المرحلة.
-                    </label>
-                  </div>
+                <div class="col-md-12">
+                  <label class="form-label">التحديات الحالية</label>
+                  <textarea name="challenges" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">الدعم المطلوب</label>
+                  <textarea name="requested_support" class="form-control" rows="3"></textarea>
                 </div>
               </div>
             </section>
@@ -1661,7 +1584,7 @@ $pageTitle = 'طلب تمويل';
                 <li>تأكيد معرفة مقدم الطلب بأن الملف قد يمر بمكتب استشاري مؤهل بعد الإرسال، وأن عرض السعر لا يطلب في بداية النموذج.</li>
                 <li>مراجعة بيانات مقدم الطلب والصفة القانونية وبيانات التواصل.</li>
                 <li>مراجعة الغاية من التمويل، القيمة، العملة، هيكل السداد، والضمانات.</li>
-                <li>التأكد من فهم مسار الإحالة للمكاتب الاستشارية بعد الإرسال (بدون اختيار يدوي للمكتب).</li>
+                <li>التأكد من إدخال اسم المشروع والمحافظة والقطاع.</li>
                 <li>التأكد من إدخال بيانات الشركة والسجل التجاري ورقم التواصل والفواتير ذات العلاقة.</li>
                 <li>مراجعة القوائم المالية والعمالة والاحتياجات التدريبية.</li>
               </ul>
@@ -1670,9 +1593,9 @@ $pageTitle = 'طلب تمويل';
                 <label class="form-label">إقرار مقدم الطلب</label>
                 <div class="form-check-wrap">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="acknowledgeInfo">
+                    <input class="form-check-input" type="checkbox" id="acknowledgeInfo" name="acknowledge_info">
                     <label class="form-check-label" for="acknowledgeInfo">
-                      أقر بأن البيانات المدخلة صحيحة بحسب علمي، وأوافق على إحالة الطلب للمراجعة، ثم للمسار الاستشاري والتمويلي المناسب بعد الإرسال.
+                      أقر بأن البيانات المدخلة صحيحة بحسب علمي، وأوافق على إحالة الطلب للمراجعة ضمن مسار التمويل المعتمد.
                     </label>
                   </div>
                 </div>
@@ -1720,58 +1643,26 @@ $pageTitle = 'طلب تمويل';
   const projectStatusRadios = document.querySelectorAll('.project-status-radio');
   const existingBlock = document.getElementById('existingProjectFields');
   const newBlock = document.getElementById('newProjectFields');
-
-  const needsConsultantOffice = document.getElementById('needsConsultantOffice');
-  const requiredStudyPhase = document.getElementById('requiredStudyPhase');
-  const requiredOfficeSpecialization = document.getElementById('requiredOfficeSpecialization');
-  const officeOfferMode = document.getElementById('officeOfferMode');
-  const maxConsultantOffices = document.getElementById('maxConsultantOffices');
-  const officeOfferDeadline = document.getElementById('officeOfferDeadline');
-  const showClientNameToOffices = document.getElementById('showClientNameToOffices');
-  const officeLinkStatusLabel = document.getElementById('officeLinkStatusLabel');
   const projectSector = document.getElementById('projectSector');
   const syrsicActivityCode = document.getElementById('syrsicActivityCode');
   const expectedPathSummary = document.getElementById('expectedPathSummary');
 
-  function updateConsultantOfficeLinkInfo() {
-    if (!officeLinkStatusLabel) return;
-
+  function updatePathSummary() {
+    if (!expectedPathSummary) return;
     const sector = projectSector ? projectSector.value : '';
     const code = syrsicActivityCode ? syrsicActivityCode.value.trim() : '';
-
     const sectorLabels = {
       agricultural: 'نشاط زراعي',
       industrial: 'نشاط صناعي',
       commercial: 'نشاط تجاري',
       service: 'نشاط خدمي'
     };
-
     const sectorText = sectorLabels[sector] || 'قطاع غير محدد';
     const codeText = code ? ' / رمز SYRSIC: ' + code : '';
-
-    if (expectedPathSummary) {
-      expectedPathSummary.value = sector
-        ? 'مسار الطلب: ' + sectorText + codeText + ' / إحالة استشارية لاحقة بعد الإرسال'
-        : 'سيتم توليده بعد اختيار القطاع الاقتصادي حسب SYRSIC';
-    }
-
-    if (sector && code) {
-      officeLinkStatusLabel.value =
-        'بعد إرسال الطلب: مراجعة أولية ثم ترشيح مكتب استشاري مؤهل حسب ' +
-        sectorText +
-        codeText +
-        '، ثم عرض سعر لاحقاً للمستخدم';
-      return;
-    }
-
-    if (sector && !code) {
-      officeLinkStatusLabel.value = 'تم اختيار ' + sectorText + ' - يفضّل إدخال رمز النشاط SYRSIC لتسهيل الترشيح اللاحق للمكتب';
-      return;
-    }
-
-    officeLinkStatusLabel.value = 'بعد الإرسال تتم المراجعة ثم الإحالة للمكاتب المؤهلة';
+    expectedPathSummary.value = sector
+      ? 'مسار الطلب: ' + sectorText + codeText + ' / مراجعة بعد الإرسال'
+      : 'سيتم توليده بعد اختيار القطاع الاقتصادي حسب SYRSIC';
   }
-
 
   function updateProjectStatusInfo() {
     const selected = document.querySelector('.project-status-radio:checked');
@@ -1784,6 +1675,11 @@ $pageTitle = 'طلب تمويل';
       existingBlock.style.display = 'block';
     } else if (selected.value === 'new' && newBlock) {
       newBlock.style.display = 'block';
+    }
+
+    const stage = document.querySelector('[name="business_stage"]');
+    if (stage && !stage.dataset.touched) {
+      stage.value = selected.value === 'existing' ? 'existing' : 'startup';
     }
   }
 
@@ -1860,30 +1756,24 @@ $pageTitle = 'طلب تمويل';
     radio.addEventListener('change', updateProjectStatusInfo);
   });
 
-  [
-    needsConsultantOffice,
-    requiredStudyPhase,
-    requiredOfficeSpecialization,
-    officeOfferMode,
-    maxConsultantOffices,
-    officeOfferDeadline,
-    showClientNameToOffices,
-    projectSector,
-    syrsicActivityCode
-  ].forEach((field) => {
+  [projectSector, syrsicActivityCode].forEach((field) => {
     if (field) {
-      field.addEventListener('change', updateConsultantOfficeLinkInfo);
-      field.addEventListener('input', updateConsultantOfficeLinkInfo);
+      field.addEventListener('change', updatePathSummary);
+      field.addEventListener('input', updatePathSummary);
     }
   });
 
+  document.querySelector('[name="business_stage"]')?.addEventListener('change', function () {
+    this.dataset.touched = '1';
+  });
+
   updateProjectStatusInfo();
-  updateConsultantOfficeLinkInfo();
+  updatePathSummary();
   goToStep(1);
 })();
 </script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.0"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-apply.js?v=1.0"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.1"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-apply.js?v=2.1"></script>
 
 </body>
 </html>

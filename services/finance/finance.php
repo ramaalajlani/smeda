@@ -1243,76 +1243,6 @@ $pageTitle = 'منظومة التمويل';
     </div>
   </section>
 
-  <section class="fg-section pt-0" id="consultants">
-    <div class="container">
-      <div class="fg-section-title">
-        <span class="fg-label"><i class="fa-solid fa-building-user"></i> المكاتب الاستشارية</span>
-        <h2>المكتب الاستشاري مسار دائم في كل طلب تمويل</h2>
-        <p>
-          لا يظهر كخيار عند الحاجة، بل كل طلب يمر عبر مكتب مؤهل ليتم تجهيز الدراسة أو الملف قبل انتقاله إلى سحابة التمويل والمراجعة.
-        </p>
-      </div>
-
-      <div class="fg-consultant-panel">
-        <div class="row g-4 align-items-center">
-          <div class="col-lg-5">
-            <h3 class="fw-bold mb-3" style="font-weight:900;color:var(--fg-dark);line-height:1.5;">
-              لماذا الربط دائم؟
-            </h3>
-            <p class="text-muted" style="line-height:1.95;">
-              لأن الهدف ليس فقط جمع بيانات من مقدم الطلب، بل تحويلها إلى ملف مهني قابل للتقييم.
-              المكتب الاستشاري يضمن أن الدراسة، المرفقات، الأرقام، والاحتياجات التمويلية منظمة قبل عرضها على الجهات التمويلية.
-            </p>
-
-            <div class="d-flex flex-wrap gap-2">
-              <span class="fg-chip neutral"><i class="fa-solid fa-check"></i> مطابقة حسب القطاع</span>
-              <span class="fg-chip neutral"><i class="fa-solid fa-check"></i> مطابقة حسب SYRSIC</span>
-              <span class="fg-chip neutral"><i class="fa-solid fa-check"></i> مطابقة حسب الاختصاص</span>
-              <span class="fg-chip neutral"><i class="fa-solid fa-check"></i> عرض سعر ودراسة</span>
-            </div>
-          </div>
-
-          <div class="col-lg-7">
-            <div class="fg-consultant-route">
-              <div class="fg-route-row">
-                <i class="fa-solid fa-clipboard-list"></i>
-                <div>
-                  <strong>1. تصنيف الطلب</strong>
-                  <span>يتم تحديد القطاع، رمز النشاط، نوع التمويل، المحافظة، والاختصاص المطلوب.</span>
-                </div>
-              </div>
-
-              <div class="fg-route-row">
-                <i class="fa-solid fa-building-user"></i>
-                <div>
-                  <strong>2. عرض على المكاتب المؤهلة</strong>
-                  <span>يظهر الطلب للمكاتب المطابقة فقط، مع إخفاء بيانات العميل الحساسة عند البداية.</span>
-                </div>
-              </div>
-
-              <div class="fg-route-row">
-                <i class="fa-solid fa-file-signature"></i>
-                <div>
-                  <strong>3. تجهيز الدراسة والملف</strong>
-                  <span>المكتب يجهز دراسة الجدوى أو ملف التمويل أو المراجعة الفنية حسب نوع الطلب.</span>
-                </div>
-              </div>
-
-              <div class="fg-route-row">
-                <i class="fa-solid fa-folder-open"></i>
-                <div>
-                  <strong>4. نقل الملف إلى سحابة التمويل</strong>
-                  <span>بعد اكتمال الملف، يصبح جاهزاً للعرض على البنوك والجهات التمويلية.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="fg-section pt-0" id="finance-cloud">
     <div class="container">
       <div class="fg-cloud-panel">
@@ -1320,7 +1250,7 @@ $pageTitle = 'منظومة التمويل';
           <span class="fg-label"><i class="fa-solid fa-building-columns"></i> سحابة التمويل</span>
           <h2>مساحة مؤسسية تربط الملفات الجاهزة بالبنوك</h2>
           <p>
-            بعد تجهيز الطلب من المكتب الاستشاري، ينتقل الملف إلى مساحة عرض منظمة تتيح للبنوك والجهات التمويلية فرز الملفات حسب القطاع،
+            بعد استكمال الطلب ومراجعته، ينتقل الملف إلى مساحة عرض منظمة تتيح للبنوك والجهات التمويلية فرز الملفات حسب القطاع،
             نوع التمويل، قيمة التمويل، الجاهزية، مستوى المخاطر، والضمانات.
           </p>
         </div>

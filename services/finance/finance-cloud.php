@@ -1123,12 +1123,10 @@ $pageTitle = 'سحابة التمويل';
               <label class="form-label">القطاع حسب التصنيف</label>
               <select class="form-select cloud-filter" id="sectorFilter">
                 <option value="">كل القطاعات</option>
-                <option value="industrial">صناعي</option>
                 <option value="agricultural">زراعي</option>
+                <option value="industrial">صناعي</option>
                 <option value="commercial">تجاري</option>
                 <option value="service">خدمي</option>
-                <option value="digital">رقمي</option>
-                <option value="tourist">سياحي</option>
               </select>
             </div>
 
@@ -1337,7 +1335,7 @@ $pageTitle = 'سحابة التمويل';
 <div id="financeCloudMessage" class="alert d-none container mt-3"></div>
 <div id="financeCloudLoading" class="text-center py-3 d-none">جاري تحميل الطلبات...</div>
 <script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.1"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-cloud.js?v=1.1"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-cloud.js?v=1.2"></script>
 
 </body>
 </html>

@@ -12,7 +12,8 @@ class FundingApplication extends Model
     protected $fillable = [
         'application_number', 'applicant_user_id', 'applicant_name', 'national_id', 'phone', 'email',
         'governorate_id', 'branch_id', 'project_name', 'project_type', 'project_sector', 'project_size',
-        'business_stage', 'requested_amount', 'currency', 'financing_type', 'repayment_period_months',
+        'business_stage', 'project_status', 'requested_amount', 'currency', 'financing_type', 'financing_mode',
+        'repayment_period_months',
         'purpose', 'description', 'status', 'current_stage', 'submitted_at', 'created_by', 'updated_by',
     ];
 

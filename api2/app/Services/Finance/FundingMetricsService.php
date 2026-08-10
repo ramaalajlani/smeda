@@ -60,8 +60,17 @@ class FundingMetricsService
     public function cloudApplications(User $user): Builder
     {
         return $this->applicationQuery($user)
-            ->whereIn('status', ['consultant_priced', 'funder_review', 'approved'])
-            ->with(['branch:id,name', 'governorate:id,name_ar', 'consultantReports', 'partnerAssignments']);
+            ->whereIn('status', [
+                'submitted', 'branch_review', 'needs_completion', 'consultant_review',
+                'consultant_priced', 'funder_review', 'approved', 'funded',
+            ])
+            ->with([
+                'branch:id,name',
+                'governorate:id,name_ar',
+                'details',
+                'consultantAssignments:id,funding_application_id,consultant_office_id,status,price_offer_amount,price_offer_status',
+                'partnerAssignments:id,funding_application_id,funding_partner_id,status,approved_amount',
+            ]);
     }
 
     public function fundedLoans(User $user): Builder

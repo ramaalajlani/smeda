@@ -47,9 +47,11 @@ class FundingApplicationService
                 'project_sector' => $data['project_sector'] ?? null,
                 'project_size' => $data['project_size'] ?? 'small',
                 'business_stage' => $data['business_stage'] ?? 'startup',
+                'project_status' => $data['project_status'] ?? null,
                 'requested_amount' => $data['requested_amount'],
                 'currency' => $data['currency'] ?? 'SYP',
                 'financing_type' => $data['financing_type'] ?? 'capital',
+                'financing_mode' => $data['financing_mode'] ?? null,
                 'repayment_period_months' => $data['repayment_period_months'] ?? null,
                 'purpose' => $data['purpose'] ?? null,
                 'description' => $data['description'] ?? null,
@@ -61,7 +63,7 @@ class FundingApplicationService
             if (!empty($data['details']) && is_array($data['details'])) {
                 FundingApplicationDetail::query()->create(array_merge(
                     ['funding_application_id' => $row->id],
-                    $data['details']
+                    $this->sanitizeDetails($data['details'])
                 ));
             }
 
@@ -82,9 +84,11 @@ class FundingApplicationService
         $before = $application->toArray();
         $application->update(array_merge(
             collect($data)->only([
-                'applicant_name', 'national_id', 'phone', 'email', 'project_name', 'project_type',
-                'project_sector', 'project_size', 'business_stage', 'requested_amount', 'currency',
-                'financing_type', 'repayment_period_months', 'purpose', 'description',
+                'applicant_name', 'national_id', 'phone', 'email', 'governorate_id', 'branch_id',
+                'project_name', 'project_type',
+                'project_sector', 'project_size', 'business_stage', 'project_status',
+                'requested_amount', 'currency',
+                'financing_type', 'financing_mode', 'repayment_period_months', 'purpose', 'description',
             ])->filter(fn ($v) => $v !== null)->all(),
             ['updated_by' => $user->id]
         ));
@@ -92,7 +96,7 @@ class FundingApplicationService
         if (!empty($data['details']) && is_array($data['details'])) {
             FundingApplicationDetail::query()->updateOrCreate(
                 ['funding_application_id' => $application->id],
-                $data['details']
+                $this->sanitizeDetails($data['details'])
             );
         }
 
@@ -345,5 +349,31 @@ class FundingApplicationService
         }
 
         throw ValidationException::withMessages(['governorate_id' => ['يجب تحديد المحافظة والفرع.']]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $details
+     * @return array<string, mixed>
+     */
+    private function sanitizeDetails(array $details): array
+    {
+        $allowed = [
+            'owner_experience', 'employees_count', 'monthly_revenue', 'monthly_expenses',
+            'existing_debts', 'assets_description', 'market_description', 'challenges',
+            'requested_support', 'notes', 'extra_data',
+        ];
+
+        $clean = collect($details)->only($allowed)->all();
+
+        if (isset($clean['extra_data']) && is_array($clean['extra_data'])) {
+            if (empty($clean['notes'])) {
+                $clean['notes'] = json_encode($clean['extra_data'], JSON_UNESCAPED_UNICODE);
+            }
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('funding_application_details', 'extra_data')) {
+                unset($clean['extra_data']);
+            }
+        }
+
+        return $clean;
     }
 }

@@ -47,7 +47,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function mapRow(row) {
     const status = row.status || 'submitted';
-    const readiness = ['approved', 'consultant_priced', 'funder_review'].includes(status)
+    const details = row.details || {};
+    let extra = details.extra_data;
+    if (!extra && details.notes) {
+      try { extra = JSON.parse(details.notes); } catch (_) { extra = {}; }
+    }
+    extra = extra || {};
+
+    const financingMode = row.financing_mode || extra.financing_mode || '';
+    const projectStatus = row.project_status || extra.project_status
+      || (row.business_stage === 'existing' || row.business_stage === 'expansion' ? 'existing' : 'new');
+
+    const modeLabels = {
+      islamic: 'إسلامي',
+      conventional: 'تقليدي',
+      both: 'إسلامي / تقليدي',
+    };
+    const sectorLabels = {
+      agricultural: 'زراعي',
+      industrial: 'صناعي',
+      commercial: 'تجاري',
+      service: 'خدمي',
+    };
+    const statusLabels = {
+      existing: 'قائم',
+      new: 'غير قائم',
+    };
+
+    const readiness = ['approved', 'consultant_priced', 'funder_review', 'funded'].includes(status)
       ? 'ready'
       : (['submitted', 'branch_review', 'consultant_review'].includes(status) ? 'review' : 'pending');
 
@@ -59,9 +86,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       location: row.governorate_name || row.governorate?.name_ar || '—',
       branch: row.branch_name || row.branch?.name || '—',
       sector: row.project_sector || '',
-      sectorAr: row.project_sector || '—',
-      mode: row.financing_type || '',
-      modeAr: row.financing_type || '—',
+      sectorAr: sectorLabels[row.project_sector] || row.project_sector || '—',
+      mode: financingMode,
+      modeAr: modeLabels[financingMode] || financingMode || '—',
+      projectStatus,
+      projectStatusAr: statusLabels[projectStatus] || projectStatus || '—',
       status,
       statusAr: window.FinancePlatform.statusLabel(status),
       readiness,
@@ -71,8 +100,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       match: readiness === 'ready' ? 88 : (readiness === 'review' ? 72 : 55),
       amount: window.FinancePlatform.formatAmount(row.requested_amount, row.currency),
       purpose: row.purpose || row.description || '—',
-      consultant: row.consultant_assignments?.[0] ? `مكتب #${row.consultant_assignments[0].consultant_office_id}` : 'يُحال لاحقاً من الإدارة',
-      consultantStatus: window.FinancePlatform.statusLabel(row.consultant_assignments?.[0]?.status || 'assigned'),
       raw: row,
     };
   }
@@ -80,8 +107,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function loadApplicants() {
     loading?.classList.remove('d-none');
     try {
-      const res = await window.APP_API.get(window.APP_ROUTES.fundingApplications({ per_page: 100 }));
-      applicants = (res.data || []).map(mapRow);
+      let rows = [];
+      try {
+        const cloudRes = await window.APP_API.get(window.APP_ROUTES.fundingCloud({ per_page: 100 }));
+        rows = cloudRes.data || [];
+      } catch (_) {
+        const res = await window.APP_API.get(window.APP_ROUTES.fundingApplications({ per_page: 100 }));
+        rows = (res.data || []).filter((r) => r.status && r.status !== 'draft');
+      }
+      applicants = rows.map(mapRow);
       if (totalRequests) totalRequests.textContent = `${applicants.length} طلب`;
       filterAndRender();
     } catch (err) {
@@ -157,12 +191,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
         <div class="info-grid">
           <div class="info-box"><span>القطاع</span><strong>${item.sectorAr}</strong></div>
+          <div class="info-box"><span>نوع التمويل</span><strong>${item.modeAr}</strong></div>
           <div class="info-box"><span>قيمة التمويل</span><strong>${item.amount}</strong></div>
           <div class="info-box"><span>مقدم الطلب</span><strong>${item.applicant}</strong></div>
         </div>
         <div class="risk-row">
           <div class="risk-item"><strong>الغاية:</strong> ${item.purpose}</div>
-          <div class="risk-item"><strong>المكتب:</strong> ${item.consultant}</div>
+          <div class="risk-item"><strong>حالة المشروع:</strong> ${item.projectStatusAr}</div>
         </div>
         <div class="applicant-actions">${actionButtons(item)}</div>
       </article>`).join('');
@@ -195,7 +230,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const matchSearch = !searchValue || haystack.includes(searchValue);
       const matchSector = !sectorValue || item.sector === sectorValue;
       const matchMode = !modeValue || item.mode === modeValue;
-      const matchStatus = !statusValue || item.raw.business_stage === statusValue;
+      const matchStatus = !statusValue || item.projectStatus === statusValue;
       const matchReadiness = !readinessValue || item.readiness === readinessValue;
       const matchRisk = !riskValue || item.risk === riskValue;
       return matchSearch && matchSector && matchMode && matchStatus && matchReadiness && matchRisk;
@@ -232,19 +267,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       ${detailRow(SiteI18n.ta('الفرع'), item.branch)}
       ${detailRow(SiteI18n.ta('المبلغ'), item.amount)}
       ${detailRow(SiteI18n.ta('الحالة'), item.statusAr)}
-      ${detailRow(SiteI18n.ta('المكتب الاستشاري'), item.consultant)}
+      ${detailRow(SiteI18n.ta('نوع التمويل'), item.modeAr)}
+      ${detailRow(SiteI18n.ta('حالة المشروع'), item.projectStatusAr)}
     </div></div>`;
 
     panes.applicationPane.innerHTML = `<div class="detail-card"><h4>نموذج الطلب</h4><div class="detail-list">
       ${detailRow(SiteI18n.ta('الغاية'), item.purpose)}
       ${detailRow(SiteI18n.ta('نوع التمويل'), item.modeAr)}
       ${detailRow(SiteI18n.ta('القطاع'), item.sectorAr)}
+      ${detailRow(SiteI18n.ta('حالة المشروع'), item.projectStatusAr)}
     </div></div>`;
 
     panes.journeyPane.innerHTML = `<div class="journey">
       <div class="journey-step"><div class="num">1</div><strong>تقديم</strong><span>تعبئة الطلب من صاحب المشروع.</span></div>
-      <div class="journey-step"><div class="num">2</div><strong>مراجعة فرع</strong><span>مدير الفرع يراجع ويحيل للمكتب الاستشاري.</span></div>
-      <div class="journey-step"><div class="num">3</div><strong>مكتب استشاري</strong><span>${item.consultantStatus}</span></div>
+      <div class="journey-step"><div class="num">2</div><strong>مراجعة</strong><span>مراجعة أولية من الفرع/الإدارة.</span></div>
+      <div class="journey-step"><div class="num">3</div><strong>سحابة التمويل</strong><span>عرض الملف مع فلترة القطاع ونوع التمويل.</span></div>
       <div class="journey-step"><div class="num">4</div><strong>جهة تمويل</strong><span>دراسة وقرار تمويل.</span></div>
     </div>`;
 

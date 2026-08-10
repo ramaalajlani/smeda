@@ -259,34 +259,6 @@ if (empty($forceAppShell) && authority_use_dashboard_shell()) {
         </div>
       </div>
 
-      <!-- المكاتب الاستشارية -->
-      <div class="sb-section" data-permission="finance.consultant_union.dashboard">
-        <button class="sb-section-btn" data-bs-toggle="collapse" data-bs-target="#sbConsult" aria-expanded="false">
-          <span class="sb-section-icon"><i class="bi bi-building-gear"></i></span>
-          <span class="sb-section-label">المكاتب الاستشارية</span>
-          <i class="bi bi-chevron-left sb-chevron"></i>
-        </button>
-        <div class="collapse" id="sbConsult">
-          <div class="sb-links">
-            <a href="<?php echo $basePath; ?>services/finance/consultant-union-dashboard.php" class="sb-link" data-permission="finance.consultant_union.dashboard">
-              <i class="bi bi-diagram-3-fill"></i><span>لوحة النقابة</span>
-            </a>
-            <a href="<?php echo $basePath; ?>services/finance/consultant-offices.php" class="sb-link" data-permission="finance.consultants.view_all">
-              <i class="bi bi-door-open-fill"></i><span>المكاتب الاستشارية</span>
-            </a>
-            <a href="<?php echo $basePath; ?>services/finance/my-consultant-assignments.php" class="sb-link" data-permission="finance.consultant_assignments.view_own">
-              <i class="bi bi-inbox-fill"></i><span>الطلبات المحالة إلي</span>
-            </a>
-            <a href="<?php echo $basePath; ?>services/finance/consultant-office-dashboard.php" class="sb-link" data-permission="finance.consultant_office.dashboard">
-              <i class="bi bi-speedometer2"></i><span>لوحة المكتب</span>
-            </a>
-            <a href="<?php echo $basePath; ?>services/finance/consultant-report-form.php" class="sb-link" data-permission="finance.consultant_reports.create">
-              <i class="bi bi-file-text-fill"></i><span>تقاريري الاستشارية</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
       <!-- البنوك وجهات التمويل -->
       <div class="sb-section" data-permission="finance.central_bank.dashboard">
         <button class="sb-section-btn" data-bs-toggle="collapse" data-bs-target="#sbBanks" aria-expanded="false">
