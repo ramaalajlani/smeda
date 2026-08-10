@@ -369,6 +369,7 @@ class RolePermissionSeeder extends Seeder
             'finance.applications.view',
             'finance.applications.review_branch',
             'finance.applications.request_completion',
+            'finance.applications.reject',
             'finance.applications.assign_consultant',
             'finance.consultants.view',
             'finance.consultants.approve_price',
