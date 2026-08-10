@@ -298,7 +298,7 @@ $homeUrl = front_url('index.php');
           <li class="nav-item mega-menu-item">
             <a
               class="nav-link dropdown-toggle mega-toggle-link <?php echo ($activePage === 'finance') ? 'active' : ''; ?>"
-              href="<?php echo front_url('index.php#finance-window'); ?>"
+              href="<?php echo front_url('services/finance/finance-cloud.php'); ?>"
               aria-expanded="false"
             >
               <?php echo htmlspecialchars(__('nav_finance')); ?>
@@ -306,28 +306,13 @@ $homeUrl = front_url('index.php');
 
             <div class="mega-menu-panel finance-menu-panel">
               <div class="container">
-                <div class="mega-menu-grid finance-menu-grid">
-
+                <div class="mega-menu-grid finance-menu-grid finance-menu-grid-simple">
                   <div class="mega-col">
-                    <h6>منظومة التمويل</h6>
-                    <a href="<?php echo front_url('index.php#finance-window'); ?>">على الصفحة الرئيسية</a>
-                    <a href="<?php echo front_url('services/finance/finance.php'); ?>">البوابة الرئيسية</a>
-                    <a href="<?php echo front_url('services/finance/finance-apply.php'); ?>">طلب تمويل جديد</a>
+                    <h6>التمويل</h6>
+                    <a href="<?php echo htmlspecialchars($registerUrl, ENT_QUOTES, 'UTF-8'); ?>">إنشاء حساب</a>
+                    <a href="<?php echo htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8'); ?>">تسجيل دخول</a>
+                    <a href="<?php echo front_url('services/finance/finance-cloud.php'); ?>">سحابة التمويل</a>
                   </div>
-
-                  <div class="mega-col">
-                    <h6>السحابة والمؤشرات</h6>
-                    <a href="<?php echo front_url('services/finance/finance-cloud.php'); ?>">سحابة القروض غير الممولة</a>
-                    <a href="<?php echo front_url('services/finance/finance-metrics.php'); ?>">مؤشرات التمويل</a>
-                    <a href="<?php echo front_url('services/finance/finance-funded.php'); ?>">القروض الممولة</a>
-                  </div>
-
-                  <div class="mega-col">
-                    <h6>حسابي</h6>
-                    <a href="<?php echo front_url('services/finance/finance-apply.php'); ?>">متابعة طلب التمويل</a>
-                    <a href="<?php echo front_url('dashboard.php'); ?>">لوحة التحكم</a>
-                  </div>
-
                 </div>
               </div>
             </div>

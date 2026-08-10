@@ -6,7 +6,11 @@ window.FinancePlatform = {
       || window.AppAuth?.hasRole('consultant_office')
       || window.AppAuth?.hasRole('funding_partner')
       || window.AppAuth?.hasRole('finance_manager')
-      || window.AppAuth?.hasRole('branch_manager');
+      || window.AppAuth?.hasRole('finance_officer')
+      || window.AppAuth?.hasRole('branch_manager')
+      || window.AppAuth?.hasRole('general_director')
+      || window.AppAuth?.hasRole('deputy_general_director')
+      || window.AppAuth?.hasRole('deputy_director');
   },
 
   canCreateApplication() {
@@ -24,6 +28,8 @@ window.FinancePlatform = {
     return window.AppAuth?.hasPermission('finance.applications.approve')
       || window.AppAuth?.hasRole('finance_manager')
       || window.AppAuth?.hasRole('general_director')
+      || window.AppAuth?.hasRole('deputy_general_director')
+      || window.AppAuth?.hasRole('deputy_director')
       || window.AppAuth?.isNationalAdmin();
   },
 

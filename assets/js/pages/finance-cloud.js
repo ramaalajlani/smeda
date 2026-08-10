@@ -153,13 +153,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (isReadOnly || !canManage) return '';
     const row = item.raw;
     let html = `<a href="finance-apply.php?id=${row.id}" class="btn btn-sm btn-outline-primary">عرض</a>`;
-    if (window.AppAuth.hasPermission('finance.applications.assign_consultant') || window.AppAuth.isNationalAdmin()) {
-      html += ` <button class="btn btn-sm btn-outline-secondary" data-action="assign-consultant" data-id="${row.id}">إحالة استشاري</button>`;
-    }
-    if (window.AppAuth.hasRole('consultant_office')) {
-      const aid = row.consultant_assignments?.[0]?.id;
-      if (aid) html += ` <button class="btn btn-sm btn-outline-info" data-action="price-offer" data-assignment="${aid}">عرض سعر</button>`;
-    }
     if (window.AppAuth.hasPermission('finance.applications.assign_partner') || window.AppAuth.isNationalAdmin()) {
       html += ` <button class="btn btn-sm btn-outline-success" data-action="assign-partner" data-id="${row.id}">إحالة تمويل</button>`;
     }
@@ -334,18 +327,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const assignmentId = btn.dataset.assignment;
 
     try {
-      if (action === 'assign-consultant') {
-        const officeId = prompt(SiteI18n.ta('أدخل رقم المكتب الاستشاري:'));
-        if (!officeId) return;
-        await window.APP_API.post(window.APP_ROUTES.fundingApplicationAssignConsultant(appId), { consultant_office_id: Number(officeId) });
-        showMessage(SiteI18n.ta('تمت الإحالة للمكتب الاستشاري.'));
-      }
-      if (action === 'price-offer' && assignmentId) {
-        const amount = prompt(SiteI18n.ta('مبلغ عرض السعر:'));
-        if (!amount) return;
-        await window.APP_API.post(window.APP_ROUTES.fundingConsultantAssignmentPrice(assignmentId), { price_offer_amount: Number(amount) });
-        showMessage(SiteI18n.ta('تم تقديم عرض السعر.'));
-      }
       if (action === 'assign-partner') {
         const partnerId = prompt(SiteI18n.ta('أدخل رقم جهة التمويل:'));
         if (!partnerId) return;

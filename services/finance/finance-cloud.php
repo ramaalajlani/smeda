@@ -1012,7 +1012,7 @@ $pageTitle = 'سحابة التمويل';
       <h1>سحابة التمويل للطلبات الجاهزة</h1>
 
       <p>
-        واجهة حكومية منظمة تجمع ملفات طالبي التمويل بعد مرورها بالمكتب الاستشاري،
+        واجهة حكومية منظمة تجمع ملفات طالبي التمويل المعتمدة بعد المراجعة،
         وتعرضها للجهات التمويلية ضمن بطاقات قابلة للفرز والفتح والتقييم، مع رحلة واضحة للمستخدم،
         وملف طلب كامل يشبه نموذج تقديم التمويل من حيث البيانات والمرفقات والمؤشرات.
       </p>
@@ -1091,10 +1091,10 @@ $pageTitle = 'سحابة التمويل';
 
           <div class="col-lg-3 col-md-6">
             <div class="summary-item">
-              <div class="summary-icon"><i class="fa-solid fa-user-tie"></i></div>
+              <div class="summary-icon"><i class="fa-solid fa-building-columns"></i></div>
               <div>
-                <div class="summary-label">مكاتب استشارية مشاركة</div>
-                <div class="summary-value">18 مكتب</div>
+                <div class="summary-label">جهات تمويل مستهدفة</div>
+                <div class="summary-value">بنوك وشركاء</div>
               </div>
             </div>
           </div>
@@ -1182,7 +1182,7 @@ $pageTitle = 'سحابة التمويل';
 
             <div class="filter-mini">
               <i class="fa-solid fa-circle-info"></i>
-              زر “فتح الملف” يعرض نموذجاً كاملاً لبيانات الطلب، رحلة المستخدم، المرفقات، التقييم الأولي، ومسار المكتب الاستشاري.
+              زر “فتح الملف” يعرض نموذجاً كاملاً لبيانات الطلب، رحلة المستخدم، المرفقات، والتقييم الأولي.
             </div>
           </aside>
         </div>
@@ -1194,7 +1194,7 @@ $pageTitle = 'سحابة التمويل';
               <div>
                 <h2 class="section-title">ملفات التمويل المرشحة للجهات التمويلية</h2>
                 <p class="section-desc mb-0">
-                  كل بطاقة تمثل ملفاً منظماً بعد مروره بالمكتب الاستشاري، ويمكن فتح الملف للاطلاع على نموذج الطلب الكامل ورحلة المعالجة.
+                  كل بطاقة تمثل ملفاً معتمداً جاهزاً للفرز من الجهات التمويلية، ويمكن فتح الملف للاطلاع على نموذج الطلب الكامل ورحلة المعالجة.
                 </p>
               </div>
 
@@ -1240,7 +1240,7 @@ $pageTitle = 'سحابة التمويل';
               <div>
                 <h2 class="section-title mb-1">رحلة المستخدم داخل سحابة التمويل</h2>
                 <p class="section-desc mb-0">
-                  هذا المسار يوضح أين يبدأ الطلب، وكيف ينتقل من مقدم الطلب إلى المكتب الاستشاري ثم إلى الجهة التمويلية.
+                  هذا المسار يوضح أين يبدأ الطلب، وكيف يُراجع داخل الهيئة ثم يُعرض على الجهات التمويلية بعد الاعتماد.
                 </p>
               </div>
             </div>
@@ -1255,10 +1255,10 @@ $pageTitle = 'سحابة التمويل';
               </div>
 
               <div class="office-step">
-                <i class="fa-solid fa-building-user"></i>
+                <i class="fa-solid fa-clipboard-check"></i>
                 <div>
-                  <strong>2. إحالة لمكتب استشاري</strong>
-                  <span>يتم ربط الملف بمكتب مؤهل حسب القطاع ورمز النشاط والاختصاص والمحافظة.</span>
+                  <strong>2. مراجعة واعتماد</strong>
+                  <span>يراجع مدير الفرع الطلب حسب المحافظة، ثم يعتمده مدير التمويل أو المدير العام.</span>
                 </div>
               </div>
 
@@ -1266,7 +1266,7 @@ $pageTitle = 'سحابة التمويل';
                 <i class="fa-solid fa-folder-tree"></i>
                 <div>
                   <strong>3. عرض في سحابة التمويل</strong>
-                  <span>بعد اكتمال الدراسة يصبح الملف قابلاً للفرز والفتح من الجهات التمويلية.</span>
+                  <span>بعد الاعتماد يصبح الملف قابلاً للفرز والفتح من الجهات التمويلية.</span>
                 </div>
               </div>
             </div>
@@ -1335,7 +1335,7 @@ $pageTitle = 'سحابة التمويل';
 <div id="financeCloudMessage" class="alert d-none container mt-3"></div>
 <div id="financeCloudLoading" class="text-center py-3 d-none">جاري تحميل الطلبات...</div>
 <script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.3"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-cloud.js?v=1.3"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-cloud.js?v=1.4"></script>
 
 </body>
 </html>

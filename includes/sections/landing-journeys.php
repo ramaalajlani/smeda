@@ -483,7 +483,7 @@ $basePath = isset($basePath) ? $basePath : '';
     <aside class="roadmap-card" data-reveal data-reveal-delay="1">
       <div class="roadmap-title">خارطة الرحلة</div>
       <p class="roadmap-note">
-        كل مرحلة تشرح المطلوب من مقدم الطلب فقط. أما إحالة الملف للمكتب الاستشاري وتحديد عرض السعر فتتم لاحقاً بعد الإرسال والمراجعة.
+        كل مرحلة تشرح المطلوب من مقدم الطلب فقط. أما المراجعة والاعتماد وعرض الملف في السحابة فتتم بعد الإرسال.
       </p>
       <ul class="roadmap-list">
         <li class="roadmap-item">
@@ -510,8 +510,8 @@ $basePath = isset($basePath) ? $basePath : '';
         <li class="roadmap-item">
           <div class="roadmap-badge">4</div>
           <div class="roadmap-text">
-            <strong>المكاتب الاستشارية</strong>
-            <span>بعد الإرسال تُحال المعاملة لمكتب استشاري مؤهل — دون اختيار يدوي.</span>
+            <strong>مراجعة واعتماد</strong>
+            <span>بعد الإرسال يُراجع الطلب من الفرع ثم يُعتمد قبل ظهوره في السحابة.</span>
           </div>
         </li>
         <li class="roadmap-item">
