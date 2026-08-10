@@ -85,7 +85,7 @@ $pageTitle = 'غير مصرح';
   <script src="<?php echo $basePath; ?>assets/js/core/config.js?v=2.0"></script>
   <script src="<?php echo $basePath; ?>assets/js/core/routes.js?v=2.0"></script>
   <script src="<?php echo $basePath; ?>assets/js/core/api.js?v=2.1"></script>
-  <script src="<?php echo $basePath; ?>assets/js/core/auth.js?v=2.1"></script>
+  <script src="<?php echo $basePath; ?>assets/js/core/auth.js?v=20260810-2"></script>
   <script>
     document.getElementById('logoutBtn')?.addEventListener('click', () => {
       window.AppAuth.logout();
