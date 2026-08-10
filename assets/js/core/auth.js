@@ -529,6 +529,7 @@ window.AppAuth = (() => {
       has('admin')
     ) {
       return (
+        window.APP_CONFIG.HOME_PAGE ||
         `${base}/dashboard.php`
       );
     }

@@ -51,10 +51,10 @@ global $siteLang;
     </div>
   </div>
 
-  <script src="<?php echo $basePath; ?>assets/js/core/config.js?v=2.0"></script>
-  <script src="<?php echo $basePath; ?>assets/js/core/routes.js?v=2.0"></script>
-  <script src="<?php echo $basePath; ?>assets/js/core/api.js?v=2.1"></script>
-  <script src="<?php echo $basePath; ?>assets/js/core/auth.js?v=20260810-2"></script>
+  <script src="<?php echo $basePath; ?>assets/js/core/config.js?v=2.2"></script>
+  <script src="<?php echo $basePath; ?>assets/js/core/routes.js?v=2.2"></script>
+  <script src="<?php echo $basePath; ?>assets/js/core/api.js?v=2.2"></script>
+  <script src="<?php echo $basePath; ?>assets/js/core/auth.js?v=20260810-4"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="<?php echo $basePath; ?>assets/js/core/i18n.js?v=1.0"></script>
   <script src="<?php echo $basePath; ?>assets/js/pages/login.js?v=2.1"></script>
