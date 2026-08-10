@@ -1,6 +1,7 @@
 window.FinancePlatform = {
   canViewApplications() {
     return window.AppAuth?.hasPermission('finance.applications.view')
+      || window.AppAuth?.hasPermission('finance.applications.review_branch')
       || window.AppAuth?.isNationalAdmin()
       || window.AppAuth?.hasRole('project_owner')
       || window.AppAuth?.hasRole('consultant_office')

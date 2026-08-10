@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   function actionButtons(item) {
     if (isReadOnly || !canManage) return '';
     const row = item.raw;
-    let html = `<a href="finance-apply.php?id=${row.id}" class="btn btn-sm btn-outline-primary">عرض</a>`;
+    let html = `<a href="finance-application-view.php?id=${row.id}" class="btn btn-sm btn-outline-primary">عرض</a>`;
     if (window.AppAuth.hasPermission('finance.applications.assign_partner') || window.AppAuth.isNationalAdmin()) {
       html += ` <button class="btn btn-sm btn-outline-success" data-action="assign-partner" data-id="${row.id}">إحالة تمويل</button>`;
     }

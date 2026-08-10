@@ -5,8 +5,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const applicationId = params.get('id');
   let currentId = applicationId ? Number(applicationId) : null;
-  const canCreate = window.FinancePlatform.canCreateApplication();
-  const canView = window.FinancePlatform.canViewApplications();
+  const canCreate = window.FinancePlatform?.canCreateApplication?.()
+    || window.AppAuth?.hasPermission?.('finance.applications.create')
+    || window.AppAuth?.hasRole?.('project_owner');
+  const canView = window.FinancePlatform?.canViewApplications?.()
+    || window.FinancePlatform?.canReviewBranch?.()
+    || window.AppAuth?.hasPermission?.('finance.applications.view')
+    || window.AppAuth?.hasPermission?.('finance.applications.review_branch')
+    || window.AppAuth?.hasRole?.('branch_manager')
+    || window.AppAuth?.hasRole?.('finance_manager')
+    || window.AppAuth?.isNationalAdmin?.();
 
   // إنشاء طلب جديد يتطلب صلاحية الإنشاء؛ عرض طلب قائم يكفي بصلاحية العرض/المراجعة
   if (!canCreate && !(canView && currentId)) {

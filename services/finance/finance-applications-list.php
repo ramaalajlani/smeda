@@ -69,6 +69,24 @@ $activePage= 'finance-applications-list';
     .alert-box.show{display:block;}
     .alert-box.ok{background:#dcfce7;color:#166534;border:1px solid #86efac;}
     .alert-box.err{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
+    .view-overlay{
+      position:fixed;inset:0;background:rgba(15,40,36,.45);z-index:1200;
+      display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto;
+    }
+    .view-overlay.show{display:flex;}
+    .view-panel{
+      width:min(920px,100%);background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.2);
+      margin:auto;padding:20px 22px 24px;border:1px solid var(--c-border);
+    }
+    .view-panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px;}
+    .view-panel-head h2{margin:0;font-size:1.1rem;font-weight:800;color:var(--c-text);}
+    .view-close{border:none;background:var(--c-soft);color:var(--c-primary);border-radius:10px;padding:8px 12px;font-weight:800;cursor:pointer;}
+    .info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:12px;}
+    .info-item{background:var(--c-soft);border-radius:12px;padding:11px 12px;}
+    .info-lbl{font-size:.72rem;font-weight:700;color:var(--c-muted);margin-bottom:3px;}
+    .info-val{font-size:.88rem;font-weight:800;color:var(--c-text);word-break:break-word;}
+    .text-block{background:#f8fafc;border:1px solid var(--c-border);border-radius:12px;padding:11px 12px;font-size:.86rem;font-weight:600;line-height:1.7;white-space:pre-wrap;margin-bottom:10px;}
+    .view-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
     @media (max-width:900px){.stats-row{grid-template-columns:repeat(2,minmax(0,1fr));}}
     @media (max-width:575px){
       .stats-row{grid-template-columns:1fr;}
@@ -129,8 +147,22 @@ $activePage= 'finance-applications-list';
   <div id="requestsContainer"></div>
 </div>
 
+<div class="view-overlay" id="viewOverlay" aria-hidden="true">
+  <div class="view-panel" role="dialog" aria-modal="true" aria-labelledby="viewTitle">
+    <div class="view-panel-head">
+      <div>
+        <h2 id="viewTitle">ملخص الطلب</h2>
+        <div id="viewSubtitle" style="color:var(--c-muted);font-size:.84rem;font-weight:700;margin-top:4px"></div>
+      </div>
+      <button type="button" class="view-close" id="viewCloseBtn"><i class="bi bi-x-lg"></i> إغلاق</button>
+    </div>
+    <div id="viewBody"><div class="empty" style="padding:28px"><i class="bi bi-hourglass-split"></i>جاري التحميل...</div></div>
+    <div class="view-actions" id="viewActions"></div>
+  </div>
+</div>
+
 <?php include __DIR__ . '/../../includes/layout/app-shell-close.php'; ?>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.5"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-applications-list.js?v=1.5"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.6"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-applications-list.js?v=1.6"></script>
 </body>
 </html>

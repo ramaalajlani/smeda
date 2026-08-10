@@ -34,7 +34,18 @@ class FinanceDataScope
 
         if (BranchDataScope::isBranchManager($user)) {
             if ($user->branch_id) {
-                return $query->where('branch_id', $user->branch_id);
+                $governorateId = (int) ($user->governorate_id ?: 0);
+                if (!$governorateId) {
+                    $governorateId = (int) (\App\Models\Branch::query()->whereKey($user->branch_id)->value('governorate_id') ?: 0);
+                }
+
+                // فرع المدير أولاً، مع احتياط لمحافظة الفرع حتى لا تُحجب الطلبات المرتبطة بنفس المحافظة
+                return $query->where(function (Builder $q) use ($user, $governorateId) {
+                    $q->where('branch_id', $user->branch_id);
+                    if ($governorateId) {
+                        $q->orWhere('governorate_id', $governorateId);
+                    }
+                });
             }
 
             return $query->whereRaw('1 = 0');

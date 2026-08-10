@@ -71,7 +71,16 @@ class FundingApplicationPolicy
         if (AccessControlGuard::isNationalAdministrator($user)
             || $user->hasPermissionTo('finance.applications.review_branch')) {
             if (BranchDataScope::isBranchManager($user)) {
-                return BranchDataScope::userBelongsToBranch($user, $application->branch_id);
+                if (BranchDataScope::userBelongsToBranch($user, $application->branch_id)) {
+                    return true;
+                }
+
+                $govId = (int) ($user->governorate_id ?: 0);
+                if (!$govId && $user->branch_id) {
+                    $govId = (int) (\App\Models\Branch::query()->whereKey($user->branch_id)->value('governorate_id') ?: 0);
+                }
+
+                return $govId > 0 && (int) $application->governorate_id === $govId;
             }
 
             return true;

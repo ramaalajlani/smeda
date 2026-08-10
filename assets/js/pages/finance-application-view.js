@@ -30,14 +30,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!ok) return;
 
     const FP = window.FinancePlatform || {};
-    const canView = typeof FP.canViewApplications === 'function'
-      ? FP.canViewApplications()
-      : (
-        window.AppAuth.hasPermission('finance.applications.view')
-        || window.AppAuth.hasRole('branch_manager')
-        || window.AppAuth.hasRole('finance_manager')
-        || window.AppAuth.isNationalAdmin?.()
-      );
+    const canView = window.FinancePlatform?.canViewApplications?.()
+      || window.FinancePlatform?.canReviewBranch?.()
+      || window.AppAuth.hasPermission('finance.applications.view')
+      || window.AppAuth.hasPermission('finance.applications.review_branch')
+      || window.AppAuth.hasRole('branch_manager')
+      || window.AppAuth.hasRole('finance_manager')
+      || window.AppAuth.hasRole('finance_officer')
+      || window.AppAuth.hasRole('general_director')
+      || window.AppAuth.hasRole('deputy_general_director')
+      || window.AppAuth.hasRole('deputy_director')
+      || window.AppAuth.hasRole('project_owner')
+      || window.AppAuth.isNationalAdmin?.();
 
     if (!canView) {
       window.location.href = window.APP_CONFIG.FORBIDDEN_PAGE;
