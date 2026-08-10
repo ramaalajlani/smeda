@@ -1334,8 +1334,8 @@ $pageTitle = 'سحابة التمويل';
 <?php include $basePath . 'includes/layout/app-shell-close.php'; ?>
 <div id="financeCloudMessage" class="alert d-none container mt-3"></div>
 <div id="financeCloudLoading" class="text-center py-3 d-none">جاري تحميل الطلبات...</div>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.1"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-cloud.js?v=1.2"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.3"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-cloud.js?v=1.3"></script>
 
 </body>
 </html>

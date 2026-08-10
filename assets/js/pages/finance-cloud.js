@@ -74,9 +74,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       new: 'غير قائم',
     };
 
-    const readiness = ['approved', 'consultant_priced', 'funder_review', 'funded'].includes(status)
+    const readiness = ['approved', 'funded'].includes(status)
       ? 'ready'
-      : (['submitted', 'branch_review', 'consultant_review'].includes(status) ? 'review' : 'pending');
+      : (['funder_review', 'consultant_priced'].includes(status) ? 'review' : 'pending');
 
     return {
       id: row.id,
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         rows = cloudRes.data || [];
       } catch (_) {
         const res = await window.APP_API.get(window.APP_ROUTES.fundingApplications({ per_page: 100 }));
-        rows = (res.data || []).filter((r) => r.status && r.status !== 'draft');
+        rows = (res.data || []).filter((r) => ['approved', 'funded'].includes(r.status));
       }
       applicants = rows.map(mapRow);
       if (totalRequests) totalRequests.textContent = `${applicants.length} طلب`;

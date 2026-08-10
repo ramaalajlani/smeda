@@ -10,6 +10,7 @@ use App\Models\FundingPartnerAssignment;
 use App\Models\FundedLoan;
 use App\Models\User;
 use App\Services\AuditLogService;
+use App\Services\Needs\NeedSyncService;
 use App\Services\StatusHistoryService;
 use App\Support\StatusTransitionValidator;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ class FundingApplicationService
         private AuditLogService $auditLog,
         private StatusTransitionValidator $statusValidator,
         private StatusHistoryService $statusHistory,
+        private NeedSyncService $needSync,
     ) {}
 
     /**
@@ -135,14 +137,17 @@ class FundingApplicationService
             $this->statusHistory->record($locked, $from, 'submitted', (int) $user->id);
             $this->auditLog->log('finance_application_submitted', $user, $locked, $before, $locked->only(['status', 'current_stage', 'submitted_at']), null, $request, 'finance', 'إرسال طلب تمويل');
 
-            return $locked->fresh();
+            $submitted = $locked->fresh(['governorate', 'branch']);
+            $this->needSync->createFromFundingApplication($submitted, $user);
+
+            return $submitted;
         });
     }
 
     public function branchReview(FundingApplication $application, User $user, string $decision, ?string $notes, ?Request $request = null): FundingApplication
     {
         $status = match ($decision) {
-            'approve' => 'consultant_review',
+            'approve' => 'funder_review',
             'needs_completion' => 'needs_completion',
             'reject' => 'rejected',
             'review' => 'branch_review',

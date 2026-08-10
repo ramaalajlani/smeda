@@ -60,10 +60,7 @@ class FundingMetricsService
     public function cloudApplications(User $user): Builder
     {
         return $this->applicationQuery($user)
-            ->whereIn('status', [
-                'submitted', 'branch_review', 'needs_completion', 'consultant_review',
-                'consultant_priced', 'funder_review', 'approved', 'funded',
-            ])
+            ->whereIn('status', ['approved', 'funded'])
             ->with([
                 'branch:id,name',
                 'governorate:id,name_ar',

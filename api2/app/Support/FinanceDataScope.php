@@ -32,8 +32,21 @@ class FinanceDataScope
             return $query;
         }
 
-        if (BranchDataScope::isBranchManager($user) && $user->branch_id) {
-            return $query->where('branch_id', $user->branch_id);
+        if (BranchDataScope::isBranchManager($user)) {
+            $governorateId = (int) ($user->governorate_id ?: 0);
+            if (!$governorateId && $user->branch_id) {
+                $governorateId = (int) (\App\Models\Branch::query()->whereKey($user->branch_id)->value('governorate_id') ?: 0);
+            }
+
+            if ($governorateId) {
+                return $query->where('governorate_id', $governorateId);
+            }
+
+            if ($user->branch_id) {
+                return $query->where('branch_id', $user->branch_id);
+            }
+
+            return $query->whereRaw('1 = 0');
         }
 
         if ($user->hasRole('branch_officer')) {
@@ -113,8 +126,19 @@ class FinanceDataScope
         }
 
         if (static::hasNationalFinanceAccess($user) || $user->hasPermissionTo('finance.loans.view')) {
-            if (BranchDataScope::isBranchManager($user) && $user->branch_id) {
-                return $query->whereHas('application', fn (Builder $q) => $q->where('branch_id', $user->branch_id));
+            if (BranchDataScope::isBranchManager($user)) {
+                $governorateId = (int) ($user->governorate_id ?: 0);
+                if (!$governorateId && $user->branch_id) {
+                    $governorateId = (int) (\App\Models\Branch::query()->whereKey($user->branch_id)->value('governorate_id') ?: 0);
+                }
+
+                if ($governorateId) {
+                    return $query->whereHas('application', fn (Builder $q) => $q->where('governorate_id', $governorateId));
+                }
+
+                if ($user->branch_id) {
+                    return $query->whereHas('application', fn (Builder $q) => $q->where('branch_id', $user->branch_id));
+                }
             }
 
             return $query;

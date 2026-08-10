@@ -15,17 +15,52 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saveDraftBtn = document.getElementById('saveDraftBtn');
   const submitBtn = document.getElementById('submitApplicationBtn');
   const progressText = document.getElementById('progressText');
+  const progressBar = document.getElementById('progressBar');
+  const statusLabel = document.getElementById('applicationStatusLabel');
+  const readinessLabel = document.getElementById('readinessStatusLabel');
+  const currentStepLabel = document.getElementById('currentStepLabel');
   const messageBox = document.getElementById('financeApplyMessage');
   const govSelect = document.getElementById('governorateId');
   const branchSelect = document.getElementById('branchId');
 
   let branchesCache = [];
+  let currentStatus = 'draft';
 
   function showMessage(text, type = 'success') {
-    if (!messageBox) return;
-    messageBox.className = `alert alert-${type === 'error' ? 'danger' : 'success'}`;
-    messageBox.textContent = text;
-    messageBox.classList.remove('d-none');
+    if (messageBox) {
+      messageBox.className = `alert alert-${type === 'error' ? 'danger' : 'success'}`;
+      messageBox.textContent = text;
+      messageBox.classList.remove('d-none');
+    }
+    if (window.AppFeedback) {
+      window.AppFeedback.fromMessage(text, type);
+      return;
+    }
+  }
+
+  function updateSummaryStatus(status, stageLabel = null) {
+    currentStatus = status || 'draft';
+    if (statusLabel) {
+      statusLabel.textContent = window.FinancePlatform.statusLabel(currentStatus);
+    }
+    if (readinessLabel) {
+      readinessLabel.textContent = window.FinancePlatform.readinessLabel(currentStatus);
+    }
+    if (currentStepLabel && stageLabel) {
+      currentStepLabel.textContent = stageLabel;
+    }
+  }
+
+  function lockSubmittedForm() {
+    if (!form) return;
+    form.querySelectorAll('input, select, textarea, button').forEach((el) => {
+      if (el.id === 'submitApplicationBtn' || el.id === 'saveDraftBtn') {
+        el.disabled = true;
+        return;
+      }
+      if (el.closest('.wizard-nav')) return;
+      el.disabled = true;
+    });
   }
 
   function apiErrorMessage(err) {
@@ -155,14 +190,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     return missing;
   }
 
-  function updateProgress(payload) {
+  function updateProgress(payload, forcedPct = null) {
     const required = ['applicant_name', 'project_name', 'requested_amount', 'governorate_id'];
     const filled = required.filter((k) => {
       if (k === 'requested_amount') return Number(payload[k]) > 0;
       return !!payload[k];
     }).length;
-    const pct = Math.round((filled / required.length) * 100);
+    const pct = forcedPct != null
+      ? forcedPct
+      : (currentStatus !== 'draft' && currentStatus !== 'needs_completion'
+        ? 100
+        : Math.round((filled / required.length) * 100));
     if (progressText) progressText.textContent = `${pct}%`;
+    if (progressBar) progressBar.style.width = `${pct}%`;
   }
 
   function fillBranches(govId, selectedBranchId = null) {
@@ -218,6 +258,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       'financing_type', 'financing_mode', 'repayment_period_months', 'purpose', 'description',
       'governorate_id', 'branch_id',
     ].forEach((key) => setFieldValue(key, data[key]));
+
+    updateSummaryStatus(data.status || 'draft', window.FinancePlatform.statusLabel(data.status || 'draft'));
+    if (data.status && data.status !== 'draft') {
+      lockSubmittedForm();
+    }
 
     const details = data.details || {};
     [
@@ -281,6 +326,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   submitBtn?.addEventListener('click', async (e) => {
     e.preventDefault();
     try {
+      if (window.FinanceApplySteps && !window.FinanceApplySteps.validateAll()) {
+        return;
+      }
       if (!form.querySelector('#acknowledgeInfo')?.checked) {
         throw new Error(SiteI18n.ta('يجب الموافقة على الإقرار قبل الإرسال.'));
       }
@@ -292,11 +340,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       submitBtn.disabled = true;
       const id = await saveDraft();
       if (!id) throw new Error(SiteI18n.ta('يجب حفظ الطلب أولاً.'));
-      await window.APP_API.post(window.APP_ROUTES.fundingApplicationSubmit(id));
-      showMessage(SiteI18n.ta('تم إرسال طلب التمويل بنجاح.'));
+      const submitRes = await window.APP_API.post(window.APP_ROUTES.fundingApplicationSubmit(id));
+      const submitted = submitRes?.data?.data || submitRes?.data || {};
+      updateSummaryStatus(submitted.status || 'submitted', SiteI18n.ta('بانتظار مراجعة الفرع'));
+      updateProgress(collectPayload(), 100);
+      lockSubmittedForm();
+      showMessage(SiteI18n.ta('تم إرسال طلب التمويل بنجاح. سيظهر لمدير الفرع حسب المحافظة، ويُسجَّل تلقائياً على خارطة الاحتياجات (فلتر: تمويل).'));
     } catch (err) {
       showMessage(apiErrorMessage(err), 'error');
-    } finally {
       submitBtn.disabled = false;
     }
   });

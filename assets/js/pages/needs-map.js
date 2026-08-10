@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   var districtLayer = null;
   var governorateLayer = null;
   var govBoundsByName = {};
+  var govLayerByName = {};
   var govIdByName = {};
   var selectedGovName = '';
   var govModalPage = 1;
@@ -128,12 +129,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function defaultGovStyle(feature) {
     var name = feature.properties.name || '';
-    var selected = selectedGovName && selectedGovName === name;
+    var selected = selectedGovName && (selectedGovName === name || selectedGovName.indexOf(name) === 0 || name.indexOf(selectedGovName) === 0);
     return {
-      color: selected ? '#0f172a' : '#1e3a5f',
-      weight: selected ? 3 : 2,
-      fillColor: govFillColor(name),
-      fillOpacity: selected ? 0.18 : 0.07,
+      color: selected ? '#06AA89' : '#1e3a5f',
+      weight: selected ? 3.2 : 2,
+      fillColor: selected ? '#17947B' : govFillColor(name),
+      fillOpacity: selected ? 0.38 : 0.07,
     };
   }
 
@@ -173,6 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           var name = f.properties.name || '';
           if (name) {
             govBoundsByName[name] = layer.getBounds();
+            govLayerByName[name] = layer;
             attachGovernorateInteractions(layer, name);
           }
 
@@ -208,6 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             var name = f.properties.name || '';
             if (name) {
               govBoundsByName[name] = layer.getBounds();
+              govLayerByName[name] = layer;
               attachGovernorateInteractions(layer, name);
             }
           },
@@ -261,17 +264,70 @@ document.addEventListener('DOMContentLoaded', async () => {
       selectedGovName = opt.text || name;
       refreshGovernorateStyles();
       loadDistrictOptions();
-      if (govBoundsByName[selectedGovName]) {
-        map.fitBounds(govBoundsByName[selectedGovName], { padding: [36, 36], maxZoom: 10 });
-      } else if (govBoundsByName[name]) {
-        map.fitBounds(govBoundsByName[name], { padding: [36, 36], maxZoom: 10 });
-      }
       loadMode();
-      openGovNeedsModal(opt.value, selectedGovName);
+      zoomToGovernorateAndOpenModal(opt.value, selectedGovName, name);
       setTimeout(function () { suppressGovChangeModal = false; }, 0);
     } else {
       refreshGovernorateStyles();
-      openGovNeedsModal(govIdByName[name] || null, name);
+      zoomToGovernorateAndOpenModal(govIdByName[name] || null, name, name);
+    }
+  }
+
+  function resolveGovBounds(primaryName, fallbackName) {
+    return govBoundsByName[primaryName]
+      || govBoundsByName[fallbackName]
+      || (govLayerByName[primaryName] && govLayerByName[primaryName].getBounds())
+      || (govLayerByName[fallbackName] && govLayerByName[fallbackName].getBounds())
+      || null;
+  }
+
+  function pulseGovernorateLayer(name) {
+    var layer = govLayerByName[name] || govLayerByName[selectedGovName];
+    if (!layer) return;
+    layer.setStyle({
+      color: '#06AA89',
+      weight: 3.6,
+      fillColor: '#17947B',
+      fillOpacity: 0.46,
+    });
+    if (layer.bringToFront) layer.bringToFront();
+    var el = layer.getElement ? layer.getElement() : null;
+    if (el && el.classList) {
+      el.classList.remove('gov-pulse-layer');
+      void el.offsetWidth;
+      el.classList.add('gov-pulse-layer');
+    }
+  }
+
+  var govZoomToken = 0;
+
+  function zoomToGovernorateAndOpenModal(govId, govName, clickName) {
+    refreshGovernorateStyles();
+    pulseGovernorateLayer(govName || clickName);
+    var bounds = resolveGovBounds(govName, clickName);
+    var opened = false;
+    var token = ++govZoomToken;
+    function openOnce() {
+      if (opened || token !== govZoomToken) return;
+      opened = true;
+      openGovNeedsModal(govId, govName || clickName);
+    }
+    if (bounds && typeof bounds.isValid === 'function' && bounds.isValid()) {
+      map.flyToBounds(bounds, {
+        padding: [64, 64],
+        maxZoom: 9,
+        duration: 1.05,
+        easeLinearity: 0.28,
+      });
+      map.once('moveend', openOnce);
+      setTimeout(openOnce, 1150);
+    } else if (window.SYRIA_GOVERNORATE_CENTERS && window.SYRIA_GOVERNORATE_CENTERS[clickName || govName]) {
+      var center = window.SYRIA_GOVERNORATE_CENTERS[clickName || govName];
+      map.flyTo(center, 8.4, { duration: 1.0 });
+      map.once('moveend', openOnce);
+      setTimeout(openOnce, 1100);
+    } else {
+      openOnce();
     }
   }
 
@@ -691,10 +747,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     govModalGovId = govId || null;
     govModalGovName = govName || '';
     govModalPage = 1;
-    document.getElementById('govNeedsTitle').textContent = 'احتياجات — ' + (govName || 'محافظة');
-    document.getElementById('govNeedsSub').textContent = 'قائمة الاحتياجات ضمن هذه المحافظة';
+    document.getElementById('govNeedsTitle').textContent = 'محافظة ' + (govName || '—');
+    document.getElementById('govNeedsSub').textContent = 'عرض موسّع لاحتياجات هذه المحافظة — مرتبة وقابلة للتصفح';
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
     var listLink = document.getElementById('govNeedsListLink');
     if (listLink) {
       if (govId) {
@@ -704,6 +761,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         listLink.style.display = 'none';
       }
     }
+    setGovStats({ total: 0, finance: 0, priority: 0, page: 0 });
     loadGovNeedsPage(1);
   }
 
@@ -712,6 +770,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!modal) return;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function setGovStats(stats) {
+    var totalEl = document.getElementById('govStatTotal');
+    var financeEl = document.getElementById('govStatFinance');
+    var priorityEl = document.getElementById('govStatPriority');
+    var pageEl = document.getElementById('govStatPage');
+    if (totalEl) totalEl.textContent = String(stats.total || 0);
+    if (financeEl) financeEl.textContent = String(stats.finance || 0);
+    if (priorityEl) priorityEl.textContent = String(stats.priority || 0);
+    if (pageEl) pageEl.textContent = String(stats.page || 0);
+  }
+
+  function summarizeGovItems(items, total) {
+    var finance = 0;
+    var priority = 0;
+    (items || []).forEach(function (n) {
+      if (n.source_platform === 'finance' || n.need_type === 'تمويل' || n.proposed_intervention === 'تمويل') finance += 1;
+      if (n.priority === 'عالية' || n.priority === 'عاجلة' || n.priority === 'high') priority += 1;
+    });
+    setGovStats({
+      total: total || items.length || 0,
+      finance: finance,
+      priority: priority,
+      page: (items || []).length,
+    });
   }
 
   async function loadGovNeedsPage(page) {
@@ -762,6 +847,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } catch (_) {
         if (body) body.innerHTML = '<div class="gov-needs-empty">تعذّر تحميل الاحتياجات</div>';
         if (countEl) countEl.textContent = '—';
+        setGovStats({ total: 0, finance: 0, priority: 0, page: 0 });
         return;
       }
     }
@@ -770,13 +856,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (countEl) countEl.textContent = total + ' احتياج — صفحة ' + govModalPage + ' / ' + lastPage;
     if (prevBtn) prevBtn.disabled = govModalPage <= 1;
     if (nextBtn) nextBtn.disabled = govModalPage >= lastPage;
+    summarizeGovItems(items, total);
 
     if (!items.length) {
       if (body) body.innerHTML = '<div class="gov-needs-empty"><i class="bi bi-inbox" style="font-size:2rem;display:block;margin-bottom:8px;opacity:.4"></i>لا توجد احتياجات بهذه الفلاتر في ' + _e(govModalGovName || 'هذه المحافظة') + '</div>';
       return;
     }
 
-    body.innerHTML = items.map(function (n) {
+    body.innerHTML = '<div class="gov-needs-grid">' + items.map(function (n) {
       var pri = n.priority || 'متوسطة';
       var priCls = PRI_CLS[pri] || 'np-pri-متوسطة';
       var statusLabel = n.status_label || (window.NeedsPlatform ? window.NeedsPlatform.statusLabel(n.status) : (n.status || '—'));
@@ -785,22 +872,30 @@ document.addEventListener('DOMContentLoaded', async () => {
       var loc = govDisplay(n.governorate);
       if (n.district_name) loc += ' — ' + n.district_name;
       var hasGeo = n.latitude && n.longitude;
-      return '<div class="gov-need-card">' +
-        '<div class="gov-need-title">' + _e(n.title || n.need_code || ('#' + n.id)) + '</div>' +
-        '<div class="gov-need-meta">' +
+      var isFinance = n.source_platform === 'finance' || n.need_type === 'تمويل';
+      var desc = n.summary || n.description || n.purpose || '';
+      if (desc && String(desc).length > 140) desc = String(desc).slice(0, 140) + '…';
+      return '<article class="gov-need-card">' +
+        '<div class="gov-need-top">' +
+          (n.need_code ? '<span class="gov-need-code">#' + _e(n.need_code) + '</span>' : '<span></span>') +
           '<span class="np-badge ' + priCls + '">' + _e(pri) + '</span>' +
-          (n.need_category_label ? '<span class="np-sector-tag">' + _e(n.need_category_label) + '</span>' : '') +
+        '</div>' +
+        '<h4 class="gov-need-title">' + _e(n.title || n.need_code || ('#' + n.id)) + '</h4>' +
+        (desc ? '<p class="gov-need-desc">' + _e(desc) + '</p>' : '') +
+        '<div class="gov-need-meta">' +
           '<span><i class="bi bi-clipboard-check"></i> ' + _e(statusLabel) + '</span>' +
+          (n.need_category_label ? '<span class="np-sector-tag">' + _e(n.need_category_label) + '</span>' : '') +
+          (n.need_type ? '<span><i class="bi bi-tag"></i> ' + _e(n.need_type) + '</span>' : '') +
+          (isFinance ? '<span class="gov-source-finance"><i class="bi bi-bank2"></i> تمويل</span>' : '') +
           (sectorsLabels ? '<span><i class="bi bi-grid"></i> ' + _e(sectorsLabels) + '</span>' : '') +
           '<span><i class="bi bi-geo-alt"></i> ' + _e(loc) + '</span>' +
-          (n.need_code ? '<span style="font-family:monospace">#' + _e(n.need_code) + '</span>' : '') +
         '</div>' +
         '<div class="gov-need-actions">' +
           '<a class="gov-btn-view" href="need-view.php?id=' + n.id + '"><i class="bi bi-eye"></i> التفاصيل</a>' +
           (hasGeo ? '<button type="button" class="gov-btn-map" data-lat="' + n.latitude + '" data-lng="' + n.longitude + '" data-id="' + n.id + '"><i class="bi bi-geo-alt-fill"></i> على الخريطة</button>' : '') +
         '</div>' +
-      '</div>';
-    }).join('');
+      '</article>';
+    }).join('') + '</div>';
 
     body.querySelectorAll('.gov-btn-map').forEach(function (btn) {
       btn.addEventListener('click', function () {

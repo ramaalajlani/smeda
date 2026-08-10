@@ -64,13 +64,27 @@ class FundingApplicationPolicy
 
     public function reviewBranch(?User $user, FundingApplication $application): bool
     {
-        return $this->view($user, $application)
-            && !$user->hasRole('auditor')
-            && (
-                AccessControlGuard::isNationalAdministrator($user)
-                || (BranchDataScope::isBranchManager($user) && (int) $application->branch_id === (int) $user->branch_id)
-                || $user->hasPermissionTo('finance.applications.review_branch')
-            );
+        if (!$this->view($user, $application) || $user->hasRole('auditor')) {
+            return false;
+        }
+
+        if (AccessControlGuard::isNationalAdministrator($user)
+            || $user->hasPermissionTo('finance.applications.review_branch')) {
+            if (BranchDataScope::isBranchManager($user)) {
+                $govId = (int) ($user->governorate_id ?: 0);
+                if (!$govId && $user->branch_id) {
+                    $govId = (int) (\App\Models\Branch::query()->whereKey($user->branch_id)->value('governorate_id') ?: 0);
+                }
+
+                return $govId > 0
+                    ? (int) $application->governorate_id === $govId
+                    : ((int) $application->branch_id === (int) $user->branch_id);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     public function assignConsultant(?User $user, FundingApplication $application): bool
@@ -99,7 +113,9 @@ class FundingApplicationPolicy
             && !$user->hasRole('auditor')
             && (
                 AccessControlGuard::isNationalAdministrator($user)
+                || $user->hasRole('finance_manager')
                 || (AccessControlGuard::isNationalExecutive($user) && $user->hasPermissionTo('finance.applications.approve'))
+                || $user->hasPermissionTo('finance.applications.approve')
             );
     }
 

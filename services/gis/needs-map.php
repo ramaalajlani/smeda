@@ -382,67 +382,163 @@ $embed = isset($_GET['embed']); // وضع التضمين داخل داشبورد
 
     .gov-needs-modal {
       position: fixed; inset: 0; z-index: 3000;
-      display: none; align-items: flex-end; justify-content: center;
-      background: rgba(15, 23, 42, .45);
-      backdrop-filter: blur(3px);
-      padding: 12px;
-      padding-bottom: max(12px, env(safe-area-inset-bottom));
+      display: none; align-items: center; justify-content: center;
+      background: rgba(6, 40, 36, .52);
+      backdrop-filter: blur(5px);
+      padding: 16px;
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+      opacity: 0;
+      transition: opacity .22s ease;
     }
-    .gov-needs-modal.open { display: flex; }
+    .gov-needs-modal.open {
+      display: flex;
+      opacity: 1;
+    }
     .gov-needs-sheet {
-      width: min(720px, 100%);
-      max-height: min(82dvh, 720px);
+      width: min(1120px, 100%);
+      max-height: min(90dvh, 860px);
       background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+      border-radius: 22px;
+      box-shadow: 0 28px 70px rgba(0,0,0,.28);
       display: flex; flex-direction: column;
       overflow: hidden;
-      animation: govSheetIn .22s ease-out;
+      transform: scale(.96) translateY(18px);
+      opacity: 0;
+      transition: transform .28s cubic-bezier(.22,1,.36,1), opacity .28s ease;
     }
-    @keyframes govSheetIn {
-      from { transform: translateY(24px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .gov-needs-modal.open .gov-needs-sheet {
+      transform: none;
+      opacity: 1;
     }
     .gov-needs-hd {
-      display: flex; align-items: flex-start; gap: 10px;
-      padding: 14px 16px; border-bottom: 1px solid #e5e7eb;
-      background: linear-gradient(135deg, #062824, #0f4f47);
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, #062824 0%, #0f4f47 55%, #17947B 120%);
       color: #fff;
     }
-    .gov-needs-hd h3 { margin: 0; font-size: 1.05rem; font-weight: 800; flex: 1; line-height: 1.35; }
-    .gov-needs-hd p { margin: 4px 0 0; font-size: .8rem; opacity: .85; }
+    .gov-needs-hd-icon {
+      width: 46px; height: 46px; border-radius: 14px;
+      background: rgba(255,255,255,.14);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; flex: 0 0 auto;
+    }
+    .gov-needs-hd h3 { margin: 0; font-size: 1.2rem; font-weight: 800; flex: 1; line-height: 1.35; }
+    .gov-needs-hd p { margin: 5px 0 0; font-size: .86rem; opacity: .88; }
     .gov-needs-close {
-      width: 40px; height: 40px; border: none; border-radius: 10px;
+      width: 42px; height: 42px; border: none; border-radius: 12px;
       background: rgba(255,255,255,.15); color: #fff; cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;
+      display: inline-flex; align-items: center; justify-content: center; font-size: 1.15rem;
     }
-    .gov-needs-body { flex: 1; overflow: auto; padding: 12px 14px; -webkit-overflow-scrolling: touch; }
+    .gov-needs-close:hover { background: rgba(255,255,255,.24); }
+    .gov-needs-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px 18px 6px;
+      background: #f6fbf9;
+      border-bottom: 1px solid #e8f0ed;
+    }
+    .gov-stat-chip {
+      background: #fff;
+      border: 1px solid rgba(23,148,123,.14);
+      border-radius: 14px;
+      padding: 10px 12px;
+      min-width: 0;
+    }
+    .gov-stat-chip .lbl { font-size: .74rem; font-weight: 700; color: #64748b; margin-bottom: 2px; }
+    .gov-stat-chip .val { font-size: 1.15rem; font-weight: 800; color: #0f4f47; }
+    .gov-needs-body {
+      flex: 1; overflow: auto; padding: 14px 18px 18px;
+      -webkit-overflow-scrolling: touch;
+      background: linear-gradient(180deg, #f8fcfb 0%, #ffffff 40%);
+    }
+    .gov-needs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
     .gov-need-card {
-      border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px 14px;
-      margin-bottom: 10px; background: #fafafa;
+      border: 1px solid rgba(23,148,123,.12);
+      border-radius: 16px;
+      padding: 14px 15px;
+      margin-bottom: 0;
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(6,40,36,.05);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
     }
-    .gov-need-card:hover { background: #fff; border-color: #17947B; }
-    .gov-need-title { font-weight: 800; font-size: .92rem; color: #16332E; margin: 0 0 6px; }
-    .gov-need-meta { display: flex; flex-wrap: wrap; gap: 6px 10px; font-size: .78rem; color: #6b7280; font-weight: 600; }
-    .gov-need-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .gov-need-card:hover {
+      background: #fff;
+      border-color: rgba(23,148,123,.42);
+      box-shadow: 0 14px 28px rgba(6,40,36,.1);
+      transform: translateY(-1px);
+    }
+    .gov-need-top {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px;
+    }
+    .gov-need-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .74rem; font-weight: 700;
+      color: #17947B; background: #EAF8F4;
+      border-radius: 8px; padding: 3px 8px; white-space: nowrap;
+    }
+    .gov-need-title { font-weight: 800; font-size: .98rem; color: #16332E; margin: 0 0 8px; line-height: 1.45; }
+    .gov-need-desc {
+      color: #64748b; font-size: .82rem; font-weight: 600; line-height: 1.65;
+      margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .gov-need-meta {
+      display: flex; flex-wrap: wrap; gap: 6px 8px; font-size: .78rem; color: #6b7280; font-weight: 600;
+      margin-top: auto;
+    }
+    .gov-need-meta span {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #f8fafc; border: 1px solid #eef2f7; border-radius: 999px; padding: 3px 9px;
+    }
+    .gov-need-actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
     .gov-need-actions a, .gov-need-actions button {
-      min-height: 36px; border-radius: 10px; font-size: .8rem; font-weight: 700;
-      padding: 6px 12px; text-decoration: none; border: none; cursor: pointer;
+      min-height: 38px; border-radius: 11px; font-size: .82rem; font-weight: 700;
+      padding: 7px 13px; text-decoration: none; border: none; cursor: pointer;
       display: inline-flex; align-items: center; gap: 5px;
     }
     .gov-btn-view { background: #17947B; color: #fff; }
     .gov-btn-map { background: #e0f2fe; color: #0369a1; }
+    .gov-source-finance { background: #ecfdf5 !important; color: #047857 !important; border-color: #a7f3d0 !important; }
     .gov-needs-empty, .gov-needs-loading {
-      text-align: center; padding: 36px 16px; color: #6b7280; font-weight: 600;
+      text-align: center; padding: 48px 16px; color: #6b7280; font-weight: 600; grid-column: 1 / -1;
     }
     .gov-needs-ft {
-      padding: 10px 14px; border-top: 1px solid #e5e7eb;
+      padding: 12px 18px; border-top: 1px solid #e5e7eb;
       display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;
       background: #f8fafc;
     }
     .gov-needs-ft .btn { min-height: 40px; font-weight: 700; font-size: .84rem; border-radius: 10px; }
-    @media (min-width: 768px) {
-      .gov-needs-modal { align-items: center; }
+    .gov-pulse-layer {
+      animation: govPulse 1.1s ease-out 1;
+    }
+    @keyframes govPulse {
+      0% { filter: brightness(1); }
+      40% { filter: brightness(1.08); }
+      100% { filter: brightness(1); }
+    }
+    @media (max-width: 991.98px) {
+      .gov-needs-sheet { width: min(960px, 100%); max-height: min(92dvh, 820px); }
+      .gov-needs-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .gov-needs-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 575.98px) {
+      .gov-needs-modal { padding: 8px; align-items: flex-end; }
+      .gov-needs-sheet {
+        width: 100%;
+        max-height: min(94dvh, 100%);
+        border-radius: 18px 18px 12px 12px;
+      }
+      .gov-needs-hd { padding: 14px 14px; }
+      .gov-needs-body { padding: 12px; }
+      .gov-needs-stats { padding: 10px 12px 4px; gap: 8px; }
+      .gov-needs-hd-icon { display: none; }
     }
   </style>
   <?php if ($embed): ?>
@@ -607,6 +703,7 @@ $embed = isset($_GET['embed']); // وضع التضمين داخل داشبورد
               <option value="training">التدريب</option>
               <option value="manual">إدخال يدوي</option>
             </select>
+            <div class="map-filter-hint" style="margin-top:6px">طلبات التمويل المُرسلة تظهر تلقائياً — فلتر المصدر: تمويل أو النوع: تمويل</div>
           </div>
           <div class="col-6">
             <label class="filter-label">التدخل المقترح</label>
@@ -674,6 +771,7 @@ $embed = isset($_GET['embed']); // وضع التضمين داخل داشبورد
 <div class="gov-needs-modal" id="govNeedsModal" aria-hidden="true">
   <div class="gov-needs-sheet" role="dialog" aria-modal="true" aria-labelledby="govNeedsTitle">
     <div class="gov-needs-hd">
+      <div class="gov-needs-hd-icon" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></div>
       <div style="flex:1;min-width:0">
         <h3 id="govNeedsTitle">احتياجات المحافظة</h3>
         <p id="govNeedsSub">جاري التحميل...</p>
@@ -681,6 +779,12 @@ $embed = isset($_GET['embed']); // وضع التضمين داخل داشبورد
       <button type="button" class="gov-needs-close" id="govNeedsClose" aria-label="إغلاق">
         <i class="bi bi-x-lg"></i>
       </button>
+    </div>
+    <div class="gov-needs-stats" id="govNeedsStats" aria-live="polite">
+      <div class="gov-stat-chip"><div class="lbl">الإجمالي</div><div class="val" id="govStatTotal">0</div></div>
+      <div class="gov-stat-chip"><div class="lbl">تمويل</div><div class="val" id="govStatFinance">0</div></div>
+      <div class="gov-stat-chip"><div class="lbl">عالية/عاجلة</div><div class="val" id="govStatPriority">0</div></div>
+      <div class="gov-stat-chip"><div class="lbl">هذه الصفحة</div><div class="val" id="govStatPage">0</div></div>
     </div>
     <div class="gov-needs-body" id="govNeedsBody">
       <div class="gov-needs-loading"><span class="spinner-border spinner-border-sm"></span> جاري التحميل...</div>
@@ -725,7 +829,7 @@ $embed = isset($_GET['embed']); // وضع التضمين داخل داشبورد
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="<?php echo $basePath; ?>assets/js/pages/syria-geo-config.js?v=1.0"></script>
 <script src="<?php echo $basePath; ?>assets/js/pages/needs-platform.js?v=2.1"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/needs-map.js?v=6.4" defer></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/needs-map.js?v=6.5" defer></script>
 <script>
 (function () {
   // فتح/إغلاق panel الفلاتر

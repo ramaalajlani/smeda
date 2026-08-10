@@ -31,6 +31,7 @@ class FundingApplicationController extends Controller
         )
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->string('status')))
             ->when($request->filled('branch_id'), fn ($q) => $q->where('branch_id', $request->integer('branch_id')))
+            ->when($request->filled('governorate_id'), fn ($q) => $q->where('governorate_id', $request->integer('governorate_id')))
             ->orderByDesc('id')
             ->paginate(max(1, min((int) $request->integer('per_page', 20), 100)));
 

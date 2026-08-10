@@ -292,6 +292,45 @@ $pageTitle = 'طلب تمويل';
       margin-bottom:.55rem;
     }
 
+    #finance-apply-page .req-mark{
+      display:inline-flex;
+      align-items:center;
+      margin-inline-start:6px;
+      padding:2px 8px;
+      border-radius:999px;
+      background:rgba(217,45,32,.1);
+      color:#b42318;
+      font-size:.72rem;
+      font-weight:800;
+      vertical-align:middle;
+    }
+
+    #finance-apply-page .is-invalid-field,
+    #finance-apply-page .form-check-wrap.is-invalid-field{
+      border-color:#f97066 !important;
+      box-shadow:0 0 0 .15rem rgba(249,112,102,.18);
+    }
+
+    #finance-apply-page .ai-help-note{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:10px;
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:#f0f7ff;
+      border:1px solid rgba(91,141,255,.22);
+      color:#1e3a5f;
+      font-size:.86rem;
+      font-weight:700;
+      line-height:1.7;
+    }
+
+    #finance-apply-page .ai-help-note .btn{
+      white-space:nowrap;
+    }
+
     #finance-apply-page .form-control,
     #finance-apply-page .form-select{
       min-height:48px;
@@ -419,15 +458,19 @@ $pageTitle = 'طلب تمويل';
 
     #finance-apply-page .financial-table-wrap{
       overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
       border:1px solid rgba(23,148,123,.10);
       border-radius:18px;
       background:#fff;
+      padding:0;
     }
 
     #finance-apply-page .financial-table{
-      min-width:1040px;
+      width:100%;
+      min-width:0;
       margin:0;
       vertical-align:middle;
+      table-layout:auto;
     }
 
     #finance-apply-page .financial-table thead th{
@@ -437,25 +480,116 @@ $pageTitle = 'طلب تمويل';
       white-space:nowrap;
       border-color:rgba(23,148,123,.10);
       text-align:center;
+      font-size:.88rem;
+      padding:.75rem .55rem;
     }
 
     #finance-apply-page .financial-table tbody td,
     #finance-apply-page .financial-table tbody th{
       border-color:rgba(23,148,123,.08);
       vertical-align:middle;
+      padding:.55rem;
     }
 
     #finance-apply-page .financial-table tbody th{
       color:#0F4F47;
       font-weight:800;
-      white-space:nowrap;
-      min-width:250px;
+      white-space:normal;
+      min-width:160px;
+      max-width:220px;
       background:#fcfefd;
+      font-size:.86rem;
+      line-height:1.55;
+      text-align:start;
     }
 
-    #finance-apply-page .financial-table input,
-    #finance-apply-page .financial-table select{
+    #finance-apply-page .financial-table input.form-control,
+    #finance-apply-page .financial-table select.form-select{
+      min-width:0;
+      width:100%;
+      min-height:44px;
+      font-size:.9rem;
+      border-radius:12px;
+      padding:.45rem .7rem;
+    }
+
+    #finance-apply-page .financial-table input.form-control{
+      text-align:center;
+    }
+
+    #finance-apply-page .financial-table .year-col{
+      min-width:110px;
+      width:14%;
+    }
+
+    #finance-apply-page .financial-table .audit-col{
+      min-width:120px;
+      width:16%;
+    }
+
+    #finance-apply-page .financial-table .notes-col{
       min-width:140px;
+      width:18%;
+    }
+
+    @media (max-width:991.98px){
+      #finance-apply-page .financial-table,
+      #finance-apply-page .financial-table thead,
+      #finance-apply-page .financial-table tbody,
+      #finance-apply-page .financial-table tr,
+      #finance-apply-page .financial-table th,
+      #finance-apply-page .financial-table td{
+        display:block;
+        width:100%;
+      }
+
+      #finance-apply-page .financial-table{
+        min-width:0;
+      }
+
+      #finance-apply-page .financial-table thead{
+        display:none;
+      }
+
+      #finance-apply-page .financial-table tbody tr{
+        border-bottom:1px solid rgba(23,148,123,.12);
+        padding:14px 12px;
+        background:#fff;
+      }
+
+      #finance-apply-page .financial-table tbody tr:nth-child(even){
+        background:#f8fcfb;
+      }
+
+      #finance-apply-page .financial-table tbody th{
+        max-width:none;
+        min-width:0;
+        background:transparent;
+        border:0;
+        padding:0 0 10px;
+        font-size:.95rem;
+      }
+
+      #finance-apply-page .financial-table tbody td{
+        border:0;
+        padding:6px 0;
+      }
+
+      #finance-apply-page .financial-table tbody td::before{
+        content:attr(data-label);
+        display:block;
+        font-size:.78rem;
+        font-weight:800;
+        color:#64748b;
+        margin-bottom:4px;
+      }
+
+      #finance-apply-page .financial-table .year-col,
+      #finance-apply-page .financial-table .audit-col,
+      #finance-apply-page .financial-table .notes-col{
+        min-width:0;
+        width:100%;
+      }
     }
 
     #finance-apply-page .step-actions{
@@ -726,19 +860,28 @@ $pageTitle = 'طلب تمويل';
         position:static;
         margin-bottom:1rem;
       }
+
+      #finance-apply-page .roadmap-shell{
+        margin-top:-28px;
+      }
+
+      #finance-apply-page .roadmap-shell > .container{
+        padding-inline:12px;
+      }
     }
 
     @media (max-width:767.98px){
       #finance-apply-page .finance-hero{
-        padding:72px 0 62px;
+        padding:56px 0 48px;
       }
 
       #finance-apply-page .finance-hero h1{
-        font-size:2rem;
+        font-size:clamp(1.55rem, 7vw, 2rem);
       }
 
       #finance-apply-page .finance-hero p{
-        font-size:.98rem;
+        font-size:.92rem;
+        line-height:1.75;
       }
 
       #finance-apply-page .ui-card,
@@ -748,7 +891,29 @@ $pageTitle = 'طلب تمويل';
       }
 
       #finance-apply-page .ui-card{
-        padding:1.05rem;
+        padding:1rem .9rem;
+      }
+
+      #finance-apply-page .summary-card{
+        padding:.95rem .9rem;
+      }
+
+      #finance-apply-page .summary-card .row > [class*="col-"]{
+        flex:0 0 50%;
+        max-width:50%;
+      }
+
+      #finance-apply-page .summary-label{
+        font-size:.78rem;
+      }
+
+      #finance-apply-page .summary-value{
+        font-size:.95rem;
+      }
+
+      #finance-apply-page .step-head{
+        padding:.85rem .9rem;
+        border-radius:16px;
       }
 
       #finance-apply-page .form-check-wrap{
@@ -780,6 +945,48 @@ $pageTitle = 'طلب تمويل';
       #finance-apply-page .office-match-grid{
         grid-template-columns:1fr;
       }
+
+      #finance-apply-page .form-control,
+      #finance-apply-page .form-select{
+        font-size:16px;
+        min-height:46px;
+      }
+
+      #finance-apply-page textarea.form-control{
+        min-height:96px;
+      }
+
+      #finance-apply-page .roadmap-list{
+        display:grid;
+        grid-auto-flow:column;
+        grid-auto-columns:minmax(210px, 78vw);
+        overflow-x:auto;
+        gap:10px;
+        padding-bottom:6px;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+      }
+
+      #finance-apply-page .roadmap-item{
+        scroll-snap-align:start;
+        min-height:100%;
+      }
+    }
+
+    @media (max-width:575.98px){
+      #finance-apply-page .summary-card .row > [class*="col-"]{
+        flex:0 0 100%;
+        max-width:100%;
+      }
+
+      #finance-apply-page .roadmap-shell{
+        margin-top:-18px;
+      }
+
+      #finance-apply-page .step-badge,
+      #finance-apply-page .step-chip{
+        font-size:.78rem;
+      }
     }
   </style>
 </head>
@@ -808,7 +1015,7 @@ $pageTitle = 'طلب تمويل';
         <div class="row g-3 align-items-center">
           <div class="col-lg-3 col-md-6">
             <div class="summary-label">حالة الطلب</div>
-            <div class="summary-value">مسودة</div>
+            <div class="summary-value" id="applicationStatusLabel">مسودة</div>
           </div>
           <div class="col-lg-3 col-md-6">
             <div class="summary-label">المرحلة الحالية</div>
@@ -820,7 +1027,7 @@ $pageTitle = 'طلب تمويل';
           </div>
           <div class="col-lg-3 col-md-6">
             <div class="summary-label">حالة الجاهزية</div>
-            <div class="summary-value">قيد الاستكمال</div>
+            <div class="summary-value" id="readinessStatusLabel">قيد الاستكمال</div>
           </div>
         </div>
         <div class="progress-track">
@@ -953,10 +1160,10 @@ $pageTitle = 'طلب تمويل';
 
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">نوع التمويل</label>
-                  <div class="form-check-wrap">
+                  <label class="form-label">نوع التمويل <span class="req-mark">مطلوب</span></label>
+                  <div class="form-check-wrap" data-required-group="financing_mode">
                     <div class="form-check">
-                      <input class="form-check-input" type="radio" name="financing_mode" id="financingModeIslamic" value="islamic">
+                      <input class="form-check-input" type="radio" name="financing_mode" id="financingModeIslamic" value="islamic" required>
                       <label class="form-check-label" for="financingModeIslamic">إسلامي</label>
                     </div>
                     <div class="form-check">
@@ -972,10 +1179,10 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">طبيعة المشروع</label>
-                  <div class="form-check-wrap">
+                  <label class="form-label">طبيعة المشروع <span class="req-mark">مطلوب</span></label>
+                  <div class="form-check-wrap" data-required-group="project_status">
                     <div class="form-check">
-                      <input class="form-check-input project-status-radio" type="radio" name="project_status" id="projectStatusExisting" value="existing">
+                      <input class="form-check-input project-status-radio" type="radio" name="project_status" id="projectStatusExisting" value="existing" required>
                       <label class="form-check-label" for="projectStatusExisting">قائم</label>
                     </div>
                     <div class="form-check">
@@ -987,8 +1194,8 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">القطاع الاقتصادي حسب SYRSIC</label>
-                  <select name="project_sector" id="projectSector" class="form-select">
+                  <label class="form-label">القطاع الاقتصادي حسب SYRSIC <span class="req-mark">مطلوب</span></label>
+                  <select name="project_sector" id="projectSector" class="form-select" required>
                     <option value="">اختر القطاع</option>
                     <option value="agricultural">نشاط زراعي</option>
                     <option value="industrial">نشاط صناعي</option>
@@ -999,19 +1206,24 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">رمز النشاط الاقتصادي SYRSIC</label>
-                  <input type="text" name="syrsic_activity_code" id="syrsicActivityCode" class="form-control" placeholder="مثال: 011303 أو 620101">
-                  <span class="field-hint">يفضل إدخال الرمز السداسي للنشاط عند توفره لتصنيف الطلب بدقة.</span>
+                  <label class="form-label">رمز النشاط الاقتصادي SYRSIC <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="syrsic_activity_code" id="syrsicActivityCode" class="form-control" placeholder="مثال: 011303 أو 620101" required>
+                  <div class="ai-help-note">
+                    <span>يمكنك الاستعانة بالمستشار الذكي لتحديد رمز النشاط حسب SYRSIC بدقة.</span>
+                    <button type="button" class="btn btn-sm btn-brand" id="openAiForSyrsicBtn">
+                      <i class="bi bi-robot"></i> فتح المستشار الذكي
+                    </button>
+                  </div>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">اسم المشروع / النشاط <span class="text-danger">*</span></label>
+                  <label class="form-label">اسم المشروع / النشاط <span class="req-mark">مطلوب</span></label>
                   <input type="text" name="project_name" id="projectName" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">حجم المشروع</label>
-                  <select name="project_size" id="projectSize" class="form-select">
+                  <label class="form-label">حجم المشروع <span class="req-mark">مطلوب</span></label>
+                  <select name="project_size" id="projectSize" class="form-select" required>
                     <option value="micro">متناهي الصغر</option>
                     <option value="small" selected>صغير</option>
                     <option value="medium">متوسط</option>
@@ -1019,8 +1231,8 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-12">
-                  <label class="form-label">وصف موجز للمشروع</label>
-                  <textarea name="description" id="projectDescription" class="form-control" rows="3" placeholder="صف النشاط والهدف من التمويل باختصار"></textarea>
+                  <label class="form-label">وصف موجز للمشروع <span class="req-mark">مطلوب</span></label>
+                  <textarea name="description" id="projectDescription" class="form-control" rows="3" placeholder="صف النشاط والهدف من التمويل باختصار" required></textarea>
                 </div>
 
                 <div class="col-md-6">
@@ -1049,27 +1261,27 @@ $pageTitle = 'طلب تمويل';
 
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">الاسم الثلاثي لطالب التمويل <span class="text-danger">*</span></label>
+                  <label class="form-label">الاسم الثلاثي لطالب التمويل <span class="req-mark">مطلوب</span></label>
                   <input type="text" name="applicant_name" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">رقم التواصل</label>
-                  <input type="text" name="phone" class="form-control">
+                  <label class="form-label">رقم التواصل <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="phone" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">البريد الإلكتروني</label>
-                  <input type="email" name="email" class="form-control">
+                  <label class="form-label">البريد الإلكتروني <span class="req-mark">مطلوب</span></label>
+                  <input type="email" name="email" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">الرقم الوطني</label>
-                  <input type="text" name="national_id" class="form-control">
+                  <label class="form-label">الرقم الوطني <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="national_id" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">المحافظة <span class="text-danger">*</span></label>
+                  <label class="form-label">المحافظة <span class="req-mark">مطلوب</span></label>
                   <select name="governorate_id" id="governorateId" class="form-select" required>
                     <option value="">اختر المحافظة</option>
                   </select>
@@ -1083,18 +1295,18 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">الصفة القانونية</label>
-                  <input type="text" name="legal_status" class="form-control" placeholder="فرد - مؤسسة - شركة - شراكة ...">
+                  <label class="form-label">الصفة القانونية <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="legal_status" class="form-control" placeholder="فرد - مؤسسة - شركة - شراكة ..." required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">المهنة</label>
-                  <input type="text" name="profession" class="form-control">
+                  <label class="form-label">المهنة <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="profession" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">الجنسية السورية</label>
-                  <select name="syrian_nationality" class="form-select">
+                  <label class="form-label">الجنسية السورية <span class="req-mark">مطلوب</span></label>
+                  <select name="syrian_nationality" class="form-select" required>
                     <option value="">اختر</option>
                     <option value="yes">نعم</option>
                     <option value="no">لا</option>
@@ -1102,8 +1314,8 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">المدينة / مكان الإقامة أو النشاط</label>
-                  <input type="text" name="city_or_location" class="form-control">
+                  <label class="form-label">المدينة / مكان الإقامة أو النشاط <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="city_or_location" class="form-control" required>
                 </div>
               </div>
             </section>
@@ -1126,18 +1338,18 @@ $pageTitle = 'طلب تمويل';
 
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">الغاية من التمويل</label>
-                  <input type="text" name="purpose" class="form-control" placeholder="تشغيل - توسعة - تجهيز - شراء أصول ...">
+                  <label class="form-label">الغاية من التمويل <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="purpose" class="form-control" placeholder="تشغيل - توسعة - تجهيز - شراء أصول ..." required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">سقف التمويل المطلوب <span class="text-danger">*</span></label>
+                  <label class="form-label">سقف التمويل المطلوب <span class="req-mark">مطلوب</span></label>
                   <input type="number" name="requested_amount" class="form-control" min="0" step="0.01" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">عملة التمويل</label>
-                  <select name="currency" class="form-select">
+                  <label class="form-label">عملة التمويل <span class="req-mark">مطلوب</span></label>
+                  <select name="currency" class="form-select" required>
                     <option value="SYP" selected>ليرة سورية</option>
                     <option value="USD">دولار أمريكي</option>
                     <option value="EUR">يورو</option>
@@ -1145,8 +1357,8 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">نوع التمويل التشغيلي</label>
-                  <select name="financing_type" class="form-select">
+                  <label class="form-label">نوع التمويل التشغيلي <span class="req-mark">مطلوب</span></label>
+                  <select name="financing_type" class="form-select" required>
                     <option value="capital">رأسمالي</option>
                     <option value="working_capital">رأس مال عامل</option>
                     <option value="mixed">مختلط</option>
@@ -1160,8 +1372,8 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">مدة السداد المقترحة (بالأشهر)</label>
-                  <input type="number" name="repayment_period_months" class="form-control" min="1" placeholder="مثال: 24">
+                  <label class="form-label">مدة السداد المقترحة (بالأشهر) <span class="req-mark">مطلوب</span></label>
+                  <input type="number" name="repayment_period_months" class="form-control" min="1" placeholder="مثال: 24" required>
                 </div>
 
                 <div class="col-md-6">
@@ -1208,8 +1420,8 @@ $pageTitle = 'طلب تمويل';
 
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">مرحلة المشروع</label>
-                  <select name="business_stage" class="form-select">
+                  <label class="form-label">مرحلة المشروع <span class="req-mark">مطلوب</span></label>
+                  <select name="business_stage" class="form-select" required>
                     <option value="idea">فكرة</option>
                     <option value="startup">ناشئ</option>
                     <option value="existing">قائم</option>
@@ -1218,8 +1430,8 @@ $pageTitle = 'طلب تمويل';
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">خبرة مالك المشروع</label>
-                  <input type="text" name="owner_experience" class="form-control" placeholder="سنوات الخبرة / مجال التخصص">
+                  <label class="form-label">خبرة مالك المشروع <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="owner_experience" class="form-control" placeholder="سنوات الخبرة / مجال التخصص" required>
                 </div>
 
                 <div class="col-md-12">
@@ -1269,18 +1481,18 @@ $pageTitle = 'طلب تمويل';
 
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">اسم الشركة</label>
-                  <input type="text" name="company_name" class="form-control">
+                  <label class="form-label">اسم الشركة <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="company_name" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">السجل التجاري</label>
-                  <input type="text" name="commercial_register" class="form-control">
+                  <label class="form-label">السجل التجاري <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="commercial_register" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">رقم التواصل المرتبط بالنشاط</label>
-                  <input type="text" name="business_phone" class="form-control">
+                  <label class="form-label">رقم التواصل المرتبط بالنشاط <span class="req-mark">مطلوب</span></label>
+                  <input type="text" name="business_phone" class="form-control" required>
                 </div>
 
                 <div class="col-md-6">
@@ -1350,11 +1562,11 @@ $pageTitle = 'طلب تمويل';
                   <thead>
                     <tr>
                       <th>البند</th>
-                      <th>2023</th>
-                      <th>2024</th>
-                      <th>2025</th>
-                      <th>حالة التدقيق</th>
-                      <th>ملاحظات</th>
+                      <th class="year-col">2023</th>
+                      <th class="year-col">2024</th>
+                      <th class="year-col">2025</th>
+                      <th class="audit-col">حالة التدقيق</th>
+                      <th class="notes-col">ملاحظات</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1383,17 +1595,17 @@ $pageTitle = 'طلب تمويل';
                     ?>
                     <tr>
                       <th><?php echo $item; ?></th>
-                      <td><input type="number" class="form-control" name="balance_2023[]"></td>
-                      <td><input type="number" class="form-control" name="balance_2024[]"></td>
-                      <td><input type="number" class="form-control" name="balance_2025[]"></td>
-                      <td>
+                      <td class="year-col" data-label="2023"><input type="text" inputmode="decimal" class="form-control" name="balance_2023[]" placeholder="اكتب القيمة" autocomplete="off"></td>
+                      <td class="year-col" data-label="2024"><input type="text" inputmode="decimal" class="form-control" name="balance_2024[]" placeholder="اكتب القيمة" autocomplete="off"></td>
+                      <td class="year-col" data-label="2025"><input type="text" inputmode="decimal" class="form-control" name="balance_2025[]" placeholder="اكتب القيمة" autocomplete="off"></td>
+                      <td class="audit-col" data-label="حالة التدقيق">
                         <select class="form-select" name="balance_audited[]">
                           <option value="">اختر</option>
                           <option value="audited">مدققة</option>
                           <option value="unaudited">غير مدققة</option>
                         </select>
                       </td>
-                      <td><input type="text" class="form-control" name="balance_notes[]"></td>
+                      <td class="notes-col" data-label="ملاحظات"><input type="text" class="form-control" name="balance_notes[]" placeholder="ملاحظة اختيارية" autocomplete="off"></td>
                     </tr>
                     <?php endforeach; ?>
                   </tbody>
@@ -1406,11 +1618,11 @@ $pageTitle = 'طلب تمويل';
                   <thead>
                     <tr>
                       <th>البند</th>
-                      <th>2023</th>
-                      <th>2024</th>
-                      <th>2025</th>
-                      <th>حالة التدقيق</th>
-                      <th>ملاحظات</th>
+                      <th class="year-col">2023</th>
+                      <th class="year-col">2024</th>
+                      <th class="year-col">2025</th>
+                      <th class="audit-col">حالة التدقيق</th>
+                      <th class="notes-col">ملاحظات</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1432,17 +1644,17 @@ $pageTitle = 'طلب تمويل';
                     ?>
                     <tr>
                       <th><?php echo $item; ?></th>
-                      <td><input type="number" class="form-control" name="income_2023[]"></td>
-                      <td><input type="number" class="form-control" name="income_2024[]"></td>
-                      <td><input type="number" class="form-control" name="income_2025[]"></td>
-                      <td>
+                      <td class="year-col" data-label="2023"><input type="text" inputmode="decimal" class="form-control" name="income_2023[]" placeholder="اكتب القيمة" autocomplete="off"></td>
+                      <td class="year-col" data-label="2024"><input type="text" inputmode="decimal" class="form-control" name="income_2024[]" placeholder="اكتب القيمة" autocomplete="off"></td>
+                      <td class="year-col" data-label="2025"><input type="text" inputmode="decimal" class="form-control" name="income_2025[]" placeholder="اكتب القيمة" autocomplete="off"></td>
+                      <td class="audit-col" data-label="حالة التدقيق">
                         <select class="form-select" name="income_audited[]">
                           <option value="">اختر</option>
                           <option value="audited">مدققة</option>
                           <option value="unaudited">غير مدققة</option>
                         </select>
                       </td>
-                      <td><input type="text" class="form-control" name="income_notes[]"></td>
+                      <td class="notes-col" data-label="ملاحظات"><input type="text" class="form-control" name="income_notes[]" placeholder="ملاحظة اختيارية" autocomplete="off"></td>
                     </tr>
                     <?php endforeach; ?>
                   </tbody>
@@ -1468,8 +1680,8 @@ $pageTitle = 'طلب تمويل';
 
               <div class="row g-3 mb-4">
                 <div class="col-md-3">
-                  <label class="form-label">عدد القوى العاملة</label>
-                  <input type="number" name="total_workforce" class="form-control">
+                  <label class="form-label">عدد القوى العاملة <span class="req-mark">مطلوب</span></label>
+                  <input type="number" name="total_workforce" class="form-control" required>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">عدد الموظفين الإداريين</label>
@@ -1533,8 +1745,8 @@ $pageTitle = 'طلب تمويل';
 
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">هل لديك دعم تدريبي حالي أو سابق؟</label>
-                  <select name="has_training_support" class="form-select">
+                  <label class="form-label">هل لديك دعم تدريبي حالي أو سابق؟ <span class="req-mark">مطلوب</span></label>
+                  <select name="has_training_support" class="form-select" required>
                     <option value="">اختر</option>
                     <option value="yes">نعم</option>
                     <option value="no">لا</option>
@@ -1590,10 +1802,10 @@ $pageTitle = 'طلب تمويل';
               </ul>
 
               <div class="mt-4">
-                <label class="form-label">إقرار مقدم الطلب</label>
-                <div class="form-check-wrap">
+                <label class="form-label">إقرار مقدم الطلب <span class="req-mark">مطلوب</span></label>
+                <div class="form-check-wrap" data-required-group="acknowledge_info">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="acknowledgeInfo" name="acknowledge_info">
+                    <input class="form-check-input" type="checkbox" id="acknowledgeInfo" name="acknowledge_info" value="1" required>
                     <label class="form-check-label" for="acknowledgeInfo">
                       أقر بأن البيانات المدخلة صحيحة بحسب علمي، وأوافق على إحالة الطلب للمراجعة ضمن مسار التمويل المعتمد.
                     </label>
@@ -1698,9 +1910,113 @@ $pageTitle = 'طلب تمويل';
     });
   }
 
-  function goToStep(step) {
+  function showStepMessage(text, type = 'error') {
+    const box = document.getElementById('financeApplyMessage');
+    if (box) {
+      box.className = `alert alert-${type === 'error' ? 'danger' : 'success'} mb-3`;
+      box.textContent = text;
+      box.classList.remove('d-none');
+    }
+    if (window.AppFeedback) {
+      if (type === 'error') {
+        window.AppFeedback.error('تحقق من البيانات', text);
+      } else {
+        window.AppFeedback.success('تم بنجاح', text);
+      }
+    } else if (box) {
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function clearStepMessage() {
+    const box = document.getElementById('financeApplyMessage');
+    if (!box) return;
+    box.classList.add('d-none');
+    box.textContent = '';
+  }
+
+  function fieldLabel(el) {
+    const wrap = el.closest('.col-md-6, .col-md-4, .col-md-3, .col-12, .mb-3, td, .form-check-wrap') || el.parentElement;
+    const label = wrap?.querySelector?.('.form-label, .form-check-label');
+    if (label) return label.childNodes[0]?.textContent?.trim() || label.textContent.trim();
+    return el.getAttribute('name') || 'حقل مطلوب';
+  }
+
+  function clearInvalidMarks(pane) {
+    pane.querySelectorAll('.is-invalid-field').forEach((el) => el.classList.remove('is-invalid-field'));
+  }
+
+  function validateStep(step) {
+    const pane = document.querySelector(`[data-step-pane="${step}"]`);
+    if (!pane) return { ok: true, missing: [] };
+
+    clearInvalidMarks(pane);
+    const missing = [];
+
+    pane.querySelectorAll('[data-required-group]').forEach((group) => {
+      const name = group.getAttribute('data-required-group');
+      const checked = pane.querySelector(`[name="${name}"]:checked`);
+      if (!checked) {
+        group.classList.add('is-invalid-field');
+        const label = group.closest('.col-md-6, .col-12')?.querySelector('.form-label');
+        missing.push((label?.childNodes?.[0]?.textContent || name).trim());
+      }
+    });
+
+    pane.querySelectorAll('input[required], select[required], textarea[required]').forEach((el) => {
+      if (el.type === 'radio' || el.type === 'checkbox') return;
+      const value = String(el.value || '').trim();
+      const invalidNumber = el.type === 'number' && value !== '' && Number(value) <= 0 && el.name === 'requested_amount';
+      if (!value || invalidNumber) {
+        el.classList.add('is-invalid-field');
+        missing.push(fieldLabel(el));
+      }
+    });
+
+    if (step === 3) {
+      const amount = pane.querySelector('[name="requested_amount"]');
+      if (amount && !(Number(amount.value) > 0)) {
+        amount.classList.add('is-invalid-field');
+        if (!missing.includes('سقف التمويل المطلوب')) missing.push('سقف التمويل المطلوب');
+      }
+    }
+
+    if (step === 6) {
+      const hasBalance = Array.from(pane.querySelectorAll('[name="balance_2023[]"], [name="balance_2024[]"], [name="balance_2025[]"]'))
+        .some((el) => String(el.value || '').trim() !== '');
+      const hasIncome = Array.from(pane.querySelectorAll('[name="income_2023[]"], [name="income_2024[]"], [name="income_2025[]"]'))
+        .some((el) => String(el.value || '').trim() !== '');
+      if (!hasBalance || !hasIncome) {
+        missing.push('إدخال قيمة واحدة في الميزانية وقائمة الدخل');
+      }
+    }
+
+    if (step === 9) {
+      const ack = document.getElementById('acknowledgeInfo');
+      if (!ack?.checked) {
+        ack?.closest('.form-check-wrap')?.classList.add('is-invalid-field');
+        missing.push('إقرار مقدم الطلب');
+      }
+    }
+
+    return { ok: missing.length === 0, missing: [...new Set(missing)] };
+  }
+
+  function goToStep(step, { force = false } = {}) {
     if (step < 1 || step > totalSteps) return;
 
+    if (!force && step > currentStep) {
+      for (let s = currentStep; s < step; s += 1) {
+        const result = validateStep(s);
+        if (!result.ok) {
+          showStepMessage('لا يمكن تجاوز هذه المرحلة قبل إكمال الحقول المطلوبة: ' + result.missing.join('، '));
+          goToStep(s, { force: true });
+          return;
+        }
+      }
+    }
+
+    clearStepMessage();
     currentStep = step;
 
     stepPanes.forEach((pane) => {
@@ -1734,23 +2050,46 @@ $pageTitle = 'طلب تمويل';
   roadmapItems.forEach((item) => {
     item.addEventListener('click', function () {
       const targetStep = Number(this.dataset.step);
-      if (targetStep <= currentStep) {
-        goToStep(targetStep);
-      }
+      goToStep(targetStep);
     });
   });
 
   nextBtn.addEventListener('click', function () {
+    const result = validateStep(currentStep);
+    if (!result.ok) {
+      showStepMessage('أكمل الحقول المطلوبة في هذه المرحلة قبل المتابعة: ' + result.missing.join('، '));
+      return;
+    }
     if (currentStep < totalSteps) {
-      goToStep(currentStep + 1);
+      goToStep(currentStep + 1, { force: true });
     }
   });
 
   prevBtn.addEventListener('click', function () {
     if (currentStep > 1) {
-      goToStep(currentStep - 1);
+      goToStep(currentStep - 1, { force: true });
     }
   });
+
+  document.getElementById('openAiForSyrsicBtn')?.addEventListener('click', () => {
+    if (window.AiChatFab?.open) window.AiChatFab.open();
+    else document.querySelector('#aiChatFabRoot .aic-fab')?.click();
+  });
+
+  window.FinanceApplySteps = {
+    validateStep,
+    validateAll() {
+      for (let s = 1; s <= totalSteps; s += 1) {
+        const result = validateStep(s);
+        if (!result.ok) {
+          goToStep(s, { force: true });
+          showStepMessage('أكمل الحقول المطلوبة قبل الإرسال: ' + result.missing.join('، '));
+          return false;
+        }
+      }
+      return true;
+    }
+  };
 
   projectStatusRadios.forEach((radio) => {
     radio.addEventListener('change', updateProjectStatusInfo);
@@ -1769,11 +2108,11 @@ $pageTitle = 'طلب تمويل';
 
   updateProjectStatusInfo();
   updatePathSummary();
-  goToStep(1);
+  goToStep(1, { force: true });
 })();
 </script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.1"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-apply.js?v=2.1"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.3"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-apply.js?v=2.5"></script>
 
 </body>
 </html>

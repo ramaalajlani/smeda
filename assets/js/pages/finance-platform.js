@@ -4,12 +4,35 @@ window.FinancePlatform = {
       || window.AppAuth?.isNationalAdmin()
       || window.AppAuth?.hasRole('project_owner')
       || window.AppAuth?.hasRole('consultant_office')
-      || window.AppAuth?.hasRole('funding_partner');
+      || window.AppAuth?.hasRole('funding_partner')
+      || window.AppAuth?.hasRole('finance_manager')
+      || window.AppAuth?.hasRole('branch_manager');
   },
 
   canCreateApplication() {
     return window.AppAuth?.hasPermission('finance.applications.create')
       || window.AppAuth?.hasRole('project_owner');
+  },
+
+  canReviewBranch() {
+    return window.AppAuth?.hasPermission('finance.applications.review_branch')
+      || window.AppAuth?.hasRole('branch_manager')
+      || window.AppAuth?.isNationalAdmin();
+  },
+
+  canApproveApplication() {
+    return window.AppAuth?.hasPermission('finance.applications.approve')
+      || window.AppAuth?.hasRole('finance_manager')
+      || window.AppAuth?.hasRole('general_director')
+      || window.AppAuth?.isNationalAdmin();
+  },
+
+  canRejectApplication() {
+    return window.AppAuth?.hasPermission('finance.applications.reject')
+      || window.AppAuth?.hasRole('finance_manager')
+      || window.AppAuth?.hasRole('branch_manager')
+      || window.AppAuth?.hasRole('general_director')
+      || window.AppAuth?.isNationalAdmin();
   },
 
   isReadOnly() {
@@ -36,6 +59,16 @@ window.FinancePlatform = {
       closed: SiteI18n.ta('مغلق'),
     };
     return map[status] || status;
+  },
+
+  readinessLabel(status) {
+    if (['approved', 'funded'].includes(status)) return SiteI18n.ta('جاهز للسحابة');
+    if (['submitted', 'branch_review', 'funder_review', 'consultant_review', 'consultant_priced'].includes(status)) {
+      return SiteI18n.ta('قيد المراجعة');
+    }
+    if (status === 'needs_completion') return SiteI18n.ta('بحاجة استكمال');
+    if (status === 'rejected') return SiteI18n.ta('مرفوض');
+    return SiteI18n.ta('قيد الاستكمال');
   },
 
   formatAmount(value, currency = 'SYP') {

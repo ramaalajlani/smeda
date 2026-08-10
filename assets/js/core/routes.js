@@ -348,6 +348,15 @@ window.APP_ROUTES = {
   fundingApplicationBranchReview: (id) =>
     `${window.APP_CONFIG.API_BASE_URL}/finance/applications/${id}/branch-review`,
 
+  fundingApplicationRequestCompletion: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/finance/applications/${id}/request-completion`,
+
+  fundingApplicationApprove: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/finance/applications/${id}/approve`,
+
+  fundingApplicationReject: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/finance/applications/${id}/reject`,
+
   fundingApplicationAssignConsultant: (id) =>
     `${window.APP_CONFIG.API_BASE_URL}/finance/applications/${id}/assign-consultant`,
 

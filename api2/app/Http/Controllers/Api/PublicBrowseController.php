@@ -142,7 +142,7 @@ class PublicBrowseController extends Controller
                 'governorate_id',
                 'branch_id',
             ])
-            ->whereIn('status', ['consultant_priced', 'funder_review', 'approved'])
+            ->whereIn('status', ['approved', 'funded'])
             ->with([
                 'governorate:id,name_ar',
                 'branch:id,name',

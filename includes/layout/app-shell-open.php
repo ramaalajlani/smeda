@@ -231,6 +231,9 @@ if (empty($forceAppShell) && authority_use_dashboard_shell()) {
             <a href="<?php echo $basePath; ?>services/finance/finance.php" class="sb-link" data-permission="finance.metrics.view">
               <i class="bi bi-graph-up-arrow"></i><span>منظومة التمويل</span>
             </a>
+            <a href="<?php echo $basePath; ?>services/finance/finance-applications-list.php" class="sb-link" data-permission="finance.applications.view">
+              <i class="bi bi-inboxes-fill"></i><span>طلبات التمويل</span>
+            </a>
             <a href="<?php echo $basePath; ?>services/finance/finance-cloud.php" class="sb-link" data-permission="finance.applications.view">
               <i class="bi bi-cloud-fill"></i><span>سحابة التمويل</span>
             </a>
