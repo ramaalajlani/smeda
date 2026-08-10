@@ -12,12 +12,16 @@ class FundingApplicationResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        $attrs = $this->resource->getAttributes();
+        $hasFullRow = array_key_exists('national_id', $attrs);
+
         return [
             'id' => $this->id,
             'application_number' => $this->application_number,
             'applicant_user_id' => $this->applicant_user_id,
             'applicant_name' => $this->applicant_name,
-            'national_id' => $this->when($request->user()?->can('view', $this->resource), $this->national_id),
+            // لا نستدعي Gate::can لكل صف في القائمة (كان يسبب N+1 ويبطّئ الجلب جداً)
+            'national_id' => $this->when($hasFullRow, $this->national_id),
             'phone' => $this->phone,
             'email' => $this->email,
             'project_name' => $this->project_name,
@@ -31,8 +35,8 @@ class FundingApplicationResource extends JsonResource
             'financing_type' => $this->financing_type,
             'financing_mode' => $this->financing_mode,
             'repayment_period_months' => $this->repayment_period_months,
-            'purpose' => $this->purpose,
-            'description' => $this->description,
+            'purpose' => $this->when(array_key_exists('purpose', $attrs), $this->purpose),
+            'description' => $this->when(array_key_exists('description', $attrs), $this->description),
             'status' => $this->status,
             'current_stage' => $this->current_stage,
             'submitted_at' => optional($this->submitted_at)?->format('Y-m-d H:i:s'),

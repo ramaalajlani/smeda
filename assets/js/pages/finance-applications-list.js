@@ -130,13 +130,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         || window.AppAuth.isNationalAdmin?.();
 
       if (isBranch) {
-        const gov = user.governorate_name || user.governorate?.name_ar || '';
+        const branchName = user.branch_name || user.branch?.name || '';
         if (scopeNote) {
-          scopeNote.textContent = gov
-            ? `تعرض هذه الشاشة طلبات محافظة ${gov} فقط. موافقة الفرع تحيل الطلب لمراجعة التمويل.`
-            : 'تعرض هذه الشاشة طلبات محافظتك. موافقة الفرع تحيل الطلب لمراجعة التمويل.';
+          scopeNote.textContent = branchName
+            ? `تعرض هذه الشاشة طلبات فرع ${branchName} فقط. موافقة الفرع تحيل الطلب لمراجعة التمويل.`
+            : 'تعرض هذه الشاشة طلبات فرعك فقط. موافقة الفرع تحيل الطلب لمراجعة التمويل.';
         }
-        if (pageHeroSub) pageHeroSub.textContent = 'متابعة طلبات التمويل ضمن نطاق محافظتك';
+        if (pageHeroSub) pageHeroSub.textContent = 'متابعة طلبات التمويل ضمن نطاق فرعك';
         return;
       }
 
@@ -151,6 +151,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (scopeNote) scopeNote.textContent = 'متابعة طلبات التمويل المتاحة حسب صلاحيتك.';
     }
 
+    function setStatPlaceholder() {
+      ['statTotal', 'statBranch', 'statFinance', 'statApproved'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '—';
+      });
+    }
+
     function updateStats(list) {
       const set = (id, value) => {
         const el = document.getElementById(id);
@@ -163,19 +170,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function filteredRows() {
-      const status = filterStatus?.value || '';
-      const q = (filterSearch?.value || '').trim().toLowerCase();
-      return rows.filter((row) => {
-        if (status && row.status !== status) return false;
-        if (!q) return true;
-        const hay = `${row.application_number || ''} ${row.project_name || ''} ${row.applicant_name || ''}`.toLowerCase();
-        return hay.includes(q);
-      });
+      // الفلترة الأساسية أصبحت على السيرفر
+      return rows;
     }
 
     function actionButtons(row) {
       const buttons = [];
-      buttons.push(`<a class="btn-act btn-view" href="finance-apply.php?id=${row.id}"><i class="bi bi-eye"></i> عرض</a>`);
+      buttons.push(`<a class="btn-act btn-view" href="finance-application-view.php?id=${row.id}"><i class="bi bi-eye"></i> عرض</a>`);
 
       if (['approved', 'funded'].includes(row.status)) {
         buttons.push('<a class="btn-act btn-view" href="finance-cloud.php"><i class="bi bi-cloud"></i> السحابة</a>');
@@ -238,12 +239,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function loadRows() {
       if (loadingBox) loadingBox.style.display = '';
+      setStatPlaceholder();
       try {
+        const status = filterStatus?.value || undefined;
+        const q = (filterSearch?.value || '').trim() || undefined;
+        const params = { per_page: 50 };
+        if (status) params.status = status;
+        if (q) params.q = q;
+
         let res;
         if (window.APP_API?.get && window.APP_ROUTES?.fundingApplications) {
-          res = await window.APP_API.get(window.APP_ROUTES.fundingApplications({ per_page: 100 }));
+          res = await window.APP_API.get(window.APP_ROUTES.fundingApplications(params));
         } else {
-          const url = `${window.APP_CONFIG.API_BASE_URL}/finance/applications?per_page=100`;
+          const qs = new URLSearchParams(params).toString();
+          const url = `${window.APP_CONFIG.API_BASE_URL}/finance/applications?${qs}`;
           const r = await fetch(url, {
             headers: {
               Accept: 'application/json',
@@ -320,8 +329,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       runAction(btn.dataset.action, Number(btn.dataset.id));
     });
 
-    filterStatus?.addEventListener('change', render);
-    filterSearch?.addEventListener('input', render);
+    let searchTimer = null;
+    filterStatus?.addEventListener('change', () => { loadRows(); });
+    filterSearch?.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => loadRows(), 350);
+    });
     btnRefresh?.addEventListener('click', loadRows);
 
     updateScopeNote();

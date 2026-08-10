@@ -2,14 +2,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const ok = await window.AppBootstrapAuth.init({ requireAuth: true });
   if (!ok) return;
 
-  if (!window.FinancePlatform.canCreateApplication()) {
+  const params = new URLSearchParams(window.location.search);
+  const applicationId = params.get('id');
+  let currentId = applicationId ? Number(applicationId) : null;
+  const canCreate = window.FinancePlatform.canCreateApplication();
+  const canView = window.FinancePlatform.canViewApplications();
+
+  // إنشاء طلب جديد يتطلب صلاحية الإنشاء؛ عرض طلب قائم يكفي بصلاحية العرض/المراجعة
+  if (!canCreate && !(canView && currentId)) {
     window.location.href = window.APP_CONFIG.FORBIDDEN_PAGE;
     return;
   }
 
-  const params = new URLSearchParams(window.location.search);
-  const applicationId = params.get('id');
-  let currentId = applicationId ? Number(applicationId) : null;
+  const viewOnly = !canCreate;
 
   const form = document.getElementById('fundingApplicationForm');
   const saveDraftBtn = document.getElementById('saveDraftBtn');
@@ -260,7 +265,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ].forEach((key) => setFieldValue(key, data[key]));
 
     updateSummaryStatus(data.status || 'draft', window.FinancePlatform.statusLabel(data.status || 'draft'));
-    if (data.status && data.status !== 'draft') {
+    if (viewOnly || (data.status && data.status !== 'draft' && data.status !== 'needs_completion')) {
       lockSubmittedForm();
     }
 
@@ -345,7 +350,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateSummaryStatus(submitted.status || 'submitted', SiteI18n.ta('بانتظار مراجعة الفرع'));
       updateProgress(collectPayload(), 100);
       lockSubmittedForm();
-      showMessage(SiteI18n.ta('تم إرسال طلب التمويل بنجاح. سيظهر لمدير الفرع حسب المحافظة، ويُسجَّل تلقائياً على خارطة الاحتياجات (فلتر: تمويل).'));
+      showMessage(SiteI18n.ta('تم إرسال طلب التمويل بنجاح. سيظهر لمدير الفرع المختص، ويُسجَّل تلقائياً على خارطة الاحتياجات (فلتر: تمويل).'));
     } catch (err) {
       showMessage(apiErrorMessage(err), 'error');
       submitBtn.disabled = false;
@@ -363,6 +368,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (!form.querySelector('[name="phone"]')?.value && user.phone) {
       setFieldValue('phone', user.phone);
+    }
+
+    if (viewOnly) {
+      if (saveDraftBtn) saveDraftBtn.classList.add('d-none');
+      if (submitBtn) submitBtn.classList.add('d-none');
+      lockSubmittedForm();
     }
 
     if (currentId) {

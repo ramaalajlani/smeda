@@ -95,10 +95,10 @@ $activePage= 'finance-applications-list';
   <div class="scope-note" id="scopeNote">جاري تحديد نطاق المتابعة...</div>
 
   <div class="stats-row">
-    <div class="stat-card"><div class="label">الإجمالي</div><div class="value" id="statTotal">0</div></div>
-    <div class="stat-card"><div class="label">بانتظار الفرع</div><div class="value" id="statBranch">0</div></div>
-    <div class="stat-card"><div class="label">مراجعة التمويل</div><div class="value" id="statFinance">0</div></div>
-    <div class="stat-card"><div class="label">معتمد / سحابة</div><div class="value" id="statApproved">0</div></div>
+    <div class="stat-card"><div class="label">الإجمالي</div><div class="value" id="statTotal">—</div></div>
+    <div class="stat-card"><div class="label">بانتظار الفرع</div><div class="value" id="statBranch">—</div></div>
+    <div class="stat-card"><div class="label">مراجعة التمويل</div><div class="value" id="statFinance">—</div></div>
+    <div class="stat-card"><div class="label">معتمد / سحابة</div><div class="value" id="statApproved">—</div></div>
   </div>
 
   <div class="filter-bar">
@@ -130,7 +130,7 @@ $activePage= 'finance-applications-list';
 </div>
 
 <?php include __DIR__ . '/../../includes/layout/app-shell-close.php'; ?>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.4"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-applications-list.js?v=1.2"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.5"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-applications-list.js?v=1.5"></script>
 </body>
 </html>

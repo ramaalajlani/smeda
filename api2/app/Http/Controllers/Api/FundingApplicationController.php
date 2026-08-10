@@ -19,19 +19,56 @@ class FundingApplicationController extends Controller
     {
         $this->authorize('viewAny', FundingApplication::class);
 
+        // قائمة خفيفة فقط: بدون details/assignments (كانت تبطّئ الاستجابة بشدة)
         $rows = FinanceDataScope::scopeApplications(
-            FundingApplication::query()->with([
-                'branch:id,name',
-                'governorate:id,name_ar',
-                'details',
-                'consultantAssignments:id,funding_application_id,consultant_office_id,status,price_offer_amount,price_offer_status',
-                'partnerAssignments:id,funding_application_id,funding_partner_id,status,approved_amount',
-            ]),
+            FundingApplication::query()
+                ->select([
+                    'id',
+                    'application_number',
+                    'applicant_user_id',
+                    'applicant_name',
+                    'phone',
+                    'email',
+                    'project_name',
+                    'project_type',
+                    'project_sector',
+                    'project_size',
+                    'business_stage',
+                    'project_status',
+                    'requested_amount',
+                    'currency',
+                    'financing_type',
+                    'financing_mode',
+                    'repayment_period_months',
+                    'status',
+                    'current_stage',
+                    'submitted_at',
+                    'branch_id',
+                    'governorate_id',
+                    'created_at',
+                    'updated_at',
+                ])
+                ->with([
+                    'branch:id,name',
+                    'governorate:id,name_ar',
+                ]),
             $request->user()
         )
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->string('status')))
             ->when($request->filled('branch_id'), fn ($q) => $q->where('branch_id', $request->integer('branch_id')))
             ->when($request->filled('governorate_id'), fn ($q) => $q->where('governorate_id', $request->integer('governorate_id')))
+            ->when($request->filled('q'), function ($q) use ($request) {
+                $term = trim((string) $request->string('q'));
+                if ($term === '') {
+                    return;
+                }
+                $like = '%'.$term.'%';
+                $q->where(function ($inner) use ($like) {
+                    $inner->where('application_number', 'like', $like)
+                        ->orWhere('project_name', 'like', $like)
+                        ->orWhere('applicant_name', 'like', $like);
+                });
+            })
             ->orderByDesc('id')
             ->paginate(max(1, min((int) $request->integer('per_page', 20), 100)));
 
@@ -86,8 +123,12 @@ class FundingApplicationController extends Controller
 
     public function show(Request $request, int $id): JsonResponse
     {
+        $with = $request->boolean('summary')
+            ? ['branch:id,name', 'governorate:id,name_ar']
+            : ['details', 'documents', 'consultantAssignments', 'partnerAssignments', 'fundedLoans', 'branch', 'governorate'];
+
         $application = FundingApplication::query()
-            ->with(['details', 'documents', 'consultantAssignments', 'partnerAssignments', 'fundedLoans', 'branch', 'governorate'])
+            ->with($with)
             ->findOrFail($id);
 
         $this->authorize('view', $application);
