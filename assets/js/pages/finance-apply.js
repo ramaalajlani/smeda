@@ -309,6 +309,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (currentId) {
       await window.APP_API.put(window.APP_ROUTES.fundingApplicationUpdate(currentId), payload);
+      await uploadFormFiles(currentId);
       showMessage(SiteI18n.ta('تم حفظ المسودة.'));
       return currentId;
     }
@@ -319,9 +320,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       const url = new URL(window.location.href);
       url.searchParams.set('id', currentId);
       window.history.replaceState({}, '', url);
+      await uploadFormFiles(currentId);
     }
     showMessage(SiteI18n.ta('تم إنشاء مسودة الطلب.'));
     return currentId;
+  }
+
+  async function uploadFormFiles(applicationId) {
+    if (!form || !applicationId || !window.APP_ROUTES?.fundingApplicationDocuments) return;
+    const groups = [
+      ['activity_invoices', 'activity_invoices'],
+      ['work_license_or_request', 'work_license_or_request'],
+      ['real_estate_record', 'real_estate_record'],
+      ['bank_statement', 'bank_statement'],
+    ];
+    for (const [inputName, documentType] of groups) {
+      const input = form.querySelector(`[name="${inputName}"]`);
+      const files = Array.from(input?.files || []);
+      for (const file of files) {
+        const body = new FormData();
+        body.append('document_type', documentType);
+        body.append('file', file);
+        await window.APP_API.post(window.APP_ROUTES.fundingApplicationDocuments(applicationId), body);
+      }
+      if (input) input.value = '';
+    }
   }
 
   saveDraftBtn?.addEventListener('click', async (e) => {

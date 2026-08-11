@@ -125,7 +125,7 @@ class FundingApplicationController extends Controller
     {
         $with = $request->boolean('summary')
             ? ['branch:id,name', 'governorate:id,name_ar']
-            : ['details', 'documents', 'consultantAssignments', 'partnerAssignments', 'fundedLoans', 'branch', 'governorate'];
+            : ['details', 'documents', 'branch:id,name', 'governorate:id,name_ar'];
 
         $application = FundingApplication::query()
             ->with($with)

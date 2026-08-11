@@ -369,6 +369,9 @@ window.APP_ROUTES = {
   fundingApplicationDocuments: (id) =>
     `${window.APP_CONFIG.API_BASE_URL}/finance/applications/${id}/documents`,
 
+  fundingApplicationDocumentDownload: (applicationId, documentId) =>
+    `${window.APP_CONFIG.API_BASE_URL}/finance/applications/${applicationId}/documents/${documentId}/download`,
+
   fundingConsultantOffices: (params = {}) =>
     window.APP_API.withQuery(`${window.APP_CONFIG.API_BASE_URL}/finance/consultant-offices`, params),
 

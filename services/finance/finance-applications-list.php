@@ -163,6 +163,6 @@ $activePage= 'finance-applications-list';
   </div>
 </div>
 <script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.7"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-applications-list.js?v=1.7"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-applications-list.js?v=1.8"></script>
 </body>
 </html>
