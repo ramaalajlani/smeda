@@ -147,7 +147,9 @@ $activePage= 'finance-applications-list';
   <div id="requestsContainer"></div>
 </div>
 
-<div class="view-overlay" id="viewOverlay" aria-hidden="true">
+<?php include __DIR__ . '/../../includes/layout/app-shell-close.php'; ?>
+
+<div class="view-overlay finance-view-overlay" id="viewOverlay" aria-hidden="true">
   <div class="view-panel" role="dialog" aria-modal="true" aria-labelledby="viewTitle">
     <div class="view-panel-head">
       <div>
@@ -160,9 +162,7 @@ $activePage= 'finance-applications-list';
     <div class="view-actions" id="viewActions"></div>
   </div>
 </div>
-
-<?php include __DIR__ . '/../../includes/layout/app-shell-close.php'; ?>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.6"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/finance-applications-list.js?v=1.6"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-platform.js?v=1.7"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/finance-applications-list.js?v=1.7"></script>
 </body>
 </html>

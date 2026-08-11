@@ -274,20 +274,92 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    const viewOverlay = document.getElementById('viewOverlay');
-    const viewBody = document.getElementById('viewBody');
-    const viewActions = document.getElementById('viewActions');
-    const viewTitle = document.getElementById('viewTitle');
-    const viewSubtitle = document.getElementById('viewSubtitle');
     let viewingId = null;
+    let viewOverlay = null;
+    let viewBody = null;
+    let viewActions = null;
+    let viewTitle = null;
+    let viewSubtitle = null;
+
+    function ensureOverlay() {
+      if (!document.getElementById('financeViewOverlayStyle')) {
+        const style = document.createElement('style');
+        style.id = 'financeViewOverlayStyle';
+        style.textContent = `
+          #viewOverlay.finance-view-overlay{
+            position:fixed !important; inset:0 !important; z-index:99999 !important;
+            background:rgba(15,40,36,.55) !important; display:none !important;
+            align-items:flex-start !important; justify-content:center !important;
+            padding:24px 12px !important; overflow:auto !important;
+          }
+          #viewOverlay.finance-view-overlay.show{display:flex !important;}
+          #viewOverlay .view-panel{
+            width:min(920px,100%); background:#fff; border-radius:20px;
+            box-shadow:0 24px 60px rgba(0,0,0,.28); margin:auto;
+            padding:20px 22px 24px; border:1px solid rgba(23,148,123,.13);
+          }
+          #viewOverlay .view-panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px;}
+          #viewOverlay .view-panel-head h2{margin:0;font-size:1.1rem;font-weight:800;color:#16332E;}
+          #viewOverlay .view-close{border:none;background:#EAF8F4;color:#17947B;border-radius:10px;padding:8px 12px;font-weight:800;cursor:pointer;}
+          #viewOverlay .info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:12px;}
+          #viewOverlay .info-item{background:#EAF8F4;border-radius:12px;padding:11px 12px;}
+          #viewOverlay .info-lbl{font-size:.72rem;font-weight:700;color:#6B7280;margin-bottom:3px;}
+          #viewOverlay .info-val{font-size:.88rem;font-weight:800;color:#16332E;word-break:break-word;}
+          #viewOverlay .text-block{background:#f8fafc;border:1px solid rgba(23,148,123,.13);border-radius:12px;padding:11px 12px;font-size:.86rem;font-weight:600;line-height:1.7;white-space:pre-wrap;margin-bottom:10px;}
+          #viewOverlay .view-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+        `;
+        document.head.appendChild(style);
+      }
+
+      viewOverlay = document.getElementById('viewOverlay');
+      if (!viewOverlay) {
+        viewOverlay = document.createElement('div');
+        viewOverlay.id = 'viewOverlay';
+        viewOverlay.className = 'view-overlay finance-view-overlay';
+        viewOverlay.setAttribute('aria-hidden', 'true');
+        viewOverlay.innerHTML = `
+          <div class="view-panel" role="dialog" aria-modal="true">
+            <div class="view-panel-head">
+              <div>
+                <h2 id="viewTitle">ملخص الطلب</h2>
+                <div id="viewSubtitle" style="color:#6B7280;font-size:.84rem;font-weight:700;margin-top:4px"></div>
+              </div>
+              <button type="button" class="view-close" id="viewCloseBtn"><i class="bi bi-x-lg"></i> إغلاق</button>
+            </div>
+            <div id="viewBody"></div>
+            <div class="view-actions" id="viewActions"></div>
+          </div>`;
+      }
+
+      viewOverlay.classList.add('finance-view-overlay');
+      if (viewOverlay.parentElement !== document.body) {
+        document.body.appendChild(viewOverlay);
+      }
+
+      viewBody = document.getElementById('viewBody');
+      viewActions = document.getElementById('viewActions');
+      viewTitle = document.getElementById('viewTitle');
+      viewSubtitle = document.getElementById('viewSubtitle');
+
+      if (!viewOverlay.dataset.bound) {
+        viewOverlay.dataset.bound = '1';
+        document.getElementById('viewCloseBtn')?.addEventListener('click', closeView);
+        viewOverlay.addEventListener('click', (e) => {
+          if (e.target === viewOverlay) closeView();
+        });
+      }
+    }
 
     function closeView() {
       viewingId = null;
+      document.body.style.overflow = '';
       if (viewOverlay) {
         viewOverlay.classList.remove('show');
         viewOverlay.setAttribute('aria-hidden', 'true');
       }
     }
+
+    ensureOverlay();
 
     function infoItem(label, value) {
       return `<div class="info-item"><div class="info-lbl">${esc(label)}</div><div class="info-val">${esc(value ?? '—')}</div></div>`;
@@ -346,28 +418,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function openView(id) {
+      ensureOverlay();
       viewingId = id;
-      if (viewOverlay) {
-        viewOverlay.classList.add('show');
-        viewOverlay.setAttribute('aria-hidden', 'false');
-      }
-      if (viewBody) {
-        viewBody.innerHTML = '<div class="empty" style="padding:28px"><i class="bi bi-hourglass-split"></i>جاري تحميل الملخص...</div>';
-      }
-      if (viewActions) viewActions.innerHTML = '';
-      if (viewTitle) viewTitle.textContent = 'ملخص الطلب';
-      if (viewSubtitle) viewSubtitle.textContent = '';
+      viewOverlay.classList.add('show');
+      viewOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
 
-      // أولاً من القائمة المحمّلة (سريع)، ثم تحديث من API إن توفر
       const cached = rows.find((r) => Number(r.id) === Number(id));
-      if (cached) renderView(cached);
+      if (cached) {
+        renderView(cached);
+      } else if (viewBody) {
+        viewBody.innerHTML = '<div class="empty" style="padding:28px"><i class="bi bi-hourglass-split"></i>جاري تحميل الملخص...</div>';
+        if (viewActions) viewActions.innerHTML = '';
+        if (viewTitle) viewTitle.textContent = 'ملخص الطلب';
+      }
 
       try {
-        const showUrl = window.APP_ROUTES.fundingApplicationShow(id);
+        const showFn = window.APP_ROUTES?.fundingApplicationShow;
+        if (!showFn || !window.APP_API?.get) return;
+        const showUrl = showFn(id);
         const url = `${showUrl}${showUrl.includes('?') ? '&' : '?'}summary=1`;
         const res = await window.APP_API.get(url);
         const data = res.data?.data || res.data || res;
-        if (Number(viewingId) === Number(id)) renderView(data);
+        if (Number(viewingId) === Number(id) && data) renderView(data);
       } catch (err) {
         if (!cached) {
           if (viewBody) {
@@ -430,28 +503,30 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    container?.addEventListener('click', (e) => {
+    document.addEventListener('click', (e) => {
+      const viewBtn = e.target.closest('[data-action="view"], a[href*="finance-apply.php?id="], a[href*="finance-application-view.php?id="]');
+      if (viewBtn && !viewBtn.closest('#viewOverlay')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const hrefId = viewBtn.getAttribute('href')
+          ? new URL(viewBtn.getAttribute('href'), window.location.href).searchParams.get('id')
+          : null;
+        const id = Number(viewBtn.dataset.id || hrefId || 0);
+        if (id) openView(id);
+        return;
+      }
+
       const btn = e.target.closest('[data-action]');
       if (!btn) return;
       const action = btn.dataset.action;
-      const id = Number(btn.dataset.id);
-      if (action === 'view') {
-        openView(id);
-        return;
+      if (!action || action === 'view') return;
+      const id = Number(btn.dataset.id || viewingId);
+      if (!id) return;
+      if (btn.closest('#requestsContainer') || btn.closest('#viewOverlay')) {
+        runAction(action, id);
       }
-      runAction(action, id);
-    });
+    }, true);
 
-    viewActions?.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn) return;
-      runAction(btn.dataset.action, Number(btn.dataset.id || viewingId));
-    });
-
-    document.getElementById('viewCloseBtn')?.addEventListener('click', closeView);
-    viewOverlay?.addEventListener('click', (e) => {
-      if (e.target === viewOverlay) closeView();
-    });
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && viewOverlay?.classList.contains('show')) closeView();
     });
