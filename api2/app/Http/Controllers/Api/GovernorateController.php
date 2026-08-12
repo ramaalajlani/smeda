@@ -19,7 +19,12 @@ class GovernorateController extends Controller
     {
         $user = $request->user();
         abort_unless(
-            $user && ($user->can('view_governorates') || BranchDataScope::hasNationalReadAccess($user) || BranchDataScope::isBranchManager($user)),
+            $user && (
+                $user->can('view_governorates')
+                || $user->can('finance.applications.create')
+                || BranchDataScope::hasNationalReadAccess($user)
+                || BranchDataScope::isBranchManager($user)
+            ),
             403
         );
 

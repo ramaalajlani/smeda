@@ -507,6 +507,9 @@ window.APP_ROUTES = {
   myPartnerAssignments: () =>
     `${window.APP_CONFIG.API_BASE_URL}/finance/my-partner-assignments`,
 
+  publicGovernorates: () =>
+    `${window.APP_CONFIG.API_BASE_URL}/public/governorates`,
+
   governorates: (params = {}) =>
     window.APP_API.withQuery(`${window.APP_CONFIG.API_BASE_URL}/governorates`, params),
 

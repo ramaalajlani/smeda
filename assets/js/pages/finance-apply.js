@@ -226,13 +226,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (selectedBranchId) branchSelect.value = String(selectedBranchId);
   }
 
+  async function fetchGovernorates() {
+    try {
+      const res = await window.APP_API.get(window.APP_ROUTES.governorates({ lite: 1 }));
+      const list = res?.data || res || [];
+      if (Array.isArray(list) && list.length) return list;
+    } catch (_) { /* fallback below */ }
+
+    try {
+      const url = window.APP_ROUTES.publicGovernorates?.()
+        || `${window.APP_CONFIG.API_BASE_URL}/public/governorates`;
+      const res = await window.APP_API.get(url);
+      const list = res?.data || res || [];
+      if (Array.isArray(list) && list.length) return list;
+    } catch (_) { /* fallback below */ }
+
+    return (window.SYRIA_GOVERNORATES_LIST || []).map((g) => ({
+      id: g.value,
+      name_ar: g.label,
+    }));
+  }
+
   async function loadLookups() {
-    const [govRes, branchRes] = await Promise.all([
-      window.APP_API.get(window.APP_ROUTES.governorates()).catch(() => ({ data: [] })),
-      window.APP_API.get(window.APP_ROUTES.branches()).catch(() => ({ data: [] })),
+    const [governorates, branchRes] = await Promise.all([
+      fetchGovernorates(),
+      window.APP_API.get(window.APP_ROUTES.branches({ lite: 1 })).catch(() => ({ data: [] })),
     ]);
 
-    const governorates = govRes?.data || govRes || [];
     branchesCache = branchRes?.data || branchRes || [];
 
     if (govSelect) {

@@ -10,7 +10,11 @@ class BranchPolicy
 {
     public function viewAny(?User $user): bool
     {
-        return $user && ($user->can('view_branches') || $user->hasRole('branch_manager'));
+        return $user && (
+            $user->can('view_branches')
+            || $user->can('finance.applications.create')
+            || $user->hasRole('branch_manager')
+        );
     }
 
     public function view(?User $user, Branch $branch): bool
