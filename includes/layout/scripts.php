@@ -30,7 +30,7 @@
 <?php endif; ?>
 <?php if (empty($disableAiChat)): ?>
 <script src="<?php echo $basePath ?? ''; ?>assets/js/modules/ai-chat-voice.js?v=1.1"></script>
-<script src="<?php echo $basePath ?? ''; ?>assets/js/modules/ai-chat-fab.js?v=3.5"></script>
+<script src="<?php echo $basePath ?? ''; ?>assets/js/modules/ai-chat-fab.js?v=3.6"></script>
 <?php endif; ?>
 <!-- ========================= -->
 <!-- MAIN -->
