@@ -34,17 +34,23 @@ class TrainingCenterPrintController extends Controller
             'المركز التدريبي غير معتمد أو غير مؤهل لطباعة الشهادة.'
         );
 
-        $pdf = Pdf::loadView('training-centers.certificate', $this->viewData($center))
-            ->setOptions([
-                'isRemoteEnabled' => false,
-                'isHtml5ParserEnabled' => true,
-                'defaultFont' => 'DejaVu Sans',
-            ]);
+        try {
+            $pdf = Pdf::loadView('training-centers.certificate', $this->viewData($center))
+                ->setOptions([
+                    'isRemoteEnabled' => false,
+                    'isHtml5ParserEnabled' => true,
+                    'defaultFont' => 'DejaVu Sans',
+                ]);
 
-        return response($pdf->output(), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="training-center-certificate-' . ($center->code ?: $center->id) . '.pdf"',
-        ]);
+            return response($pdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="training-center-certificate-' . ($center->code ?: $center->id) . '.pdf"',
+            ]);
+        } catch (Throwable $e) {
+            report($e);
+
+            abort(503, 'تعذّر إنشاء ملف PDF للشهادة حالياً.');
+        }
     }
 
     /**
