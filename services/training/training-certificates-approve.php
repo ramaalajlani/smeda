@@ -140,7 +140,7 @@ $activePage = 'services';
   </section>
 <?php include '../../includes/layout/app-shell-close.php'; ?>
 
-<script src="<?php echo $basePath; ?>assets/js/pages/training-certificates-approve.js?v=1.1"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/training-certificates-approve.js?v=1.3"></script>
 
 </body>
 </html>

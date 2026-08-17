@@ -8,8 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class TrainingKitResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
@@ -17,17 +15,59 @@ class TrainingKitResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'name_en' => $this->name_en,
             'code' => $this->code,
             'sector' => $this->sector,
             'category' => $this->category,
+            'category_id' => $this->category_id,
+            'subcategory_id' => $this->subcategory_id,
             'type' => $this->type,
             'material_code' => $this->material_code,
             'level' => $this->level,
             'hours' => $this->hours,
+            'suggested_days' => $this->suggested_days,
             'objective' => $this->objective,
             'description' => $this->description,
+            'short_description' => $this->short_description,
+            'prerequisites' => $this->prerequisites,
+            'target_audience' => $this->target_audience,
+            'expected_outcomes' => $this->expected_outcomes,
             'status' => $this->status,
+            'workflow_status' => $this->workflow_status,
+            'published_at' => optional($this->published_at)?->format('Y-m-d H:i:s'),
             'is_active' => (bool) $this->is_active,
+
+            'files' => [
+                'promotional' => [
+                    'has_file' => $this->hasPromotionalFile(),
+                    'original_name' => $this->promotional_file_original_name,
+                    'mime' => $this->promotional_file_mime,
+                    'size' => $this->promotional_file_size,
+                ],
+                'training_bag' => [
+                    'has_file' => $this->hasTrainingBagFile(),
+                    'original_name' => $this->training_bag_file_original_name,
+                    'mime' => $this->training_bag_file_mime,
+                    'size' => $this->training_bag_file_size,
+                ],
+            ],
+
+            'training_category' => $this->whenLoaded('trainingCategory', fn () => [
+                'id' => $this->trainingCategory->id,
+                'name_ar' => $this->trainingCategory->name_ar,
+                'slug' => $this->trainingCategory->slug,
+            ]),
+
+            'training_subcategory' => $this->whenLoaded('trainingSubcategory', fn () => [
+                'id' => $this->trainingSubcategory->id,
+                'name_ar' => $this->trainingSubcategory->name_ar,
+                'slug' => $this->trainingSubcategory->slug,
+            ]),
+
+            'creator' => $this->whenLoaded('creator', fn () => [
+                'id' => $this->creator->id,
+                'name' => $this->creator->name,
+            ]),
 
             'trainers' => $this->whenLoaded('trainers', function () {
                 return $this->trainers->map(function ($trainer) {

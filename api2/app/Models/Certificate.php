@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\BackendUrl;
 use App\Support\CertificateType;
 use App\Support\SignedPrintUrl;
 use Illuminate\Database\Eloquent\Builder;
@@ -143,14 +144,14 @@ class Certificate extends Model
     public function publicViewUrl(): ?string
     {
         return $this->certificate_code
-            ? url('/verify-certificate/' . rawurlencode($this->certificate_code))
+            ? BackendUrl::to('verify-certificate/' . rawurlencode((string) $this->certificate_code))
             : null;
     }
 
     public function publicPrintUrl(): ?string
     {
         return $this->certificate_code
-            ? url('/certificates/' . rawurlencode($this->certificate_code) . '/print')
+            ? BackendUrl::to('certificates/' . rawurlencode((string) $this->certificate_code) . '/print')
             : null;
     }
 }

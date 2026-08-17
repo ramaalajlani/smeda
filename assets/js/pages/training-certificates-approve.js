@@ -215,6 +215,75 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  function canPrint() {
+    return window.AppAuth.hasPermission(window.AppPermissions.PRINT_CERTIFICATES);
+  }
+
+  function buildPreviewActions(item) {
+    if (!item?.id) {
+      return '';
+    }
+
+    const canPreview = true;
+    const showPrint = canPrint();
+
+    if (!canPreview && !showPrint) {
+      return '';
+    }
+
+    const buttons = [];
+
+    if (canPreview) {
+      buttons.push(`
+        <button type="button"
+                class="btn btn-sm btn-outline-secondary cert-preview-btn"
+                data-id="${window.APP_HELPERS.e(item.id)}">
+          معاينة
+        </button>
+      `);
+    }
+
+    if (showPrint) {
+      buttons.push(`
+        <button type="button"
+                class="btn btn-sm btn-outline-primary cert-print-btn"
+                data-id="${window.APP_HELPERS.e(item.id)}">
+          طباعة
+        </button>
+      `);
+    }
+
+    return `<div class="d-flex flex-wrap gap-2 mb-2">${buttons.join('')}</div>`;
+  }
+
+  function bindPreviewButtons(rows) {
+    const byId = new Map((rows || []).map((item) => [String(item.id), item]));
+
+    tbody.querySelectorAll('.cert-preview-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const item = byId.get(String(btn.getAttribute('data-id')));
+        btn.disabled = true;
+        try {
+          await window.APP_HELPERS.openCertificatePreview(item);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+
+    tbody.querySelectorAll('.cert-print-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const item = byId.get(String(btn.getAttribute('data-id')));
+        btn.disabled = true;
+        try {
+          await window.APP_HELPERS.openCertificatePreview(item, { preferPrint: true });
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+  }
+
   function renderRows(rows, allowedStep, allowedStatus) {
     if (!rows.length) {
       renderInfoRow('empty', SiteI18n.ta('لا توجد شهادات ضمن مرحلة الاعتماد الحالية.'));
@@ -250,6 +319,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           </td>
 
           <td>
+            ${buildPreviewActions(item)}
             ${
               canAct
                 ? `
@@ -267,7 +337,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </button>
                   </div>
                 `
-                : `<span class="text-muted">—</span>`
+                : ''
             }
           </td>
         </tr>
@@ -275,6 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }).join('');
 
     bindRowActions(allowedStep);
+    bindPreviewButtons(rows);
   }
 
   async function loadData() {

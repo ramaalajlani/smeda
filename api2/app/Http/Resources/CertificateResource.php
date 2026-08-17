@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\Concerns\ExposesBranchScopeFields;
+use App\Support\BackendUrl;
 use App\Support\SignedPrintUrl;use App\Support\TrainingDataScope;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -71,22 +72,24 @@ class CertificateResource extends JsonResource
             'certificate_file_path' => $this->certificate_file_path,
 
             'qr_code_url' => ($this->status === 'approved' && (bool) $this->is_verified && $this->certificate_code)
-                ? url('/certificates/' . rawurlencode((string) $this->certificate_code) . '/qr')
+                ? BackendUrl::to('certificates/' . rawurlencode((string) $this->certificate_code) . '/qr')
                 : ($this->qr_code_path ? url($this->qr_code_path) : null),
 
             'qr_url' => $this->qr_url,
-            'view_url' => $this->certificate_code ? url('/verify-certificate/' . rawurlencode($this->certificate_code)) : null,
+            'view_url' => $this->certificate_code
+                ? BackendUrl::to('verify-certificate/' . rawurlencode((string) $this->certificate_code))
+                : null,
             'public_print_url' => ($this->status === 'approved' && $this->is_verified && $this->certificate_code)
-                ? url('/certificates/' . rawurlencode($this->certificate_code) . '/print')
+                ? BackendUrl::to('certificates/' . rawurlencode((string) $this->certificate_code) . '/print')
                 : null,
 
             'printable_url' => SignedPrintUrl::certificatePrint($this->id),
             'pdf_url' => SignedPrintUrl::certificatePdf($this->id),
 
             'verify_url' => $canSeeSecrets && $this->certificate_code
-                ? url('/verify-certificate/' . rawurlencode($this->certificate_code))
+                ? BackendUrl::to('verify-certificate/' . rawurlencode((string) $this->certificate_code))
                 : ($canSeeSecrets && $this->verification_code
-                    ? url('/certificates/verify?code=' . urlencode((string) $this->verification_code) . '&hash=' . urlencode((string) $antiFakeHash))
+                    ? BackendUrl::to('certificates/verify?code=' . urlencode((string) $this->verification_code) . '&hash=' . urlencode((string) $antiFakeHash))
                     : null),
 
             /*

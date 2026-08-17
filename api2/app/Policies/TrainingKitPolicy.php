@@ -31,4 +31,19 @@ class TrainingKitPolicy
     {
         return $this->hasPermission($user, 'manage_kits');
     }
+
+    public function downloadPromotionalFile(?User $user, TrainingKit $kit): bool
+    {
+        return $this->hasPermission($user, 'view_kits') && $kit->hasPromotionalFile();
+    }
+
+    public function downloadTrainingBagFile(?User $user, TrainingKit $kit): bool
+    {
+        return $this->hasPermission($user, 'manage_kits') && $kit->hasTrainingBagFile();
+    }
+
+    public function publish(?User $user, TrainingKit $kit): bool
+    {
+        return $this->hasPermission($user, 'manage_kits');
+    }
 }

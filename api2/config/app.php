@@ -56,6 +56,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Backend URL (web routes: certificate verify/print, cards)
+    |--------------------------------------------------------------------------
+    |
+    | Must match the frontend BACKEND_BASE_URL. When unset, falls back to APP_URL.
+    |
+    */
+
+    'backend_url' => env('BACKEND_URL', env('APP_URL', 'http://localhost')),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

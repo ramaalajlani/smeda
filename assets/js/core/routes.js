@@ -139,6 +139,33 @@ window.APP_ROUTES = {
   trainingKitShow: (id) =>
     `${window.APP_CONFIG.API_BASE_URL}/training-kits/${id}`,
 
+  trainingKitPromotionalUpload: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/training-kits/${id}/promotional-file`,
+
+  trainingKitBagFileUpload: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/training-kits/${id}/training-bag-file`,
+
+  trainingKitPromotionalDownload: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/training-kits/${id}/promotional-file`,
+
+  trainingKitBagFileDownload: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/training-kits/${id}/training-bag-file`,
+
+  trainingCategories: (params = {}) =>
+    window.APP_API.withQuery(
+      `${window.APP_CONFIG.API_BASE_URL}/training-categories`,
+      params
+    ),
+
+  trainingCategoryStore: () =>
+    `${window.APP_CONFIG.API_BASE_URL}/training-categories`,
+
+  trainingCategoryUpdate: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/training-categories/${id}`,
+
+  trainingCategoryDelete: (id) =>
+    `${window.APP_CONFIG.API_BASE_URL}/training-categories/${id}`,
+
   /*
   |--------------------------------------------------------------------------
   | Training Kit Nominations

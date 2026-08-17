@@ -608,6 +608,18 @@ Route::middleware('auth:sanctum')->group(function () {
 
     */
 
+    Route::prefix('training-categories')->middleware('permission:view_kits')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\TrainingCategoryController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\TrainingCategoryController::class, 'store'])
+            ->middleware('permission:manage_training_categories');
+        Route::put('/{id}', [\App\Http\Controllers\Api\TrainingCategoryController::class, 'update'])
+            ->middleware('permission:manage_training_categories')
+            ->whereNumber('id');
+        Route::delete('/{id}', [\App\Http\Controllers\Api\TrainingCategoryController::class, 'destroy'])
+            ->middleware('permission:manage_training_categories')
+            ->whereNumber('id');
+    });
+
     Route::prefix('training-kits')->middleware('permission:view_kits')->group(function () {
 
         Route::get('/', [TrainingKitController::class, 'index']);
@@ -623,6 +635,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::patch('/{id}', [TrainingKitController::class, 'update'])
             ->middleware('permission:manage_kits')
+            ->whereNumber('id');
+
+        Route::post('/{id}/promotional-file', [TrainingKitController::class, 'uploadPromotionalFile'])
+            ->middleware(['permission:manage_kits', 'throttle:file-upload'])
+            ->whereNumber('id');
+
+        Route::post('/{id}/training-bag-file', [TrainingKitController::class, 'uploadTrainingBagFile'])
+            ->middleware(['permission:manage_kits', 'throttle:file-upload'])
+            ->whereNumber('id');
+
+        Route::get('/{id}/promotional-file', [TrainingKitController::class, 'downloadPromotionalFile'])
+            ->whereNumber('id');
+
+        Route::get('/{id}/training-bag-file', [TrainingKitController::class, 'downloadTrainingBagFile'])
             ->whereNumber('id');
 
         // مواد الحقيبة (وحدات/محاور داخل الحقيبة)

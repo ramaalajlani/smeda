@@ -24,6 +24,7 @@ window.AppPermissions = {
   */
   VIEW_KITS: 'view_kits',
   MANAGE_KITS: 'manage_kits',
+  MANAGE_TRAINING_CATEGORIES: 'manage_training_categories',
   NOMINATE_TRAINING_KITS: 'nominate_training_kits',
   REVIEW_TRAINING_KIT_NOMINATIONS: 'review_training_kit_nominations',
 

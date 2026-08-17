@@ -98,7 +98,7 @@ $activePage = 'services';
   </section>
 <?php include '../../includes/layout/app-shell-close.php'; ?>
 
-<script src="<?php echo $basePath; ?>assets/js/pages/training-certificates-list.js?v=1.1"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/training-certificates-list.js?v=1.2"></script>
 
 </body>
 </html>

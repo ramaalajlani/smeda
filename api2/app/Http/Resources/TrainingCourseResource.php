@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\Concerns\ExposesBranchScopeFields;
+use App\Support\BackendUrl;
 use App\Support\SignedPrintUrl;
 use App\Support\TrainingLocationFormatter;
 use Illuminate\Http\Request;
@@ -119,10 +120,10 @@ class TrainingCourseResource extends JsonResource
                         'is_verified' => (bool) $certificate->is_verified,
                         'qr_code_path' => $certificate->qr_code_path,
                         'qr_code_url' => ($certificate->status === 'approved' && (bool) $certificate->is_verified && $certificate->certificate_code)
-                            ? url('/certificates/' . rawurlencode((string) $certificate->certificate_code) . '/qr')
+                            ? BackendUrl::to('certificates/' . rawurlencode((string) $certificate->certificate_code) . '/qr')
                             : ($certificate->qr_code_path ? url($certificate->qr_code_path) : null),
                         'view_url' => $certificate->certificate_code
-                            ? url('/verify-certificate/' . rawurlencode((string) $certificate->certificate_code))
+                            ? BackendUrl::to('verify-certificate/' . rawurlencode((string) $certificate->certificate_code))
                             : null,
                         'certificate_file_path' => $certificate->certificate_file_path,
                         'printable_url' => SignedPrintUrl::certificatePrint($certificate->id),

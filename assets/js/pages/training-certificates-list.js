@@ -68,31 +68,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   function buildActions(item) {
     const actions = [];
     const qrSrc = item?.qr_code_url ? window.APP_HELPERS.e(item.qr_code_url) : '';
+    const links = window.APP_HELPERS.resolveCertificateLinks(item);
 
-    if (item?.view_url) {
+    if (links.viewUrl || item?.id) {
       actions.push(`
-        <a href="${item.view_url}"
-           target="_blank"
-           class="btn btn-sm btn-outline-secondary">
+        <button type="button"
+                class="btn btn-sm btn-outline-secondary cert-preview-btn"
+                data-id="${window.APP_HELPERS.e(item.id)}">
           عرض
-        </a>
+        </button>
       `);
     }
 
-    if (item?.printable_url && canPrint()) {
+    if ((links.printUrl || item?.id) && canPrint()) {
       actions.push(`
-        <a href="${item.printable_url}"
-           target="_blank"
-           class="btn btn-sm btn-outline-success">
+        <button type="button"
+                class="btn btn-sm btn-outline-success cert-print-btn"
+                data-id="${window.APP_HELPERS.e(item.id)}">
           طباعة
-        </a>
+        </button>
       `);
     }
 
-    if (item?.verify_url && canVerify()) {
+    if (links.verifyUrl && canVerify()) {
       actions.push(`
-        <a href="${item.verify_url}"
+        <a href="${window.APP_HELPERS.e(links.verifyUrl)}"
            target="_blank"
+           rel="noopener noreferrer"
            class="btn btn-sm btn-outline-dark">
           تحقق
         </a>
@@ -213,6 +215,36 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
 
       tbody.appendChild(row);
+    });
+
+    bindCertificateActionButtons(rows);
+  }
+
+  function bindCertificateActionButtons(rows) {
+    const byId = new Map((rows || []).map((item) => [String(item.id), item]));
+
+    tbody.querySelectorAll('.cert-preview-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const item = byId.get(String(btn.getAttribute('data-id')));
+        btn.disabled = true;
+        try {
+          await window.APP_HELPERS.openCertificatePreview(item);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+
+    tbody.querySelectorAll('.cert-print-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const item = byId.get(String(btn.getAttribute('data-id')));
+        btn.disabled = true;
+        try {
+          await window.APP_HELPERS.openCertificatePreview(item, { preferPrint: true });
+        } finally {
+          btn.disabled = false;
+        }
+      });
     });
   }
 

@@ -63,43 +63,59 @@ $activePage = 'services';
   <section class="section pt-0">
     <div class="container">
 
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h2 class="h5 fw-bold mb-0">جدول الحقائب</h2>
+        <?php if (true): ?>
+        <a href="training-bag-form.php" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> إضافة حقيبة</a>
+        <?php endif; ?>
+      </div>
+
       <div class="services-grid-card mb-4">
         <div class="row g-3 align-items-end">
-          <div class="col-lg-6">
-            <label for="trainingSearchInput" class="form-label fw-bold">البحث</label>
-            <input
-              type="text"
-              id="trainingSearchInput"
-              class="form-control"
-              placeholder="ابحث باسم الحقيبة أو الكود أو القطاع أو الصنف"
-            >
-          </div>
-
           <div class="col-lg-4">
-            <label for="trainingSectorFilter" class="form-label fw-bold">فلترة حسب القطاع</label>
-            <select id="trainingSectorFilter" class="form-select">
-              <option value="">كل القطاعات</option>
+            <label for="trainingSearchInput" class="form-label fw-bold">البحث</label>
+            <input type="text" id="trainingSearchInput" class="form-control" placeholder="اسم، كود، وصف...">
+          </div>
+          <div class="col-lg-3">
+            <label for="trainingCategoryFilter" class="form-label fw-bold">التصنيف</label>
+            <select id="trainingCategoryFilter" class="form-select"><option value="">الكل</option></select>
+          </div>
+          <div class="col-lg-3">
+            <label for="trainingStatusFilter" class="form-label fw-bold">الحالة</label>
+            <select id="trainingStatusFilter" class="form-select">
+              <option value="">الكل</option>
+              <option value="draft">مسودة</option>
+              <option value="under_review">قيد المراجعة</option>
+              <option value="approved">معتمدة</option>
+              <option value="published">منشورة</option>
+              <option value="inactive">غير نشطة</option>
+              <option value="archived">مؤرشفة</option>
             </select>
           </div>
-
           <div class="col-lg-2">
-            <button type="button" id="resetTrainingFilters" class="soft-btn w-100 border-0">
-              إعادة التصفية
-            </button>
+            <button type="button" id="resetTrainingFilters" class="soft-btn w-100 border-0">إعادة</button>
           </div>
         </div>
       </div>
 
-      <div id="bagsLoadingBox" class="bags-loading-box">
-        جاري تحميل بيانات الحقائب التدريبية...
-      </div>
+      <div id="bagsLoadingBox" class="bags-loading-box">جاري تحميل بيانات الحقائب...</div>
 
-      <div class="row g-4" id="trainingBagsContainer"></div>
+      <div class="table-responsive bg-white border rounded-4">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>الكود</th><th>الاسم</th><th>التصنيف</th><th>التخصص</th><th>المستوى</th><th>ساعات</th>
+              <th>ترويجي</th><th>PDF</th><th>الحالة</th><th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="bagsTableBody"></tbody>
+        </table>
+      </div>
     </div>
   </section>
 <?php include '../../includes/layout/app-shell-close.php'; ?>
 
-<script src="<?php echo $basePath; ?>assets/js/pages/training-kits-list.js?v=2.1"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/training-kits-list.js?v=3.0"></script>
 
 </body>
 </html>

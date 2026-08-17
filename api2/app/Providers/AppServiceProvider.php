@@ -24,6 +24,7 @@ use App\Models\TrainerRegistrationRequest;
 use App\Models\TrainingCenter;
 use App\Models\TrainingCenterRegistrationRequest;
 use App\Models\TrainingCourse;
+use App\Models\TrainingCategory;
 use App\Models\TrainingKit;
 use App\Models\TrainingKitNomination;
 use App\Models\User;
@@ -51,6 +52,7 @@ use App\Policies\TrainerRegistrationRequestPolicy;
 use App\Policies\TrainingCenterPolicy;
 use App\Policies\TrainingCenterRegistrationRequestPolicy;
 use App\Policies\TrainingCoursePolicy;
+use App\Policies\TrainingCategoryPolicy;
 use App\Policies\TrainingKitNominationPolicy;
 use App\Policies\TrainingKitPolicy;
 use App\Policies\UserAccessPolicy;
@@ -69,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
         Trainer::class => TrainerPolicy::class,
         Trainee::class => TraineePolicy::class,
         TrainingKit::class => TrainingKitPolicy::class,
+        TrainingCategory::class => TrainingCategoryPolicy::class,
         TrainingCourse::class => TrainingCoursePolicy::class,
         Certificate::class => CertificatePolicy::class,
         TrainingKitNomination::class => TrainingKitNominationPolicy::class,

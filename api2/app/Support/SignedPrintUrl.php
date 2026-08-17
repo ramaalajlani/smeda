@@ -2,8 +2,6 @@
 
 namespace App\Support;
 
-use Illuminate\Support\Facades\URL;
-
 class SignedPrintUrl
 {
     /** مدة صلاحية روابط الطباعة بالساعات */
@@ -11,7 +9,7 @@ class SignedPrintUrl
 
     public static function certificatePrint(int $id): string
     {
-        return URL::temporarySignedRoute(
+        return BackendUrl::temporarySignedRoute(
             'certificates.print',
             now()->addHours(self::EXPIRATION_HOURS),
             ['id' => $id]
@@ -20,7 +18,7 @@ class SignedPrintUrl
 
     public static function certificatePdf(int $id): string
     {
-        return URL::temporarySignedRoute(
+        return BackendUrl::temporarySignedRoute(
             'certificates.pdf',
             now()->addHours(self::EXPIRATION_HOURS),
             ['id' => $id]
@@ -29,7 +27,7 @@ class SignedPrintUrl
 
     public static function trainerCard(int $id): string
     {
-        return URL::temporarySignedRoute(
+        return BackendUrl::temporarySignedRoute(
             'trainers.card',
             now()->addHours(self::EXPIRATION_HOURS),
             ['id' => $id]
@@ -38,7 +36,7 @@ class SignedPrintUrl
 
     public static function trainerCardPdf(int $id): string
     {
-        return URL::temporarySignedRoute(
+        return BackendUrl::temporarySignedRoute(
             'trainers.card.pdf',
             now()->addHours(self::EXPIRATION_HOURS),
             ['id' => $id]
@@ -47,7 +45,7 @@ class SignedPrintUrl
 
     public static function traineeCard(int $id): string
     {
-        return URL::temporarySignedRoute(
+        return BackendUrl::temporarySignedRoute(
             'trainees.card',
             now()->addHours(self::EXPIRATION_HOURS),
             ['id' => $id]
@@ -56,7 +54,7 @@ class SignedPrintUrl
 
     public static function traineeCardPdf(int $id): string
     {
-        return URL::temporarySignedRoute(
+        return BackendUrl::temporarySignedRoute(
             'trainees.card.pdf',
             now()->addHours(self::EXPIRATION_HOURS),
             ['id' => $id]
@@ -65,7 +63,7 @@ class SignedPrintUrl
 
     public static function trainingCenterCertificate(int $id): string
     {
-        return URL::temporarySignedRoute(
+        return BackendUrl::temporarySignedRoute(
             'training-centers.certificate',
             now()->addHours(self::EXPIRATION_HOURS),
             ['id' => $id]
@@ -74,7 +72,7 @@ class SignedPrintUrl
 
     public static function trainingCenterCertificatePdf(int $id): string
     {
-        return URL::temporarySignedRoute(
+        return BackendUrl::temporarySignedRoute(
             'training-centers.certificate.pdf',
             now()->addHours(self::EXPIRATION_HOURS),
             ['id' => $id]

@@ -44,6 +44,8 @@ $pageTitle  = 'بيانات الحقيبة';
       </div>
       <div class="fld"><label>الهدف</label><textarea id="objective" rows="2"></textarea></div>
       <div class="fld"><label>الوصف</label><textarea id="description" rows="3"></textarea></div>
+      <div class="fld"><label>ملف الحقيبة (PDF)</label><input type="file" id="training_bag_file" accept=".pdf,application/pdf"><small class="text-muted">PDF فقط — محمي</small></div>
+      <div class="fld"><label>ملف ترويجي (اختياري)</label><input type="file" id="promotional_file" accept=".pdf,.doc,.docx,.ppt,.pptx"></div>
       <div style="text-align:center"><button class="tc-save" id="saveBtn" type="submit"><i class="bi bi-save2-fill"></i> حفظ</button></div>
     </form>
   </div>
@@ -84,7 +86,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('form').addEventListener('submit', async (e)=>{
     e.preventDefault();
     const btn = document.getElementById('saveBtn'); btn.disabled=true; msg('');
-    const body = {
+    const bagFile = document.getElementById('training_bag_file')?.files?.[0];
+    const promoFile = document.getElementById('promotional_file')?.files?.[0];
+    const useMultipart = !!(bagFile || promoFile);
+
+    const payload = {
       name: val('name').trim(),
       code: val('code').trim() || null,
       sector: val('sector').trim() || null,
@@ -98,10 +104,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       objective: val('objective').trim() || null,
       description: val('description').trim() || null,
     };
+
     try{
       const url = ID ? `${BASE}/training-kits/${ID}` : `${BASE}/training-kits`;
-      const method = ID ? 'PUT' : 'POST';
-      const r = await fetch(url, { method, headers:H(), body: JSON.stringify(body) });
+      let r;
+      if (useMultipart) {
+        const fd = new FormData();
+        Object.entries(payload).forEach(([k,v]) => { if (v !== null && v !== undefined) fd.append(k, typeof v === 'boolean' ? (v ? '1' : '0') : String(v)); });
+        if (bagFile) fd.append('training_bag_file', bagFile);
+        if (promoFile) fd.append('promotional_file', promoFile);
+        if (ID) fd.append('_method', 'PUT');
+        r = await fetch(url, { method: 'POST', headers: { Authorization:`Bearer ${window.AppAuth.getToken()}`, Accept:'application/json' }, body: fd });
+      } else {
+        r = await fetch(url, { method: ID ? 'PUT' : 'POST', headers: H(), body: JSON.stringify(payload) });
+      }
       const j = await r.json().catch(()=>({}));
       if (!r.ok) throw new Error(j.message || (j.errors && Object.values(j.errors).flat()[0]) || 'فشل الحفظ');
       const k = j.data || {};

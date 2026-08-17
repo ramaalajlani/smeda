@@ -29,6 +29,7 @@ class RolePermissionSeeder extends Seeder
             // Kits
             'view_kits',
             'manage_kits',
+            'manage_training_categories',
             'nominate_training_kits',
             'review_training_kit_nominations',
 
@@ -291,7 +292,7 @@ class RolePermissionSeeder extends Seeder
         $projectServicesTraining = [
             'view_trainers', 'manage_trainers', 'view_trainer_profiles',
             'view_centers', 'manage_centers',
-            'view_kits', 'manage_kits', 'review_training_kit_nominations',
+            'view_kits', 'manage_kits', 'manage_training_categories', 'review_training_kit_nominations',
             'view_programs', 'manage_programs',
             'program_bank.view', 'program_bank.create', 'program_bank.update',
             'program_bank.delete', 'program_bank.approve', 'program_bank.reports',
@@ -487,6 +488,7 @@ class RolePermissionSeeder extends Seeder
 
                 'view_kits',
                 'manage_kits',
+                'manage_training_categories',
                 'review_training_kit_nominations',
 
                 'view_programs',

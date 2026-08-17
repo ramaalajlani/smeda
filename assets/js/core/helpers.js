@@ -345,5 +345,65 @@ window.APP_HELPERS = {
     }
 
     return `<span class="badge bg-${found[0]}">${lbl(found[1])}</span>`;
-  }
+  },
+
+  /**
+   * Resolve certificate view/print URLs using frontend BACKEND_BASE_URL.
+   * Pending certificates open the signed print preview (full document).
+   */
+  resolveCertificateLinks(certificate) {
+    const routes = window.APP_ROUTES || {};
+    const code = certificate?.certificate_code;
+    const id = certificate?.id;
+    const isApproved = certificate?.status === 'approved' && !!certificate?.is_verified;
+
+    const signedPrintUrl = certificate?.printable_url || certificate?.pdf_url || null;
+
+    const verifyUrl = (code && routes.certificateViewByCode)
+      ? routes.certificateViewByCode(code)
+      : (certificate?.view_url || null);
+
+    const printUrl = signedPrintUrl
+      || (isApproved && code && routes.certificatePrintByCode
+        ? routes.certificatePrintByCode(code)
+        : null);
+
+    const viewUrl = (!isApproved && signedPrintUrl)
+      ? signedPrintUrl
+      : (verifyUrl || printUrl);
+
+    return { viewUrl, printUrl: printUrl || signedPrintUrl, verifyUrl, pdfUrl: certificate?.pdf_url || null };
+  },
+
+  async openCertificatePreview(certificate, { preferPrint = false } = {}) {
+    let item = certificate || null;
+
+    if (item?.id && window.APP_API && window.APP_ROUTES?.certificateShow) {
+      try {
+        const response = await window.APP_API.get(window.APP_ROUTES.certificateShow(item.id));
+        if (response?.data) {
+          item = response.data;
+        }
+      } catch (error) {
+        console.warn('Certificate preview refresh failed:', error);
+      }
+    }
+
+    const links = this.resolveCertificateLinks(item);
+    const target = preferPrint
+      ? (links.printUrl || links.viewUrl)
+      : (links.viewUrl || links.printUrl);
+
+    if (!target) {
+      if (window.APP_UI?.showMessage) {
+        window.APP_UI.showMessage('تعذّر فتح معاينة الشهادة.', 'error');
+      } else {
+        window.alert('تعذّر فتح معاينة الشهادة.');
+      }
+      return false;
+    }
+
+    window.open(target, '_blank', 'noopener,noreferrer');
+    return true;
+  },
 };

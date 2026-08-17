@@ -5,124 +5,130 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   if (!ok) return;
 
-  const container = document.getElementById('trainingBagsContainer');
+  const tbody = document.getElementById('bagsTableBody');
   const loadingBox = document.getElementById('bagsLoadingBox');
   const searchInput = document.getElementById('trainingSearchInput');
-  const sectorFilter = document.getElementById('trainingSectorFilter');
+  const categoryFilter = document.getElementById('trainingCategoryFilter');
+  const statusFilter = document.getElementById('trainingStatusFilter');
   const resetBtn = document.getElementById('resetTrainingFilters');
+  const canManage = window.AppAuth.hasPermission(window.AppPermissions.MANAGE_KITS);
 
-  let allRows = [];
-
-  function fillSectorFilter(rows) {
-    if (!sectorFilter) return;
-    const sectors = [...new Set(rows.map(item => item.sector).filter(Boolean))];
-    sectorFilter.innerHTML = `<option value="">كل القطاعات</option>` +
-      sectors.map(sector => `<option value="${window.APP_HELPERS.e(sector)}">${window.APP_HELPERS.e(sector)}</option>`).join('');
+  const urlParams = new URLSearchParams(location.search);
+  if (urlParams.get('workflow_status') && statusFilter) {
+    statusFilter.value = urlParams.get('workflow_status');
   }
 
-  function render(rows) {
+  let categories = [];
+
+  const workflowLabels = {
+    draft: 'مسودة',
+    under_review: 'قيد المراجعة',
+    approved: 'معتمدة',
+    published: 'منشورة',
+    inactive: 'غير نشطة',
+    archived: 'مؤرشفة',
+  };
+
+  async function loadCategories() {
+    const res = await window.APP_API.get(window.APP_ROUTES.trainingCategories({ roots_only: 1, with_children: 1 }));
+    categories = res.data || [];
+    if (!categoryFilter) return;
+    categoryFilter.innerHTML = '<option value="">كل التصنيفات</option>' + categories.map((c) =>
+      `<option value="${c.id}">${window.APP_HELPERS.e(c.name_ar)}</option>`
+    ).join('');
+  }
+
+  async function downloadFile(url, name) {
+    const r = await fetch(url, { headers: { Authorization: `Bearer ${window.AppAuth.getToken()}` } });
+    if (!r.ok) return alert('تعذّر التحميل');
+    const blob = await r.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name || 'file.pdf';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function renderRows(rows) {
     if (!rows.length) {
-      container.innerHTML = `
-        <div class="col-12">
-          <div class="bg-white border rounded-4 p-4 text-center text-muted">
-            لا توجد حقائب مطابقة.
-          </div>
-        </div>
-      `;
+      tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted p-4">لا توجد حقائب مطابقة.</td></tr>';
       return;
     }
 
-    container.innerHTML = rows.map(item => {
-      const trainers = item.trainers || [];
-      const centers = item.centers || [];
-      const trainersCount = item.stats?.trainers_count ?? trainers.length;
-      const centersCount = item.stats?.centers_count ?? centers.length;
-      const trainersNames = trainers.length
-        ? trainers.slice(0, 3).map(t => window.APP_HELPERS.safe(t.name)).join('، ') + (trainers.length > 3 ? ` (+${trainers.length - 3})` : '')
-        : 'لا يوجد';
-      const centersNames = centers.length
-        ? centers.slice(0, 2).map(c => window.APP_HELPERS.safe(c.name)).join('، ') + (centers.length > 2 ? ` (+${centers.length - 2})` : '')
-        : 'لا يوجد';
-      return `
-      <div class="col-md-6 col-xl-4">
-        <div class="bg-white border rounded-4 p-4 h-100 shadow-sm d-flex flex-column">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <h3 class="h5 fw-bold mb-0">${window.APP_HELPERS.e(window.APP_HELPERS.safe(item.name))}</h3>
-            ${window.APP_HELPERS.badgeHtml(item.status)}
-          </div>
-          <div class="small text-muted mb-2">الكود: ${window.APP_HELPERS.e(window.APP_HELPERS.safe(item.code))}</div>
-          <div class="small mb-2">القطاع: ${window.APP_HELPERS.e(window.APP_HELPERS.safe(item.sector))}</div>
-          <div class="small mb-2">الصنف: ${window.APP_HELPERS.e(window.APP_HELPERS.safe(item.category))}</div>
-          <div class="small mb-2">النوع: ${window.APP_HELPERS.e(window.APP_HELPERS.safe(item.type))}</div>
-          <div class="small mb-2">المستوى: ${window.APP_HELPERS.e(window.APP_HELPERS.safe(item.level))}</div>
-          <div class="small mb-2">الساعات: ${window.APP_HELPERS.safe(item.hours)}</div>
-          <div class="small mb-1">المراكز المكلَّفة: <strong>${centersCount}</strong></div>
-          <div class="small mb-2 text-muted">${window.APP_HELPERS.e(centersNames)}</div>
-          <div class="small mb-1">المدربين المكلّفين: <strong>${trainersCount}</strong></div>
-          <div class="small mb-3 text-muted">${window.APP_HELPERS.e(trainersNames)}</div>
-          <div class="mt-auto">
-            <a class="btn btn-sm btn-outline-primary" href="training-kit-manage.php?id=${item.id}">إدارة التكليف</a>
-          </div>
-        </div>
-      </div>
-    `;
+    tbody.innerHTML = rows.map((item) => {
+      const cat = item.training_category?.name_ar || item.category || '—';
+      const sub = item.training_subcategory?.name_ar || item.type || '—';
+      const wf = workflowLabels[item.workflow_status] || item.workflow_status || '—';
+      const promo = item.files?.promotional?.has_file ? '<i class="bi bi-check-circle text-success"></i>' : '—';
+      const bag = item.files?.training_bag?.has_file ? '<i class="bi bi-file-pdf text-danger"></i>' : '—';
+      const actions = [
+        canManage ? `<a class="btn btn-sm btn-outline-primary" href="training-bag-form.php?id=${item.id}">تعديل</a>` : '',
+        item.files?.promotional?.has_file ? `<button class="btn btn-sm btn-outline-secondary" data-promo="${item.id}">ترويجي</button>` : '',
+        item.files?.training_bag?.has_file && canManage ? `<button class="btn btn-sm btn-outline-danger" data-bag="${item.id}">PDF</button>` : '',
+      ].filter(Boolean).join(' ');
+
+      return `<tr>
+        <td><code>${window.APP_HELPERS.e(item.code)}</code></td>
+        <td>${window.APP_HELPERS.e(item.name)}</td>
+        <td>${window.APP_HELPERS.e(cat)}</td>
+        <td>${window.APP_HELPERS.e(sub)}</td>
+        <td>${window.APP_HELPERS.e(item.level || '—')}</td>
+        <td>${item.hours ?? 0}</td>
+        <td class="text-center">${promo}</td>
+        <td class="text-center">${bag}</td>
+        <td><span class="badge bg-light text-dark border">${window.APP_HELPERS.e(wf)}</span></td>
+        <td class="text-nowrap">${actions}</td>
+      </tr>`;
     }).join('');
-  }
 
-  function applyFilters() {
-    const search = (searchInput?.value || '').trim().toLowerCase();
-    const sector = sectorFilter?.value || '';
-
-    const filtered = allRows.filter(item => {
-      const haystack = [
-        item.name,
-        item.code,
-        item.sector,
-        item.category,
-        item.type,
-        item.level,
-        item.objective,
-        item.description
-      ].join(' ').toLowerCase();
-
-      const matchesSearch = !search || haystack.includes(search);
-      const matchesSector = !sector || item.sector === sector;
-
-      return matchesSearch && matchesSector;
+    tbody.querySelectorAll('[data-promo]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const row = rows.find((r) => String(r.id) === btn.dataset.promo);
+        downloadFile(window.APP_ROUTES.trainingKitPromotionalDownload(row.id), row.files?.promotional?.original_name);
+      });
     });
-
-    render(filtered);
-  }
-
-  try {
-    const result = await window.APP_API.get(window.APP_ROUTES.trainingKits({
-      with_trainers: 1,
-      with_centers: 1,
-      with_counts: 1,
-      per_page: 100,
-    }));
-    allRows = result.data || [];
-
-    window.APP_UI.hideLoadingState(loadingBox);
-    fillSectorFilter(allRows);
-    render(allRows);
-
-    searchInput?.addEventListener('input', applyFilters);
-    sectorFilter?.addEventListener('change', applyFilters);
-    resetBtn?.addEventListener('click', () => {
-      if (searchInput) searchInput.value = '';
-      if (sectorFilter) sectorFilter.value = '';
-      render(allRows);
+    tbody.querySelectorAll('[data-bag]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const row = rows.find((r) => String(r.id) === btn.dataset.bag);
+        downloadFile(window.APP_ROUTES.trainingKitBagFileDownload(row.id), row.files?.training_bag?.original_name);
+      });
     });
-  } catch (error) {
-    console.error(error);
-    window.APP_UI.hideLoadingState(loadingBox);
-    container.innerHTML = `
-      <div class="col-12">
-        <div class="bg-white border rounded-4 p-4 text-center text-danger">
-          تعذر تحميل بيانات الحقائب التدريبية.
-        </div>
-      </div>
-    `;
   }
+
+  async function loadRows() {
+    const params = { per_page: 100, with_counts: 0 };
+    const search = (searchInput?.value || '').trim();
+    if (search) params.search = search;
+    if (categoryFilter?.value) params.category_id = categoryFilter.value;
+    if (statusFilter?.value) params.workflow_status = statusFilter.value;
+
+    const result = await window.APP_API.get(window.APP_ROUTES.trainingKits(params));
+    return result.data || [];
+  }
+
+  async function refresh() {
+    try {
+      loadingBox?.classList.remove('d-none');
+      tbody.innerHTML = '';
+      const rows = await loadRows();
+      window.APP_UI.hideLoadingState(loadingBox);
+      renderRows(rows);
+    } catch (e) {
+      window.APP_UI.hideLoadingState(loadingBox);
+      tbody.innerHTML = '<tr><td colspan="10" class="text-center text-danger p-4">تعذر تحميل البيانات</td></tr>';
+    }
+  }
+
+  searchInput?.addEventListener('input', () => { clearTimeout(window._bagSearchT); window._bagSearchT = setTimeout(refresh, 350); });
+  categoryFilter?.addEventListener('change', refresh);
+  statusFilter?.addEventListener('change', refresh);
+  resetBtn?.addEventListener('click', () => {
+    if (searchInput) searchInput.value = '';
+    if (categoryFilter) categoryFilter.value = '';
+    if (statusFilter) statusFilter.value = '';
+    refresh();
+  });
+
+  await loadCategories();
+  await refresh();
 });

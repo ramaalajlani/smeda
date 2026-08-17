@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             TrainingCenterPlatformSeeder::class,
 
             TrainingKitSeeder::class,
+            TrainingCategorySeeder::class,
             TrainingProgramSeeder::class,
 
             TrainerSeeder::class,

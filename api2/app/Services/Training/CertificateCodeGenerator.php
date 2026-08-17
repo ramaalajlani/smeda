@@ -8,6 +8,7 @@ use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\TrainingCourse;
 use App\Models\TrainingKit;
+use App\Support\BackendUrl;
 
 class CertificateCodeGenerator
 {
@@ -58,12 +59,12 @@ class CertificateCodeGenerator
 
     public function publicViewUrl(string $certificateCode): string
     {
-        return url('/verify-certificate/' . rawurlencode($certificateCode));
+        return BackendUrl::to('verify-certificate/' . rawurlencode($certificateCode));
     }
 
     public function publicPrintUrl(string $certificateCode): string
     {
-        return url('/certificates/' . rawurlencode($certificateCode) . '/print');
+        return BackendUrl::to('certificates/' . rawurlencode($certificateCode) . '/print');
     }
 
     private function codeExists(string $code, ?int $ignoreId = null): bool
