@@ -309,12 +309,12 @@
 
                 <div class="meta-card">
                     <div class="label">بداية الاعتماد</div>
-                    <div class="value">{{ optional($center->accreditation_start_date)->format('Y-m-d') ?? '—' }}</div>
+                    <div class="value">{{ $accreditationStart ?? '—' }}</div>
                 </div>
 
                 <div class="meta-card">
                     <div class="label">نهاية الاعتماد</div>
-                    <div class="value">{{ optional($center->accreditation_end_date)->format('Y-m-d') ?? '—' }}</div>
+                    <div class="value">{{ $accreditationEnd ?? '—' }}</div>
                 </div>
 
                 <div class="meta-card">
@@ -360,8 +360,8 @@
                             <div class="platform-meta">
                                 الرابط: {{ $platform->platform_url ?? '—' }}<br>
                                 الحالة: {{ $platform->status ?? '—' }}<br>
-                                تاريخ الموافقة: {{ optional($platform->approved_at)->format('Y-m-d') ?? '—' }}<br>
-                                تاريخ الانتهاء: {{ optional($platform->expires_at)->format('Y-m-d') ?? '—' }}
+                                تاريخ الموافقة: {{ \App\Support\PrintSupport::formatDate($platform->approved_at) }}<br>
+                                تاريخ الانتهاء: {{ \App\Support\PrintSupport::formatDate($platform->expires_at) }}
                             </div>
                         </div>
                     @endforeach

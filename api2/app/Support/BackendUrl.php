@@ -47,13 +47,12 @@ class BackendUrl
 
     public static function temporarySignedRoute(string $name, $expiration, array $parameters = []): string
     {
-        $previousRoot = config('app.url');
         URL::forceRootUrl(self::base());
 
         try {
             return URL::temporarySignedRoute($name, $expiration, $parameters);
         } finally {
-            URL::forceRootUrl($previousRoot);
+            URL::forceRootUrl(rtrim((string) config('app.url'), '/'));
         }
     }
 }

@@ -60,6 +60,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -110,6 +111,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         foreach ($this->policies as $model => $policy) {
             Gate::policy($model, $policy);
         }
