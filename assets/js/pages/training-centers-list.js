@@ -18,33 +18,67 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function buildActions(center) {
-    const actions = [];
-
-    if (center?.certificate_url) {
-      actions.push(`
-        <a href="${center.certificate_url}" target="_blank" class="btn btn-sm btn-outline-success">
-          ${ta('الشهادة')}
-        </a>
-      `);
-    }
-
-    if (center?.pdf_url) {
-      actions.push(`
-        <a href="${center.pdf_url}" target="_blank" class="btn btn-sm btn-outline-primary">
-          PDF
-        </a>
-      `);
-    }
-
-    if (!actions.length) {
+    if (!center?.id) {
       return '—';
     }
 
     return `
       <div class="d-flex flex-wrap gap-2">
-        ${actions.join('')}
+        <button type="button"
+                class="btn btn-sm btn-outline-success center-cert-btn"
+                data-id="${window.APP_HELPERS.e(center.id)}">
+          ${ta('الشهادة')}
+        </button>
+        <button type="button"
+                class="btn btn-sm btn-outline-primary center-pdf-btn"
+                data-id="${window.APP_HELPERS.e(center.id)}">
+          PDF
+        </button>
       </div>
     `;
+  }
+
+  function bindCenterActions(rows) {
+    const byId = new Map((rows || []).map((item) => [String(item.id), item]));
+
+    tbody.querySelectorAll('.center-cert-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const item = byId.get(String(btn.getAttribute('data-id')));
+        btn.disabled = true;
+        try {
+          await window.APP_HELPERS.openSignedPrintAsset({
+            id: item?.id,
+            fetchUrl: window.APP_ROUTES.trainingCenterShow,
+            htmlField: 'certificate_url',
+            pdfField: 'pdf_url',
+            fallbackItem: item,
+            errorMessage: ta('تعذّر فتح شهادة المركز.'),
+          });
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+
+    tbody.querySelectorAll('.center-pdf-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const item = byId.get(String(btn.getAttribute('data-id')));
+        btn.disabled = true;
+        try {
+          await window.APP_HELPERS.openSignedPrintAsset({
+            id: item?.id,
+            fetchUrl: window.APP_ROUTES.trainingCenterShow,
+            htmlField: 'certificate_url',
+            pdfField: 'pdf_url',
+            preferPdf: true,
+            fallbackItem: item,
+            errorMessage: ta('تعذّر فتح ملف PDF.'),
+          });
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
   }
 
   try {
@@ -65,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     emptyState?.classList.add('d-none');
 
-    rows.forEach(center => {
+    rows.forEach((center) => {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${safeText(center.name)}</td>
@@ -80,6 +114,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
       tbody.appendChild(row);
     });
+
+    bindCenterActions(rows);
   } catch (error) {
     console.error(error);
     window.APP_UI.hideLoadingState(loadingBox);

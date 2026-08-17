@@ -406,4 +406,44 @@ window.APP_HELPERS = {
     window.open(target, '_blank', 'noopener,noreferrer');
     return true;
   },
+
+  /**
+   * Open signed center/trainer/trainee card or certificate links (fresh from API).
+   */
+  async openSignedPrintAsset(options = {}) {
+    const {
+      id,
+      fetchUrl,
+      htmlField = 'certificate_url',
+      pdfField = 'pdf_url',
+      preferPdf = false,
+      fallbackItem = null,
+      errorMessage = 'تعذّر فتح الملف.',
+    } = options;
+
+    let item = fallbackItem;
+
+    if (id && typeof fetchUrl === 'function' && window.APP_API) {
+      try {
+        const response = await window.APP_API.get(fetchUrl(id));
+        if (response?.data) {
+          item = response.data;
+        }
+      } catch (error) {
+        console.warn('Signed asset refresh failed:', error);
+      }
+    }
+
+    const url = preferPdf
+      ? (item?.[pdfField] || item?.[htmlField] || null)
+      : (item?.[htmlField] || item?.[pdfField] || null);
+
+    if (!url) {
+      window.alert(errorMessage);
+      return false;
+    }
+
+    window.open(url, '_blank', 'noopener,noreferrer');
+    return true;
+  },
 };

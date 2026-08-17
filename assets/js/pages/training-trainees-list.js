@@ -45,31 +45,67 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function buildActions(trainee) {
-    const actions = [];
+    if (!trainee?.id) {
+      return '—';
+    }
 
-    if (trainee?.card_url) {
-      actions.push(`
-        <a href="${window.APP_HELPERS.e(trainee.card_url)}"
-           target="_blank"
-           class="btn btn-sm btn-outline-success">
+    return `
+      <div class="trainee-actions">
+        <button type="button"
+                class="btn btn-sm btn-outline-success trainee-card-btn"
+                data-id="${window.APP_HELPERS.e(trainee.id)}">
           البطاقة
-        </a>
-      `);
-    }
-
-    if (trainee?.pdf_url) {
-      actions.push(`
-        <a href="${window.APP_HELPERS.e(trainee.pdf_url)}"
-           target="_blank"
-           class="btn btn-sm btn-outline-primary">
+        </button>
+        <button type="button"
+                class="btn btn-sm btn-outline-primary trainee-pdf-btn"
+                data-id="${window.APP_HELPERS.e(trainee.id)}">
           PDF
-        </a>
-      `);
-    }
+        </button>
+      </div>
+    `;
+  }
 
-    if (!actions.length) return '—';
+  function bindTraineeActions(rows) {
+    const byId = new Map((rows || []).map((item) => [String(item.id), item]));
 
-    return `<div class="trainee-actions">${actions.join('')}</div>`;
+    tbody.querySelectorAll('.trainee-card-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const item = byId.get(String(btn.getAttribute('data-id')));
+        btn.disabled = true;
+        try {
+          await window.APP_HELPERS.openSignedPrintAsset({
+            id: item?.id,
+            fetchUrl: window.APP_ROUTES.traineeShow,
+            htmlField: 'card_url',
+            pdfField: 'pdf_url',
+            fallbackItem: item,
+            errorMessage: SiteI18n.ta('تعذّر فتح بطاقة المتدرب.'),
+          });
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+
+    tbody.querySelectorAll('.trainee-pdf-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const item = byId.get(String(btn.getAttribute('data-id')));
+        btn.disabled = true;
+        try {
+          await window.APP_HELPERS.openSignedPrintAsset({
+            id: item?.id,
+            fetchUrl: window.APP_ROUTES.traineeShow,
+            htmlField: 'card_url',
+            pdfField: 'pdf_url',
+            preferPdf: true,
+            fallbackItem: item,
+            errorMessage: SiteI18n.ta('تعذّر فتح ملف PDF.'),
+          });
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
   }
 
   function updateCounters(rows) {
@@ -124,6 +160,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
       tbody.appendChild(row);
     });
+
+    bindTraineeActions(rows);
   }
 
   async function loadTrainees() {

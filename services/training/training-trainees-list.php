@@ -203,7 +203,7 @@ $activePage = 'services';
   </section>
 <?php include '../../includes/layout/app-shell-close.php'; ?>
 
-<script src="<?php echo $basePath; ?>assets/js/pages/training-trainees-list.js?v=2.1"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/training-trainees-list.js?v=2.2"></script>
 
 </body>
 </html>
