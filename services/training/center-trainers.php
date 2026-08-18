@@ -28,13 +28,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   const BASE = window.APP_CONFIG.API_BASE_URL;
   const H = () => ({ Authorization:`Bearer ${window.AppAuth.getToken()}`, Accept:'application/json' });
   const E = TC.esc;
+  const showLoadError = (boxId, label, err) => {
+    let msg = `تعذّر تحميل ${label}`;
+    const status = err?.status;
+    const apiMsg = err?.data?.message || err?.message;
+    if (status) msg += ` (${status})`;
+    if (apiMsg && status !== 401) msg += `: ${apiMsg}`;
+    document.getElementById(boxId).innerHTML = `<div class="tc-empty">${E(msg)}</div>`;
+  };
   try{
     const user = window.AppAuth.getUser()||{};
     let url = `${BASE}/trainers?per_page=200`;
     if (user.training_center_id) url += `&training_center_id=${user.training_center_id}`;
     const r = await fetch(url, { headers:H() });
-    if (!r.ok) throw new Error('x');
-    const all = (await r.json()).data || [];
+    const payload = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error('load-failed'), { data: payload, status: r.status });
+    const all = payload.data || [];
     const box = document.getElementById('tcTrainers');
     let html = '';
     if (canManage) {
@@ -60,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     box.innerHTML = html;
     TC.bindListSearch('#tcSearch', '#list .tc-item');
   }catch(e){
-    document.getElementById('tcTrainers').innerHTML='<div class="tc-empty">تعذّر تحميل المدربين</div>';
+    showLoadError('tcTrainers', 'المدربين', e);
   }
 });
 </script>

@@ -29,10 +29,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const BASE = window.APP_CONFIG.API_BASE_URL;
   const H = () => ({ Authorization:`Bearer ${window.AppAuth.getToken()}`, Accept:'application/json' });
   const E = TC.esc;
+  const showLoadError = (boxId, label, err) => {
+    let msg = `تعذّر تحميل ${label}`;
+    const status = err?.status;
+    const apiMsg = err?.data?.message || err?.message;
+    if (status) msg += ` (${status})`;
+    if (apiMsg && status !== 401) msg += `: ${apiMsg}`;
+    document.getElementById(boxId).innerHTML = `<div class="tc-empty">${E(msg)}</div>`;
+  };
   try {
     const r = await fetch(`${BASE}/training-kits?per_page=200&with_counts=1&with_trainers=1`, { headers:H() });
-    if (!r.ok) throw new Error('x');
-    const all = (await r.json()).data || [];
+    const payload = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error('load-failed'), { data: payload, status: r.status });
+    const all = payload.data || [];
     TC.cacheKits(all);
     const box = document.getElementById('tcKits');
     let html = '';
@@ -74,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     box.innerHTML = html;
     TC.bindListSearch('#tcSearch', '#list .tc-item');
   } catch(e){
-    document.getElementById('tcKits').innerHTML='<div class="tc-empty">تعذّر تحميل الحقائب</div>';
+    showLoadError('tcKits', 'الحقائب', e);
   }
 });
 </script>

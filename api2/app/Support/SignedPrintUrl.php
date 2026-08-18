@@ -7,75 +7,61 @@ class SignedPrintUrl
     /** مدة صلاحية روابط الطباعة بالساعات */
     public const EXPIRATION_HOURS = 24;
 
-    public static function certificatePrint(int $id): string
+    public static function certificatePrint(int $id): ?string
     {
-        return BackendUrl::temporarySignedRoute(
-            'certificates.print',
-            now()->addHours(self::EXPIRATION_HOURS),
-            ['id' => $id]
-        );
+        return self::safeRoute('certificates.print', ['id' => $id]);
     }
 
-    public static function certificatePdf(int $id): string
+    public static function certificatePdf(int $id): ?string
     {
-        return BackendUrl::temporarySignedRoute(
-            'certificates.pdf',
-            now()->addHours(self::EXPIRATION_HOURS),
-            ['id' => $id]
-        );
+        return self::safeRoute('certificates.pdf', ['id' => $id]);
     }
 
-    public static function trainerCard(int $id): string
+    public static function trainerCard(int $id): ?string
     {
-        return BackendUrl::temporarySignedRoute(
-            'trainers.card',
-            now()->addHours(self::EXPIRATION_HOURS),
-            ['id' => $id]
-        );
+        return self::safeRoute('trainers.card', ['id' => $id]);
     }
 
-    public static function trainerCardPdf(int $id): string
+    public static function trainerCardPdf(int $id): ?string
     {
-        return BackendUrl::temporarySignedRoute(
-            'trainers.card.pdf',
-            now()->addHours(self::EXPIRATION_HOURS),
-            ['id' => $id]
-        );
+        return self::safeRoute('trainers.card.pdf', ['id' => $id]);
     }
 
-    public static function traineeCard(int $id): string
+    public static function traineeCard(int $id): ?string
     {
-        return BackendUrl::temporarySignedRoute(
-            'trainees.card',
-            now()->addHours(self::EXPIRATION_HOURS),
-            ['id' => $id]
-        );
+        return self::safeRoute('trainees.card', ['id' => $id]);
     }
 
-    public static function traineeCardPdf(int $id): string
+    public static function traineeCardPdf(int $id): ?string
     {
-        return BackendUrl::temporarySignedRoute(
-            'trainees.card.pdf',
-            now()->addHours(self::EXPIRATION_HOURS),
-            ['id' => $id]
-        );
+        return self::safeRoute('trainees.card.pdf', ['id' => $id]);
     }
 
-    public static function trainingCenterCertificate(int $id): string
+    public static function trainingCenterCertificate(int $id): ?string
     {
-        return BackendUrl::temporarySignedRoute(
-            'training-centers.certificate',
-            now()->addHours(self::EXPIRATION_HOURS),
-            ['id' => $id]
-        );
+        return self::safeRoute('training-centers.certificate', ['id' => $id]);
     }
 
-    public static function trainingCenterCertificatePdf(int $id): string
+    public static function trainingCenterCertificatePdf(int $id): ?string
     {
-        return BackendUrl::temporarySignedRoute(
-            'training-centers.certificate.pdf',
-            now()->addHours(self::EXPIRATION_HOURS),
-            ['id' => $id]
-        );
+        return self::safeRoute('training-centers.certificate.pdf', ['id' => $id]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $parameters
+     */
+    private static function safeRoute(string $name, array $parameters): ?string
+    {
+        try {
+            return BackendUrl::temporarySignedRoute(
+                $name,
+                now()->addHours(self::EXPIRATION_HOURS),
+                $parameters
+            );
+        } catch (\Throwable $e) {
+            report($e);
+
+            return null;
+        }
     }
 }

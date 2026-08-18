@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -35,11 +36,7 @@ class TrainingKitController extends Controller
         $withPrograms = $request->boolean('with_programs', false);
 
         $kits = TrainingDataScope::scopeTrainingKits(TrainingKit::query(), $request->user())
-            ->with([
-                'trainingCategory:id,name_ar,slug',
-                'trainingSubcategory:id,name_ar,slug',
-                'creator:id,name',
-            ])
+            ->with($this->indexRelations())
             ->when($request->boolean('with_counts', true), function (Builder $query) {
                 $query->withCount([
                     'trainers',
@@ -519,5 +516,22 @@ class TrainingKitController extends Controller
     private function toBoolean(mixed $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    private function indexRelations(): array
+    {
+        $with = [
+            'creator:id,name',
+        ];
+
+        if (Schema::hasTable('training_categories') && Schema::hasColumn('training_kits', 'category_id')) {
+            $with[] = 'trainingCategory:id,name_ar,slug';
+            $with[] = 'trainingSubcategory:id,name_ar,slug';
+        }
+
+        return $with;
     }
 }
