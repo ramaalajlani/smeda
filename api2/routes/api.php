@@ -658,6 +658,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{id}/materials/{materialId}', [$km, 'update'])->whereNumber('id')->whereNumber('materialId')->middleware('permission:manage_kits');
         Route::delete('/{id}/materials/{materialId}', [$km, 'destroy'])->whereNumber('id')->whereNumber('materialId')->middleware('permission:manage_kits');
 
+        // مرفقات الحقيبة (ملفات متعددة)
+        $ka = \App\Http\Controllers\Api\KitAttachmentController::class;
+        Route::get('/{id}/attachments', [$ka, 'index'])->whereNumber('id');
+        Route::post('/{id}/attachments', [$ka, 'store'])->whereNumber('id')->middleware(['permission:manage_kits', 'throttle:file-upload']);
+        Route::put('/{id}/attachments/{attachmentId}', [$ka, 'update'])->whereNumber('id')->whereNumber('attachmentId')->middleware('permission:manage_kits');
+        Route::delete('/{id}/attachments/{attachmentId}', [$ka, 'destroy'])->whereNumber('id')->whereNumber('attachmentId')->middleware('permission:manage_kits');
+        Route::get('/{id}/attachments/{attachmentId}/download', [$ka, 'download'])->whereNumber('id')->whereNumber('attachmentId');
+
     });
 
 

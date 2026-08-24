@@ -78,6 +78,11 @@ class TrainingKit extends Model
         return $this->hasMany(KitMaterial::class, 'training_kit_id')->orderBy('sort_order')->orderBy('id');
     }
 
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(TrainingKitAttachment::class, 'training_kit_id')->orderBy('sort_order')->orderBy('id');
+    }
+
     public function trainingCategory(): BelongsTo
     {
         return $this->belongsTo(TrainingCategory::class, 'category_id');

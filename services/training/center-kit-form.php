@@ -44,8 +44,15 @@ $pageTitle  = 'بيانات الحقيبة';
       </div>
       <div class="fld"><label>الهدف</label><textarea id="objective" rows="2"></textarea></div>
       <div class="fld"><label>الوصف</label><textarea id="description" rows="3"></textarea></div>
-      <div class="fld"><label>ملف الحقيبة (PDF)</label><input type="file" id="training_bag_file" accept=".pdf,application/pdf"><small class="text-muted">PDF فقط — محمي</small></div>
-      <div class="fld"><label>ملف ترويجي (اختياري)</label><input type="file" id="promotional_file" accept=".pdf,.doc,.docx,.ppt,.pptx"></div>
+      <div id="attachmentsBlock" class="fld" style="display:none">
+        <label>المرفقات</label>
+        <p style="margin:0;color:#64748b;font-size:.9rem">يمكن رفع عدة ملفات (PDF، Word، PowerPoint، Excel، صور) من صفحة المرفقات.</p>
+        <a id="attachmentsLink" href="#" class="tc-save" style="display:inline-flex;margin-top:10px;text-decoration:none;font-size:.9rem;padding:8px 14px"><i class="bi bi-paperclip"></i> إدارة مرفقات الحقيبة</a>
+      </div>
+      <div id="legacyFilesBlock">
+        <div class="fld"><label>ملف الحقيبة (PDF)</label><input type="file" id="training_bag_file" accept=".pdf,application/pdf"><small class="text-muted">PDF فقط — محمي (ملف واحد — للمرفقات المتعددة استخدم صفحة المرفقات بعد الحفظ)</small></div>
+        <div class="fld"><label>ملف ترويجي (اختياري)</label><input type="file" id="promotional_file" accept=".pdf,.doc,.docx,.ppt,.pptx"></div>
+      </div>
       <div style="text-align:center"><button class="tc-save" id="saveBtn" type="submit"><i class="bi bi-save2-fill"></i> حفظ</button></div>
     </form>
   </div>
@@ -71,6 +78,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (ID) {
     document.getElementById('barTitle').textContent = 'تعديل الحقيبة';
     document.getElementById('back').href = 'center-kit.php?id='+ID;
+    document.getElementById('attachmentsBlock').style.display='block';
+    document.getElementById('attachmentsLink').href = 'center-kit-attachments.php?kit='+ID;
+    document.getElementById('legacyFilesBlock').style.display='none';
     try{
       const r = await fetch(`${BASE}/training-kits/${ID}`, { headers:H() });
       if (!r.ok) throw new Error('x');

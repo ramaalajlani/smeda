@@ -122,12 +122,28 @@ class TrainingKitResource extends JsonResource
                 })->values();
             }),
 
+            'attachments' => $this->whenLoaded('attachments', function () {
+                return $this->attachments->map(function ($attachment) {
+                    return [
+                        'id' => $attachment->id,
+                        'title' => $attachment->title,
+                        'display_name' => $attachment->displayName(),
+                        'original_name' => $attachment->original_name,
+                        'mime' => $attachment->mime,
+                        'size' => $attachment->size,
+                        'sort_order' => $attachment->sort_order,
+                        'created_at' => optional($attachment->created_at)?->format('Y-m-d H:i:s'),
+                    ];
+                })->values();
+            }),
+
             'stats' => [
                 'trainers_count' => $this->whenCounted('trainers', fn () => $this->trainers_count),
                 'centers_count' => $this->whenCounted('centers', fn () => $this->centers_count),
                 'programs_count' => $this->whenCounted('programs', fn () => $this->programs_count),
                 'courses_count' => $this->whenCounted('courses', fn () => $this->courses_count),
                 'certificates_count' => $this->whenCounted('certificates', fn () => $this->certificates_count),
+                'attachments_count' => $this->whenCounted('attachments', fn () => $this->attachments_count),
             ],
 
             'created_at' => optional($this->created_at)?->format('Y-m-d H:i:s'),

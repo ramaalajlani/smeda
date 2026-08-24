@@ -3,6 +3,7 @@
 namespace App\Services\Training;
 
 use App\Models\TrainingKit;
+use App\Models\TrainingKitAttachment;
 use App\Support\SecureFileStorage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,24 @@ class TrainingKitFileService
     private const MAX_PROMOTIONAL_BYTES = 15 * 1024 * 1024;
 
     private const MAX_BAG_BYTES = 25 * 1024 * 1024;
+
+    public const MAX_ATTACHMENTS_PER_KIT = 30;
+
+    private const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
+
+    /** @var list<string> */
+    private const ATTACHMENT_MIMES = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+    ];
 
     /**
      * @return array{path: string, original_name: string, mime: string, size: int}
@@ -87,6 +106,33 @@ class TrainingKitFileService
     public function bagDisk(): string
     {
         return 'local';
+    }
+
+    public function attachmentDisk(): string
+    {
+        return 'local';
+    }
+
+    /**
+     * @return array{path: string, original_name: string, mime: string, size: int}
+     */
+    public function storeAttachment(UploadedFile $file, TrainingKit $kit): array
+    {
+        $this->assertSize($file, self::MAX_ATTACHMENT_BYTES, 'files');
+
+        $path = SecureFileStorage::storeUploadedFile(
+            $file,
+            'training-kits/' . $kit->id . '/attachments',
+            'local',
+            self::ATTACHMENT_MIMES
+        );
+
+        return $this->metaFromUpload($file, $path);
+    }
+
+    public function deleteAttachment(TrainingKitAttachment $attachment): void
+    {
+        $this->deleteStoredPath($attachment->path, $this->attachmentDisk());
     }
 
     private function assertSize(UploadedFile $file, int $maxBytes, string $field): void

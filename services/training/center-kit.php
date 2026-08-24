@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let actions = `
     <a href="center-kit-materials.php?kit=${KIT_ID}"><i class="bi bi-collection"></i> مواد الحقيبة</a>
+    <a href="center-kit-attachments.php?kit=${KIT_ID}"><i class="bi bi-paperclip"></i> مرفقات الحقيبة</a>
     <a href="center-kit-trainers.php?kit=${KIT_ID}"><i class="bi bi-person-workspace"></i> مدربو الحقيبة</a>
     <a href="center-kit-programs.php?kit=${KIT_ID}"><i class="bi bi-journal-text"></i> عرض البرامج</a>
     <a href="center-kit-courses.php?kit=${KIT_ID}"><i class="bi bi-person"></i> عرض الدورات</a>
