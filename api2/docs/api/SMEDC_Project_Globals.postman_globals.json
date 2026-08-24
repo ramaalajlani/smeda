@@ -1,0 +1,590 @@
+{
+    "id": "smedc-project-globals",
+    "values": [
+        {
+            "key": "active_actor",
+            "value": "general_director",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "admin_email",
+            "value": "admin@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "admin_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "admin_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "super_admin_email",
+            "value": "super.admin@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "super_admin_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "super_admin_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "general_director_email",
+            "value": "general@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "general_director_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "general_director_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "deputy_general_director_email",
+            "value": "deputy@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "deputy_general_director_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "deputy_general_director_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "deputy_director_email",
+            "value": "deputy@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "deputy_director_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "deputy_director_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "system_admin_email",
+            "value": "system.admin@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "system_admin_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "system_admin_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "governor_email",
+            "value": "governor.tartus@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "governor_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "governor_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "branch_manager_email",
+            "value": "branch.damascus@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "branch_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "branch_manager_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "branch_officer_email",
+            "value": "branch.officer.damascus@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "branch_officer_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "branch_officer_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "workforce_manager_email",
+            "value": "workforce@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "workforce_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "workforce_manager_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "training_manager_email",
+            "value": "manager@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "training_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "training_manager_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "training_supervisor_email",
+            "value": "training.supervisor@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "training_supervisor_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "training_supervisor_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "center_user_email",
+            "value": "center@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "center_user_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "center_user_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "trainer_user_email",
+            "value": "trainer@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "trainer_user_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "trainer_user_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "trainee_user_email",
+            "value": "trainee@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "trainee_user_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "trainee_user_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "auditor_email",
+            "value": "auditor@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "auditor_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "auditor_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "data_entry_email",
+            "value": "data-entry.damascus@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "data_entry_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "data_entry_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "data_reviewer_email",
+            "value": "data-reviewer.damascus@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "data_reviewer_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "data_reviewer_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "project_services_manager_email",
+            "value": "projects@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "project_services_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "project_services_manager_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "development_manager_email",
+            "value": "development@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "development_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "development_manager_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "local_development_manager_email",
+            "value": "local.development@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "local_development_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "local_development_manager_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "finance_manager_email",
+            "value": "finance.manager@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "finance_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "finance_manager_login_status",
+            "value": "LOGIN_OK",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "finance_officer_email",
+            "value": "finance.officer@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "finance_officer_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "finance_officer_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "consultant_office_email",
+            "value": "consultant.office@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "consultant_office_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "consultant_office_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "funding_partner_email",
+            "value": "funding.partner@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "funding_partner_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "funding_partner_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "consultant_union_admin_email",
+            "value": "consultant.union@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "consultant_union_admin_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "consultant_union_admin_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "central_bank_admin_email",
+            "value": "central.bank@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "central_bank_admin_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "central_bank_admin_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "project_owner_email",
+            "value": "project.owner@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "project_owner_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "project_owner_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "incubator_manager_email",
+            "value": "incubator.manager@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "incubator_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "incubator_manager_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "incubator_mentor_email",
+            "value": "incubator.mentor@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "incubator_mentor_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "incubator_mentor_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "entrepreneur_manager_email",
+            "value": "entrepreneur.manager@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "entrepreneur_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "entrepreneur_manager_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "media_manager_email",
+            "value": "media@system.com",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "media_manager_password",
+            "value": "12345678",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "media_manager_login_status",
+            "value": "LOGIN_FAILED",
+            "type": "default",
+            "enabled": true
+        }
+    ],
+    "_postman_variable_scope": "globals",
+    "_postman_exported_at": "2026-08-16T09:26:38.000Z",
+    "_postman_exported_using": "Postman/11"
+}

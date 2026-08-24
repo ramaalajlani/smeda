@@ -1,0 +1,98 @@
+[
+    {
+        "active_actor": "admin"
+    },
+    {
+        "active_actor": "super_admin"
+    },
+    {
+        "active_actor": "general_director"
+    },
+    {
+        "active_actor": "deputy_general_director"
+    },
+    {
+        "active_actor": "deputy_director"
+    },
+    {
+        "active_actor": "system_admin"
+    },
+    {
+        "active_actor": "governor"
+    },
+    {
+        "active_actor": "branch_manager"
+    },
+    {
+        "active_actor": "branch_officer"
+    },
+    {
+        "active_actor": "workforce_manager"
+    },
+    {
+        "active_actor": "training_manager"
+    },
+    {
+        "active_actor": "training_supervisor"
+    },
+    {
+        "active_actor": "center_user"
+    },
+    {
+        "active_actor": "trainer_user"
+    },
+    {
+        "active_actor": "trainee_user"
+    },
+    {
+        "active_actor": "auditor"
+    },
+    {
+        "active_actor": "data_entry"
+    },
+    {
+        "active_actor": "data_reviewer"
+    },
+    {
+        "active_actor": "project_services_manager"
+    },
+    {
+        "active_actor": "development_manager"
+    },
+    {
+        "active_actor": "local_development_manager"
+    },
+    {
+        "active_actor": "finance_manager"
+    },
+    {
+        "active_actor": "finance_officer"
+    },
+    {
+        "active_actor": "consultant_office"
+    },
+    {
+        "active_actor": "funding_partner"
+    },
+    {
+        "active_actor": "consultant_union_admin"
+    },
+    {
+        "active_actor": "central_bank_admin"
+    },
+    {
+        "active_actor": "project_owner"
+    },
+    {
+        "active_actor": "incubator_manager"
+    },
+    {
+        "active_actor": "incubator_mentor"
+    },
+    {
+        "active_actor": "entrepreneur_manager"
+    },
+    {
+        "active_actor": "media_manager"
+    }
+]
