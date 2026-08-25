@@ -73,47 +73,76 @@ class AiChatService
     }
 
     /**
-     * تصنيف نشاط اقتصادي وفق ISIC4. يُستبعد candidates لأنه مقاطع فهرسة خام.
+     * تصنيف ISIC4 — بروكسي شفاف: نفس حمولة واستجابة ai.smedc-sy.tech.
      *
-     * @return array{best_match:?array{code:?string,label:?string,raw:string,reason:string},alternatives:list<array{code:?string,label:?string,raw:string,reason:string}>,clarifying_question:?string}
+     * @param  array<string, string>  $answers
+     * @return array{success:bool,data:array<string,mixed>}
      */
-    public function classifyIsic4(string $description): array
+    public function classifyIsic4(string $description, array $answers = []): array
     {
-        $data = $this->send('post', '/api/isic4/classify', ['description' => $description]);
+        $data = $this->send('post', '/api/isic4/classify', [
+            'description' => $description,
+            'answers' => $this->buildIsicAnswersPayload($answers),
+        ]);
 
-        $best = null;
-        if (isset($data['best_match']) && is_array($data['best_match'])) {
-            $best = $this->isicMatch($data['best_match']);
+        $data = $this->sanitizeIsicResponse($data);
+
+        $status = $this->stringOrNull($data['status'] ?? null);
+        if ($status === null && isset($data['best_match'])) {
+            $data['status'] = 'classified';
         }
 
-        $alternatives = [];
-        foreach ((array) ($data['alternatives'] ?? []) as $alternative) {
-            if (!is_array($alternative)) {
-                continue;
-            }
-            $match = $this->isicMatch($alternative);
-            if ($match !== null) {
-                $alternatives[] = $match;
-            }
+        if ($status === 'need_input' || ($data['status'] ?? null) === 'classified') {
+            return [
+                'success' => true,
+                'data' => $data,
+            ];
         }
 
-        $clarifying = $this->stringOrNull($data['clarifying_question'] ?? null);
+        if (isset($data['best_match']) || isset($data['clarifying_question']) || !empty($data['alternatives'])) {
+            $data['status'] = $data['status'] ?? 'classified';
 
-        if ($best === null && $alternatives === [] && $clarifying === null) {
-            throw new RuntimeException('لم تتضمن استجابة التصنيف أي نتيجة.');
+            return [
+                'success' => true,
+                'data' => $data,
+            ];
         }
 
-        return [
-            'best_match' => $best,
-            'alternatives' => $alternatives,
-            'clarifying_question' => $clarifying,
-        ];
+        throw new RuntimeException('لم تتضمن استجابة التصنيف أي نتيجة.');
     }
 
     /**
-     * الخدمة تعيد الكود كسطر خام من ملف الفهرسة، مثل «136,,,,0150,,,الزراعة المختلطة,»
-     * أو نصاً يتذيّله الكود. نفصل رقم التصنيف عن مسمّاه ليصلح للعرض.
-     *
+     * @param  array<string, mixed>  $answers
+     * @return array<string, string>
+     */
+    private function buildIsicAnswersPayload(array $answers): array
+    {
+        $payload = [
+            'section' => '',
+            'division' => '',
+            'group' => '',
+            'class' => '',
+        ];
+
+        foreach (['section', 'division', 'group', 'class'] as $key) {
+            $value = $answers[$key] ?? null;
+            if (is_string($value) && trim($value) !== '') {
+                $payload[$key] = trim($value);
+            }
+        }
+
+        return $payload;
+    }
+
+    /** @param  array<string, mixed>  $data */
+    private function sanitizeIsicResponse(array $data): array
+    {
+        unset($data['candidates']);
+
+        return $data;
+    }
+
+    /**
      * @param  array<string, mixed>  $match
      * @return ?array{code:?string,label:?string,raw:string,reason:string}
      */

@@ -123,6 +123,11 @@ class AiChatController extends Controller
     {
         $validated = $request->validate([
             'description' => ['required', 'string', 'max:2000'],
+            'answers' => ['sometimes', 'array'],
+            'answers.section' => ['sometimes', 'nullable', 'string', 'max:32'],
+            'answers.division' => ['sometimes', 'nullable', 'string', 'max:32'],
+            'answers.group' => ['sometimes', 'nullable', 'string', 'max:32'],
+            'answers.class' => ['sometimes', 'nullable', 'string', 'max:32'],
         ], [
             'description.required' => 'اكتب وصف النشاط أولاً.',
             'description.max' => 'الوصف طويل جداً (الحد الأقصى 2000 حرف).',
@@ -134,7 +139,7 @@ class AiChatController extends Controller
         }
 
         try {
-            $result = $this->aiChat->classifyIsic4($description);
+            $result = $this->aiChat->classifyIsic4($description, $validated['answers'] ?? []);
         } catch (Throwable $e) {
             return response()->json(
                 ApiErrorResponse::payload($e, self::CLASSIFY_FAILURE_MESSAGE, 'ai_chat.isic4_failed'),
@@ -142,7 +147,7 @@ class AiChatController extends Controller
             );
         }
 
-        return response()->json(['success' => true] + $result);
+        return response()->json($result);
     }
 
     /** سجل محادثات المستخدم الحالي وحده. */

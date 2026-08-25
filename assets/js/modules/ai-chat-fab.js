@@ -28,6 +28,13 @@
   let voice = null;
   let capabilities = null;
   let departmentId = null;
+  let isicState = { description: '', answers: {}, busy: false, done: false, requestId: 0 };
+  const ISIC_STEPS = [
+    { key: 'section', title: 'الباب' },
+    { key: 'division', title: 'التصنيف الفرعي' },
+    { key: 'group', title: 'المجموعة' },
+    { key: 'class', title: 'النوع' },
+  ];
   let interimRow = null;
   let waveValues = new Array(WAVE_BARS).fill(0);
 
@@ -440,7 +447,7 @@
       #${ROOT_ID} .aic-isic4::-webkit-scrollbar-button{display:none}
       #${ROOT_ID} .aic-isic4::-webkit-scrollbar-thumb{background:rgba(23,148,123,.22);border-radius:99px}
       #${ROOT_ID} .aic-label{font-size:.83rem;font-weight:800;color:var(--aic-dark)}
-      #${ROOT_ID} .aic-hint{font-size:.75rem;color:var(--aic-muted);margin-top:-6px}
+      #${ROOT_ID} .aic-hint{font-size:.75rem;color:var(--aic-muted);margin-top:-6px;line-height:1.65}
       #${ROOT_ID} .aic-desc{
         width:100%;resize:none;border:1px solid var(--aic-line);border-radius:16px;
         background:#fff;padding:13px 15px;min-height:96px;font-size:.85rem;line-height:1.7;
@@ -448,14 +455,63 @@
       }
       #${ROOT_ID} .aic-desc:focus{outline:0;border-color:rgba(6,170,137,.45);box-shadow:0 0 0 3px rgba(234,248,244,.65)}
       #${ROOT_ID} .aic-desc::placeholder{color:#94a3b8}
-      #${ROOT_ID} .aic-classify{
+      #${ROOT_ID} .aic-classify,#${ROOT_ID} .aic-isic-act{
         align-self:flex-start;border:0;border-radius:14px;background:var(--aic-grad);
         color:#fff;font-size:.82rem;font-weight:800;padding:12px 20px;min-height:44px;
         cursor:pointer;display:inline-flex;align-items:center;gap:8px;
         box-shadow:0 6px 16px rgba(23,148,123,.28);transition:transform .2s ease
       }
-      #${ROOT_ID} .aic-classify:hover:not(:disabled){transform:translateY(-2px)}
-      #${ROOT_ID} .aic-classify:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+      #${ROOT_ID} .aic-classify:hover:not(:disabled),#${ROOT_ID} .aic-isic-act:hover:not(:disabled){transform:translateY(-2px)}
+      #${ROOT_ID} .aic-classify:disabled,#${ROOT_ID} .aic-isic-act:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+      #${ROOT_ID} .aic-isic-act.ghost{background:#fff;color:var(--aic-dark);border:1px solid var(--aic-line);box-shadow:none}
+      #${ROOT_ID} .aic-isic-steps{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin:2px 0 8px}
+      #${ROOT_ID} .aic-isic-step{flex:1 1 0;min-width:0;text-align:center}
+      #${ROOT_ID} .aic-isic-step-dot{
+        width:28px;height:28px;margin:0 auto 5px;border-radius:50%;display:grid;place-items:center;
+        font-size:.72rem;font-weight:800;border:2px solid var(--aic-line);color:var(--aic-muted);background:#fff
+      }
+      #${ROOT_ID} .aic-isic-step.done .aic-isic-step-dot{background:var(--aic-primary);border-color:var(--aic-primary);color:#fff}
+      #${ROOT_ID} .aic-isic-step.active .aic-isic-step-dot{border-color:var(--aic-primary);color:var(--aic-primary);box-shadow:0 0 0 3px rgba(23,148,123,.12)}
+      #${ROOT_ID} .aic-isic-step-lab{display:block;font-size:.62rem;line-height:1.35;color:var(--aic-muted);overflow-wrap:anywhere}
+      #${ROOT_ID} .aic-isic-step.active .aic-isic-step-lab{color:var(--aic-dark);font-weight:700}
+      #${ROOT_ID} .aic-isic-q{font-size:.86rem;font-weight:800;color:var(--aic-dark);margin:0 0 8px;line-height:1.65}
+      #${ROOT_ID} .aic-isic-query{font-size:.76rem;color:var(--aic-muted);margin:0 0 10px;line-height:1.6}
+      #${ROOT_ID} .aic-isic-opts{display:flex;flex-direction:column;gap:8px}
+      #${ROOT_ID} .aic-isic-opt{
+        width:100%;text-align:start;border:1px solid var(--aic-line);border-radius:14px;background:#fff;
+        padding:12px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px;
+        transition:border-color .2s ease,background .2s ease,transform .2s ease
+      }
+      #${ROOT_ID} .aic-isic-opt:hover{border-color:rgba(6,170,137,.45);background:var(--aic-soft);transform:translateY(-1px)}
+      #${ROOT_ID} .aic-isic-opt.rec{border-color:rgba(6,170,137,.55);background:rgba(234,248,244,.65)}
+      #${ROOT_ID} .aic-isic-opt-code{
+        flex:0 0 auto;background:var(--aic-soft);color:var(--aic-primary);border-radius:10px;
+        padding:4px 8px;font-size:.78rem;font-weight:800;direction:ltr
+      }
+      #${ROOT_ID} .aic-isic-opt-lab{flex:1 1 auto;font-size:.82rem;line-height:1.65;color:var(--aic-text)}
+      #${ROOT_ID} .aic-isic-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+      #${ROOT_ID} .aic-isic-trail{display:flex;flex-direction:column;gap:6px;margin:0 0 10px}
+      #${ROOT_ID} .aic-isic-trail-row{font-size:.76rem;line-height:1.55;color:var(--aic-muted);display:flex;gap:8px;align-items:flex-start}
+      #${ROOT_ID} .aic-isic-trail-row strong{color:var(--aic-dark);font-weight:800;min-width:4.5em}
+      #${ROOT_ID} .aic-isic-path{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 10px}
+      #${ROOT_ID} .aic-isic-path-sep{color:var(--aic-muted);font-size:.75rem}
+      #${ROOT_ID} .aic-isic-path-chip{
+        border:1px solid var(--aic-line);background:var(--aic-soft);color:var(--aic-dark);
+        border-radius:999px;padding:5px 10px;font-size:.72rem;font-weight:700;cursor:pointer;max-width:100%
+      }
+      #${ROOT_ID} .aic-isic-opt-badge{
+        display:inline-block;margin-top:4px;font-size:.68rem;font-weight:800;color:var(--aic-primary);
+        background:rgba(23,148,123,.12);border-radius:999px;padding:2px 8px
+      }
+      #${ROOT_ID} .aic-isic-opt-index{
+        flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--aic-soft);color:var(--aic-primary);
+        display:grid;place-items:center;font-size:.72rem;font-weight:800
+      }
+      #${ROOT_ID} .aic-isic-copy{
+        border:0;background:var(--aic-soft);color:var(--aic-primary);border-radius:10px;
+        padding:6px 10px;font-size:.75rem;font-weight:800;cursor:pointer
+      }
+      #${ROOT_ID} .aic-isic-official{font-size:.84rem;font-weight:800;color:var(--aic-dark);margin:8px 0 0;line-height:1.65}
       #${ROOT_ID} .aic-card{
         background:#fff;border:1px solid var(--aic-line-soft);border-radius:16px;padding:14px 15px
       }
@@ -910,84 +966,254 @@
     }
   }
 
-  /* ────────── تصنيف ISIC4 (عبر Laravel) ────────── */
+  /* ────────── تصنيف ISIC4 — مطابق لـ ai.smedc-sy.tech (عبر Laravel) ────────── */
 
-  /** كود التصنيف كرقاقة، ومسمّى النشاط بجانبه. */
-  function appendCode(parent, match) {
-    if (match.code) parent.appendChild(el('span', 'aic-code', match.code));
-    const label = match.label || (match.code ? null : match.raw);
-    if (label) parent.appendChild(el('span', 'aic-codelabel', label));
+  function isicRoot(root) {
+    return root.querySelector('[data-aic-isic4-root]');
   }
 
-  function renderClassification(target, result) {
-    target.replaceChildren();
+  function isicPayload(res) {
+    return (res && res.data) ? res.data : res;
+  }
 
-    if (result.best_match && (result.best_match.code || result.best_match.label)) {
+  function resetIsicState() {
+    isicState = { description: '', answers: {}, busy: false, done: false, requestId: 0 };
+  }
+
+  function renderIsicIntro(root) {
+    const box = isicRoot(root);
+    if (!box) return;
+    resetIsicState();
+    box.replaceChildren();
+    box.appendChild(el('label', 'aic-label', 'صف نشاطك التجاري بلغتك الخاصة'));
+    box.appendChild(el('p', 'aic-hint', 'تصنيف النشاط وفق SYRSIC — أربع خطوات قصيرة ثم كود ISIC4 معتمد.'));
+    const ta = el('textarea', 'aic-desc');
+    ta.id = 'aicDesc';
+    ta.maxLength = MAX_DESC_LEN;
+    ta.placeholder = 'مثال: عندي محل تجزئة لبيع سلع متنوعة';
+    box.appendChild(ta);
+    const btn = el('button', 'aic-classify');
+    btn.type = 'button';
+    btn.innerHTML = '<i class="bi bi-tag-fill" aria-hidden="true"></i><span>بدء التصنيف</span>';
+    btn.addEventListener('click', () => isicStart(root));
+    box.appendChild(btn);
+  }
+
+  function renderIsicProgress(container, data, root) {
+    if (!data) return;
+    const stepIndex = data.status === 'classified' ? ISIC_STEPS.length : (data.step_index || 1);
+    const steps = data.steps && data.steps.length ? data.steps : ISIC_STEPS;
+    const wrap = el('div', 'aic-isic-steps');
+    steps.forEach((step, index) => {
+      const item = el('div', 'aic-isic-step');
+      const n = index + 1;
+      if (n < stepIndex) item.classList.add('done');
+      else if (n === stepIndex && data.status !== 'classified') item.classList.add('active');
+      else if (data.status === 'classified') item.classList.add('done');
+      item.appendChild(el('div', 'aic-isic-step-dot', String(n)));
+      item.appendChild(el('span', 'aic-isic-step-lab', step.title || step.key));
+      wrap.appendChild(item);
+    });
+    container.appendChild(wrap);
+    const label = data.status === 'classified'
+      ? 'اكتمل التصنيف'
+      : `السؤال ${data.step_index || stepIndex} من ${data.step_count || ISIC_STEPS.length} — ${data.step_title || ''}`;
+    container.appendChild(el('p', 'aic-hint', label.trim()));
+
+    if (data.status === 'classified' || !(data.selected || []).length) return;
+    const path = el('div', 'aic-isic-path');
+    (data.selected || []).forEach((item, index) => {
+      if (index) path.appendChild(el('span', 'aic-isic-path-sep', '‹'));
+      const chip = el('button', 'aic-isic-path-chip');
+      chip.type = 'button';
+      chip.title = `${item.title || item.key}: ${item.label || ''}`;
+      chip.textContent = item.label || item.code || '';
+      chip.addEventListener('click', () => isicJumpTo(root, item.key));
+      path.appendChild(chip);
+    });
+    container.appendChild(path);
+  }
+
+  function renderIsicOptionButton(opt, step, index, root) {
+    const btn = el('button', 'aic-isic-opt' + (opt.recommended ? ' rec' : ''));
+    btn.type = 'button';
+    btn.disabled = !!isicState.busy;
+    btn.appendChild(el('span', 'aic-isic-opt-index', String(index + 1)));
+    const body = el('span', 'aic-isic-opt-lab');
+    if (opt.code && !/^[A-U]$/.test(String(opt.code))) {
+      body.appendChild(el('span', 'aic-isic-opt-code', opt.code));
+    }
+    body.appendChild(document.createTextNode(opt.label || opt.code || ''));
+    if (opt.recommended) body.appendChild(el('span', 'aic-isic-opt-badge', 'الأقرب لوصفك'));
+    btn.appendChild(body);
+    btn.addEventListener('click', () => isicPickOption(root, step, opt));
+    return btn;
+  }
+
+  function renderIsicWizard(root, data) {
+    const box = isicRoot(root);
+    if (!box) return;
+    box.replaceChildren();
+    if (isicState.description || data.query) {
+      box.appendChild(el('p', 'aic-isic-query', `الوصف: ${data.query || isicState.description}`));
+    }
+    renderIsicProgress(box, data, root);
+    box.appendChild(el('h3', 'aic-isic-q', data.question || data.step_title || 'اختر أحد الخيارات'));
+    const opts = el('div', 'aic-isic-opts');
+    (data.options || []).forEach((opt, index) => {
+      opts.appendChild(renderIsicOptionButton(opt, data.step, index, root));
+    });
+    if (!(data.options || []).length) {
+      box.appendChild(el('p', 'aic-hint', 'تعذّر ترشيح خيارات مناسبة. أعد الصياغة أو ابدأ من جديد.'));
+    }
+    box.appendChild(opts);
+    appendIsicActions(root, box, !!ISIC_STEPS.some((s) => isicState.answers[s.key]));
+  }
+
+  function appendIsicActions(root, box, showBack) {
+    const acts = el('div', 'aic-isic-acts');
+    if (showBack || isicState.done) {
+      const back = el('button', 'aic-isic-act ghost');
+      back.type = 'button';
+      back.innerHTML = '<i class="bi bi-arrow-right" aria-hidden="true"></i><span>رجوع</span>';
+      back.disabled = !!isicState.busy;
+      back.addEventListener('click', () => isicGoBack(root));
+      acts.appendChild(back);
+    }
+    const reset = el('button', 'aic-isic-act ghost');
+    reset.type = 'button';
+    reset.innerHTML = '<i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i><span>بدء من جديد</span>';
+    reset.disabled = !!isicState.busy;
+    reset.addEventListener('click', () => renderIsicIntro(root));
+    acts.appendChild(reset);
+    box.appendChild(acts);
+  }
+
+  function renderIsicResult(root, data) {
+    const box = isicRoot(root);
+    if (!box) return;
+    box.replaceChildren();
+    if (isicState.description || data.query) {
+      box.appendChild(el('p', 'aic-isic-query', `الوصف: ${data.query || isicState.description}`));
+    }
+    renderIsicProgress(box, { ...data, status: 'classified', step_index: ISIC_STEPS.length, step_count: ISIC_STEPS.length }, root);
+    const match = data.best_match;
+    if (match && match.code) {
       const card = el('div', 'aic-card');
       card.appendChild(el('h4', null, 'الكود المقترح'));
       const line = el('div', 'aic-codeline');
-      appendCode(line, result.best_match);
+      line.appendChild(el('span', 'aic-code', match.code));
+      const copy = el('button', 'aic-isic-copy');
+      copy.type = 'button';
+      copy.textContent = 'نسخ الكود';
+      copy.addEventListener('click', () => {
+        navigator.clipboard.writeText(String(match.code)).then(() => { copy.textContent = 'تم النسخ'; });
+      });
+      line.appendChild(copy);
       card.appendChild(line);
-      if (result.best_match.reason) {
-        card.appendChild(el('p', 'aic-reason', result.best_match.reason));
-      }
-      target.appendChild(card);
-    } else if (result.clarifying_question) {
-      const card = el('div', 'aic-card');
-      card.appendChild(el('h4', null, 'نحتاج توضيحاً إضافياً'));
-      card.appendChild(el('p', 'aic-reason', result.clarifying_question));
-      target.appendChild(card);
+      if (match.description) card.appendChild(el('p', 'aic-isic-official', match.description));
+      if (match.breadcrumb) card.appendChild(el('p', 'aic-reason', match.breadcrumb));
+      if (match.reason) card.appendChild(el('p', 'aic-reason', match.reason));
+      box.appendChild(card);
     }
-
-    if (Array.isArray(result.alternatives) && result.alternatives.length) {
+    if (Array.isArray(data.alternatives) && data.alternatives.length) {
       const card = el('div', 'aic-card');
-      card.appendChild(el('h4', null, 'خيارات بديلة'));
-      result.alternatives.forEach((alternative) => {
+      card.appendChild(el('h4', null, 'بدائل قريبة'));
+      data.alternatives.forEach((alt) => {
         const row = el('div', 'aic-alt');
-        const line = el('div', 'aic-codeline');
-        appendCode(line, alternative);
-        row.appendChild(line);
-        if (alternative.reason) {
-          row.appendChild(el('p', 'aic-reason', alternative.reason));
-        }
+        row.appendChild(el('span', 'aic-code', alt.code || ''));
+        row.appendChild(document.createTextNode(' — ' + (alt.description || alt.reason || '')));
         card.appendChild(row);
       });
-      target.appendChild(card);
+      box.appendChild(card);
     }
+    if (!match || !match.code) {
+      box.appendChild(el('div', 'aic-empty', 'تعذّر تحديد كود مناسب.'));
+    }
+    isicState.done = true;
+    appendIsicActions(root, box, true);
+  }
 
-    if (!target.childNodes.length) {
-      target.appendChild(el('div', 'aic-empty', 'لم نتمكن من تحديد تصنيف مناسب. جرّب وصفاً أوضح.'));
+  function showIsicError(root, err) {
+    const box = isicRoot(root);
+    if (!box) return;
+    const errBox = el('div', 'aic-err');
+    errBox.setAttribute('role', 'alert');
+    const head = el('div', 'aic-err-head');
+    head.appendChild(icon('exclamation-circle'));
+    head.appendChild(el('span', null, errorMessage(err, 'تعذر تصنيف النشاط حالياً.')));
+    errBox.appendChild(head);
+    box.replaceChildren(errBox);
+    appendIsicActions(root, box, Object.keys(isicState.answers).length > 0);
+  }
+
+  async function isicRequest(root) {
+    if (!isicState.description) return;
+    const requestId = ++isicState.requestId;
+    isicState.busy = true;
+    const box = isicRoot(root);
+    if (box) {
+      box.replaceChildren();
+      box.appendChild(el('p', 'aic-isic-query', `الوصف: ${isicState.description}`));
+      box.appendChild(el('div', 'aic-empty', 'جارٍ ترشيح الخيارات المناسبة...'));
+    }
+    try {
+      const res = await window.APP_API.post(window.APP_ROUTES.aiIsic4Classify(), {
+        description: isicState.description,
+        answers: isicState.answers,
+      });
+      if (requestId !== isicState.requestId) return;
+      const data = isicPayload(res);
+      if (data.status === 'need_input') {
+        renderIsicWizard(root, data);
+        return;
+      }
+      renderIsicResult(root, data);
+    } catch (err) {
+      if (requestId !== isicState.requestId) return;
+      showIsicError(root, err);
+    } finally {
+      if (requestId !== isicState.requestId) return;
+      isicState.busy = false;
     }
   }
 
-  async function classifyActivity(root) {
-    const input = root.querySelector('.aic-desc');
-    const button = root.querySelector('.aic-classify');
-    const result = root.querySelector('[data-aic-isic4-result]');
-    const description = input.value.trim();
-    if (!description || button.disabled) return;
+  function isicStart(root) {
+    const ta = root.querySelector('.aic-desc');
+    const description = ((ta && ta.value) || '').trim();
+    if (!description) { if (ta) ta.focus(); return; }
+    isicState.description = description;
+    isicState.answers = {};
+    isicState.done = false;
+    isicState.requestId += 1;
+    isicRequest(root);
+  }
 
-    button.disabled = true;
-    const label = button.querySelector('span');
-    const original = label.textContent;
-    label.textContent = 'جارٍ التصنيف...';
-    result.replaceChildren(el('div', 'aic-empty', 'جارٍ البحث والتصنيف...'));
+  function isicPickOption(root, step, opt) {
+    if (isicState.busy || !step || !opt) return;
+    isicState.answers[step] = opt.id || opt.code;
+    isicRequest(root);
+  }
 
-    try {
-      const res = await window.APP_API.post(window.APP_ROUTES.aiIsic4Classify(), { description });
-      renderClassification(result, res || {});
-    } catch (err) {
-      const box = el('div', 'aic-err');
-      box.setAttribute('role', 'alert');
-      const head = el('div', 'aic-err-head');
-      head.appendChild(icon('exclamation-circle'));
-      head.appendChild(el('span', null, errorMessage(err, 'تعذر تصنيف النشاط حالياً.')));
-      box.appendChild(head);
-      result.replaceChildren(box);
-    } finally {
-      button.disabled = false;
-      label.textContent = original;
-    }
+  function isicJumpTo(root, stepKey) {
+    if (isicState.busy) return;
+    const idx = ISIC_STEPS.findIndex((step) => step.key === stepKey);
+    if (idx < 0) return;
+    ISIC_STEPS.forEach((step, index) => {
+      if (index >= idx) delete isicState.answers[step.key];
+    });
+    isicState.done = false;
+    isicRequest(root);
+  }
+
+  function isicGoBack(root) {
+    const filled = ISIC_STEPS.filter((step) => isicState.answers[step.key]);
+    if (!filled.length) { renderIsicIntro(root); return; }
+    isicJumpTo(root, filled[filled.length - 1].key);
+  }
+
+  function classifyActivity(root) {
+    isicStart(root);
   }
 
   /* ────────── سجل المحادثات (عبر Laravel) ────────── */
@@ -1371,12 +1597,7 @@
         </div>
 
         <div class="aic-view" data-aic-view="isic4">
-          <div class="aic-isic4">
-            <label class="aic-label" for="aicDesc">صف نشاطك التجاري بلغتك الخاصة</label>
-            <textarea class="aic-desc" id="aicDesc" maxlength="${MAX_DESC_LEN}" placeholder="مثال: عندي مزرعة أزرع فيها القمح والشعير"></textarea>
-            <button type="button" class="aic-classify"><i class="bi bi-tag-fill" aria-hidden="true"></i><span>تصنيف النشاط</span></button>
-            <div data-aic-isic4-result></div>
-          </div>
+          <div class="aic-isic4" data-aic-isic4-root></div>
         </div>
 
         <div class="aic-hist" role="dialog" aria-label="سجل المحادثات">
@@ -1432,6 +1653,7 @@
     document.body.appendChild(root);
 
     renderWelcome(root);
+    renderIsicIntro(root);
 
     const input = root.querySelector('.aic-input');
     const menu = root.querySelector('.aic-menu');
@@ -1482,8 +1704,6 @@
 
     root.querySelector('[data-aic-history]').addEventListener('click', () => openHistory(root));
     root.querySelector('[data-aic-hist-close]').addEventListener('click', () => closeHistory(root));
-
-    root.querySelector('.aic-classify').addEventListener('click', () => classifyActivity(root));
 
     /* ── الصوت ── */
     root.querySelector('[data-aic-mic]').addEventListener('click', () => {

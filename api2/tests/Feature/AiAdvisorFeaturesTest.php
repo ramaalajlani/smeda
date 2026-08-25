@@ -59,18 +59,16 @@ class AiAdvisorFeaturesTest extends TestCase
     {
         return [
             'data' => [
+                'status' => 'classified',
                 'query' => 'عندي مزرعة أزرع فيها القمح والشعير',
-                // الخدمة تعيد سطراً خاماً من ملف الفهرسة.
                 'best_match' => [
-                    'code' => '136,,,,0150,,,الزراعة المختلطة,',
+                    'code' => '0150',
+                    'description' => 'الزراعة المختلطة',
                     'reason' => 'الوصف يشير إلى زراعة نوعين من الحبوب.',
                 ],
                 'alternatives' => [
-                    ['code' => '- زراعة الذرة الصفراء للعلف 0119', 'reason' => 'زراعة الحبوب فقط.'],
-                    ['code' => null, 'reason' => 'يُستبعد لعدم وجود كود.'],
+                    ['code' => '0119', 'description' => 'زراعة الذرة الصفراء للعلف', 'reason' => 'زراعة الحبوب فقط.'],
                 ],
-                'clarifying_question' => null,
-                // مقاطع الفهرسة الخام يجب ألا تصل للواجهة.
                 'candidates' => [
                     ['code' => 'isic_file.xlsx', 'text' => 'محتوى خام طويل', 'relevance' => 0.71],
                 ],
@@ -101,18 +99,95 @@ class AiAdvisorFeaturesTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('success', true)
-            ->assertJsonPath('best_match.code', '0150')
-            ->assertJsonPath('best_match.label', 'الزراعة المختلطة')
-            ->assertJsonPath('clarifying_question', null)
-            ->assertJsonCount(1, 'alternatives')
-            ->assertJsonPath('alternatives.0.code', '0119')
-            ->assertJsonPath('alternatives.0.label', 'زراعة الذرة الصفراء للعلف')
-            ->assertJsonMissingPath('candidates');
+            ->assertJsonPath('data.status', 'classified')
+            ->assertJsonPath('data.best_match.code', '0150')
+            ->assertJsonPath('data.best_match.description', 'الزراعة المختلطة')
+            ->assertJsonCount(1, 'data.alternatives')
+            ->assertJsonPath('data.alternatives.0.code', '0119')
+            ->assertJsonMissingPath('data.candidates');
 
         Http::assertSent(function (Request $request) {
             return $request->url() === self::BASE_URL.'/api/isic4/classify'
-                && $request['description'] === 'عندي مزرعة أزرع فيها القمح والشعير';
+                && $request['description'] === 'عندي مزرعة أزرع فيها القمح والشعير'
+                && ($request['answers'] ?? []) === [
+                    'section' => '',
+                    'division' => '',
+                    'group' => '',
+                    'class' => '',
+                ];
         });
+    }
+
+    public function test_classify_wizard_returns_need_input_with_options(): void
+    {
+        $this->actingAsUser();
+        Http::fake([self::BASE_URL.'/api/isic4/classify' => Http::response([
+            'data' => [
+                'status' => 'need_input',
+                'step' => 'section',
+                'step_index' => 1,
+                'step_count' => 4,
+                'step_title' => 'الباب الأقرب',
+                'question' => 'ما الباب الأقرب لنشاطك؟',
+                'options' => [
+                    ['id' => 'G', 'code' => 'G', 'label' => 'تجارة الجملة والتجزئة', 'recommended' => true],
+                ],
+                'answers' => ['section' => '', 'division' => '', 'group' => '', 'class' => ''],
+                'selected' => [],
+                'steps' => [
+                    ['key' => 'section', 'title' => 'الباب الأقرب'],
+                    ['key' => 'division', 'title' => 'التصنيف الفرعي'],
+                ],
+                'query' => 'عندي محل تجزئة',
+            ],
+            'status_code' => 1,
+        ])]);
+
+        $this->postJson('/api/ai/isic4/classify', [
+            'description' => 'عندي محل تجزئة',
+            'answers' => [],
+        ])
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.status', 'need_input')
+            ->assertJsonPath('data.step', 'section')
+            ->assertJsonCount(1, 'data.options')
+            ->assertJsonPath('data.options.0.code', 'G');
+    }
+
+    public function test_classify_wizard_forwards_partial_answers(): void
+    {
+        $this->actingAsUser();
+        Http::fake([self::BASE_URL.'/api/isic4/classify' => Http::response([
+            'data' => [
+                'status' => 'classified',
+                'query' => 'عندي محل تجزئة',
+                'answers' => ['section' => 'G', 'division' => '47', 'group' => '471', 'class' => '4719'],
+                'selected' => [],
+                'best_match' => [
+                    'code' => '471901',
+                    'description' => 'البيع بالتجزئة لمجموعة واسعة من السلع',
+                    'reason' => 'أنسب خيار لمحل تجزئة عام.',
+                    'breadcrumb' => 'تجارة > تجزئة > ...',
+                ],
+                'alternatives' => [],
+                'candidates' => [['code' => '471901', 'text' => 'raw']],
+            ],
+            'status_code' => 1,
+        ])]);
+
+        $this->postJson('/api/ai/isic4/classify', [
+            'description' => 'عندي محل تجزئة',
+            'answers' => ['section' => 'G', 'division' => '47', 'group' => '471', 'class' => '4719'],
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.status', 'classified')
+            ->assertJsonPath('data.best_match.code', '471901')
+            ->assertJsonPath('data.best_match.description', 'البيع بالتجزئة لمجموعة واسعة من السلع')
+            ->assertJsonMissingPath('data.candidates');
+
+        Http::assertSent(fn (Request $request) => ($request['answers']['class'] ?? null) === '4719'
+            && ($request['answers']['section'] ?? null) === 'G');
     }
 
     public function test_classify_requires_a_description(): void
