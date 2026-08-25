@@ -174,8 +174,6 @@ class CertificateService
 
             foreach ([
                 'center_approval',
-                'training_manager_approval',
-                'deputy_director_approval',
                 'general_director_approval',
             ] as $step) {
                 CertificateApproval::create([
@@ -186,6 +184,10 @@ class CertificateService
                     'decision_at' => null,
                     'notes' => null,
                 ]);
+            }
+
+            if ($this->usesSimpleCenterCertificateFlow($user)) {
+                $this->finalizeSimpleCenterCertificate($certificate, $user);
             }
 
             $this->auditLog->log('certificate_issued', $user, $certificate, null, [
@@ -322,5 +324,46 @@ class CertificateService
         $issuerLine = 'issued_by_user_id=' . $issuerId;
 
         return $notes ? trim($notes . "\n" . $issuerLine) : $issuerLine;
+    }
+
+    private function usesSimpleCenterCertificateFlow(User $user): bool
+    {
+        if (!$user->isCenterUser()) {
+            return false;
+        }
+
+        return !$user->hasAnyRole([
+            'admin',
+            'super_admin',
+            'system_admin',
+            'general_director',
+            'training_manager',
+            'deputy_general_director',
+            'deputy_director',
+        ]);
+    }
+
+    private function finalizeSimpleCenterCertificate(Certificate $certificate, User $user): void
+    {
+        $now = now();
+
+        CertificateApproval::query()
+            ->where('certificate_id', $certificate->id)
+            ->whereIn('approval_step', ['center_approval', 'general_director_approval'])
+            ->update([
+                'approved_by' => $user->id,
+                'decision' => 'approved',
+                'decision_at' => $now,
+                'notes' => 'اعتماد تلقائي — شهادة مبسّطة بدون عقد',
+            ]);
+
+        $certificate->update([
+            'status' => 'approved',
+            'is_verified' => true,
+            'verified_at' => $now,
+            'notes' => trim(($certificate->notes ?? '') . "\nsimple_center_flow=1"),
+        ]);
+
+        $this->generateQrForCertificate($certificate->fresh());
     }
 }

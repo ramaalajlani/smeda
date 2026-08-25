@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     <a href="center-trainees.php?course=${COURSE_ID}"><i class="bi bi-people"></i><span class="lab">2 · متدربو الدورة</span><small>عرض النتائج والحضور على مستوى الدورة</small></a>
     <a href="center-attendance.php?course=${COURSE_ID}"><i class="bi bi-calendar-check"></i><span class="lab">3 · الحضور</span><small>تسجيل حضور الجلسات</small></a>
     <a href="center-modules.php?course=${COURSE_ID}"><i class="bi bi-journal-text"></i><span class="lab">4 · المواد والدرجات</span><small>إدخال درجات المحاور</small></a>
-    <a href="center-certificates.php?course=${COURSE_ID}"><i class="bi bi-patch-check"></i><span class="lab">5 · الشهادات</span><small>${canIssue ? 'إصدار للناجحين + فتح/PDF' : 'عرض وفتح/PDF'}</small></a>
+    <a href="center-certificates.php?course=${COURSE_ID}"><i class="bi bi-patch-check"></i><span class="lab">5 · الشهادات</span><small>${canIssue ? 'إصدار بسيط للناجحين — بدون عقد' : 'عرض وطباعة'}</small></a>
     <a href="center-course-report.php?id=${COURSE_ID}"><i class="bi bi-file-earmark"></i><span class="lab">6 · التقرير</span><small>ملخص الدورة للطباعة</small></a>`;
   if (canManageCourse) {
     actions += `<a href="center-course-edit.php?id=${COURSE_ID}" data-center-only><i class="bi bi-pencil-square"></i><span class="lab">تعديل بيانات الدورة</span><small>العنوان والتواريخ والمدرب</small></a>`;

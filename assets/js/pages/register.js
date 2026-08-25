@@ -262,6 +262,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         ['cCenterAddress', SiteI18n.ta('العنوان')],
         ['cCenterPhone', SiteI18n.ta('الهاتف')],
         ['cLicenseNumber', SiteI18n.ta('رقم الترخيص')],
+        ['cLicenseIssueDate', SiteI18n.ta('تاريخ الترخيص')],
+        ['cLicenseIssuedBy', SiteI18n.ta('الجهة الصادرة عنها')],
       ];
 
       required.forEach(([id, label]) => {
@@ -271,6 +273,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           valid = false;
         }
       });
+
+      if (!document.getElementById('cLicenseImage')?.files?.[0]) {
+        setFieldError('cLicenseImage', `${SiteI18n.ta('هذا الحقل مطلوب')}.`);
+        missingLabels.push(SiteI18n.ta('صورة الترخيص'));
+        valid = false;
+      }
 
       if (!getValue('cCenterLatitude') || !getValue('cCenterLongitude')) {
         // Fallback to current map center if map is loaded but user did not click.
@@ -355,7 +363,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     formData.append('address', getValue('cCenterAddress'));
     formData.append('phone', getValue('cCenterPhone'));
     formData.append('email', getValue('cCenterEmail'));
-    formData.append('classification_requested', getValue('cCenterClassification'));
+    formData.append('classification_requested', '');
     formData.append('supports_offline_training', document.getElementById('cSupportsOfflineTraining')?.value || '0');
     formData.append('supports_online_training', document.getElementById('cSupportsOnlineTraining')?.value || '0');
     formData.append('latitude', getValue('cCenterLatitude'));

@@ -33,8 +33,12 @@ $pageTitle  = 'بيانات الحقيبة';
           </select>
         </div>
         <div class="fld"><label>القطاع</label><input id="sector"></div>
-        <div class="fld"><label>التصنيف</label><input id="category"></div>
-        <div class="fld"><label>النوع</label><input id="type"></div>
+        <div class="fld"><label>التصنيف *</label>
+          <select id="category_id"><option value="">— اختر التصنيف —</option></select>
+        </div>
+        <div class="fld"><label>التخصص / التصنيف الفرعي</label>
+          <select id="subcategory_id"><option value="">—</option></select>
+        </div>
         <div class="fld"><label>المستوى</label><input id="level"></div>
         <div class="fld"><label>رمز المادة</label><input id="material_code"></div>
         <div class="fld"><label>الساعات</label><input id="hours" type="number" min="0" value="0"></div>
@@ -74,6 +78,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   const msg = (t, ok=false)=>{ const el=document.getElementById('formMsg'); el.className='tc-form-msg '+(ok?'ok':'err'); el.textContent=t||''; };
   const val = id => document.getElementById(id).value;
   const set = (id,v)=>{ if(document.getElementById(id)) document.getElementById(id).value = v??''; };
+  let categoriesTree = [];
+
+  async function loadCategories() {
+    try {
+      const res = await window.APP_API.get(window.APP_ROUTES.trainingCategories({ roots_only: 1, with_children: 1, active_only: 1 }));
+      categoriesTree = res.data || [];
+      const catSel = document.getElementById('category_id');
+      if (!catSel) return;
+      catSel.innerHTML = '<option value="">— اختر التصنيف —</option>' + categoriesTree.map(c =>
+        `<option value="${c.id}">${String(c.name_ar||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}</option>`
+      ).join('');
+    } catch (e) {}
+  }
+
+  function fillSubcategories(parentId, selected) {
+    const subSel = document.getElementById('subcategory_id');
+    if (!subSel) return;
+    const parent = categoriesTree.find(c => String(c.id) === String(parentId));
+    const children = parent?.active_children || parent?.children || [];
+    subSel.innerHTML = '<option value="">—</option>' + children.map(c =>
+      `<option value="${c.id}">${String(c.name_ar||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}</option>`
+    ).join('');
+    if (selected) subSel.value = String(selected);
+  }
+
+  document.getElementById('category_id')?.addEventListener('change', e => fillSubcategories(e.target.value));
+  await loadCategories();
 
   if (ID) {
     document.getElementById('barTitle').textContent = 'تعديل الحقيبة';
@@ -85,8 +116,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       const r = await fetch(`${BASE}/training-kits/${ID}`, { headers:H() });
       if (!r.ok) throw new Error('x');
       const k = (await r.json()).data || {};
-      set('name', k.name); set('code', k.code); set('sector', k.sector); set('category', k.category);
-      set('type', k.type); set('level', k.level); set('material_code', k.material_code);
+      set('name', k.name); set('code', k.code); set('sector', k.sector);
+      set('level', k.level); set('material_code', k.material_code);
+      if (k.category_id) {
+        set('category_id', k.category_id);
+        fillSubcategories(k.category_id, k.subcategory_id);
+      } else if (k.category) {
+        const match = categoriesTree.find(c => c.name_ar === k.category);
+        if (match) {
+          set('category_id', match.id);
+          fillSubcategories(match.id, k.subcategory_id);
+        }
+      }
       set('hours', k.hours ?? 0); set('status', k.status||'active');
       set('is_active', k.is_active===false?0:1);
       set('objective', k.objective); set('description', k.description);
@@ -95,6 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('form').addEventListener('submit', async (e)=>{
     e.preventDefault();
+    if (!val('category_id')) { msg('يرجى اختيار تصنيف الحقيبة (تعليمي، مهني، …)'); return; }
     const btn = document.getElementById('saveBtn'); btn.disabled=true; msg('');
     const bagFile = document.getElementById('training_bag_file')?.files?.[0];
     const promoFile = document.getElementById('promotional_file')?.files?.[0];
@@ -104,8 +146,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       name: val('name').trim(),
       code: val('code').trim() || null,
       sector: val('sector').trim() || null,
-      category: val('category').trim() || null,
-      type: val('type').trim() || null,
+      category_id: val('category_id') ? Number(val('category_id')) : null,
+      subcategory_id: val('subcategory_id') ? Number(val('subcategory_id')) : null,
       level: val('level').trim() || null,
       material_code: val('material_code').trim() || null,
       hours: Number(val('hours')||0),

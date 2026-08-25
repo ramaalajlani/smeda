@@ -103,8 +103,7 @@ class CertificateSeeder extends Seeder
 
             foreach ([
                 'center_approval',
-                'training_manager_approval',
-                'deputy_director_approval',
+                'general_director_approval',
             ] as $step) {
                 CertificateApproval::updateOrCreate(
                     [

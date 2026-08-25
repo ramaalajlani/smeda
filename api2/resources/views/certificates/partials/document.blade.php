@@ -11,10 +11,9 @@
 
     $approvalByStep = $certificate->approvals?->keyBy('approval_step') ?? collect();
     $centerApproval = $approvalByStep->get('center_approval');
-    $trainingApproval = $approvalByStep->get('training_manager_approval');
-    $deputyApproval = $approvalByStep->get('deputy_director_approval');
     $generalApproval = $approvalByStep->get('general_director_approval');
     $signatureImages = $signatureImages ?? [];
+    $isSimpleCenterFlow = str_contains((string) ($certificate->notes ?? ''), 'simple_center_flow=1');
 @endphp
 
 <div class="certificate">
@@ -101,7 +100,7 @@
 
     <table class="footer-table" role="presentation">
         <tr>
-            <td class="sign-box" width="25%">
+            <td class="sign-box" width="50%">
                 @if($centerApproval?->decision === 'approved' && ($centerApproval->electronicSignature || $centerApproval->approver))
                     @php $cs = $centerApproval->electronicSignature; @endphp
                     @if(!empty($signatureImages['center_approval']))
@@ -109,7 +108,7 @@
                     @endif
                     <div class="esign-badge">{{ $cs ? 'توقيع إلكتروني' : 'معتمد' }}</div>
                     <div class="sign-name">{{ $cs?->signer_name ?? $centerApproval->approver?->name ?? '—' }}</div>
-                    <div class="sign-title-small">{{ $cs?->signer_title ?? 'اعتماد المركز' }}</div>
+                    <div class="sign-title-small">{{ $cs?->signer_title ?? 'اعتماد المركز التدريبي' }}</div>
                     <div class="sign-date">{{ optional($cs?->signed_at ?? $centerApproval->decision_at)->format('Y-m-d H:i') }}</div>
                     @if($cs?->verification_code)
                         <div class="esign-code">{{ $cs->verification_code }}</div>
@@ -117,46 +116,10 @@
                 @else
                     <div class="sign-line"></div>
                 @endif
-                <div class="sign-title">اعتماد المركز</div>
+                <div class="sign-title">اعتماد المركز التدريبي</div>
             </td>
 
-            <td class="sign-box" width="25%">
-                @if($trainingApproval?->decision === 'approved' && ($trainingApproval->electronicSignature || $trainingApproval->approver))
-                    @php $ts = $trainingApproval->electronicSignature; @endphp
-                    @if(!empty($signatureImages['training_manager_approval']))
-                        <img src="{{ $signatureImages['training_manager_approval'] }}" alt="توقيع التدريب" class="sign-image">
-                    @endif
-                    <div class="esign-badge">{{ $ts ? 'توقيع إلكتروني' : 'معتمد' }}</div>
-                    <div class="sign-name">{{ $ts?->signer_name ?? $trainingApproval->approver?->name ?? '—' }}</div>
-                    <div class="sign-title-small">{{ $ts?->signer_title ?? 'اعتماد قسم التدريب' }}</div>
-                    <div class="sign-date">{{ optional($ts?->signed_at ?? $trainingApproval->decision_at)->format('Y-m-d H:i') }}</div>
-                    @if($ts?->verification_code)
-                        <div class="esign-code">{{ $ts->verification_code }}</div>
-                    @endif
-                @else
-                    <div class="sign-line"></div>
-                @endif
-                <div class="sign-title">اعتماد قسم التدريب</div>
-            </td>
-
-            <td class="sign-box" width="25%">
-                @if($deputyApproval?->decision === 'approved' && $deputyApproval->electronicSignature)
-                    @php $ds = $deputyApproval->electronicSignature; @endphp
-                    @if(!empty($signatureImages['deputy_director_approval']))
-                        <img src="{{ $signatureImages['deputy_director_approval'] }}" alt="توقيع النائب" class="sign-image">
-                    @endif
-                    <div class="esign-badge">توقيع إلكتروني</div>
-                    <div class="sign-name">{{ $ds->signer_name }}</div>
-                    <div class="sign-title-small">{{ $ds->signer_title }}</div>
-                    <div class="sign-date">{{ optional($ds->signed_at)->format('Y-m-d H:i') }}</div>
-                    <div class="esign-code">{{ $ds->verification_code }}</div>
-                @else
-                    <div class="sign-line"></div>
-                @endif
-                <div class="sign-title">نائب المدير العام</div>
-            </td>
-
-            <td class="sign-box" width="25%">
+            <td class="sign-box" width="50%">
                 @if($generalApproval?->decision === 'approved' && $generalApproval->electronicSignature)
                     @php $gs = $generalApproval->electronicSignature; @endphp
                     @if(!empty($signatureImages['general_director_approval']))
@@ -167,6 +130,11 @@
                     <div class="sign-title-small">{{ $gs->signer_title }}</div>
                     <div class="sign-date">{{ optional($gs->signed_at)->format('Y-m-d H:i') }}</div>
                     <div class="esign-code">{{ $gs->verification_code }}</div>
+                @elseif($generalApproval?->decision === 'approved' && ($generalApproval->approver || $isSimpleCenterFlow))
+                    <div class="esign-badge">معتمد</div>
+                    <div class="sign-name">{{ $generalApproval->approver?->name ?? $certificate->trainingCenter?->name ?? '—' }}</div>
+                    <div class="sign-title-small">اعتماد إداري</div>
+                    <div class="sign-date">{{ optional($generalApproval->decision_at)->format('Y-m-d H:i') }}</div>
                 @else
                     <div class="sign-line"></div>
                 @endif
@@ -186,6 +154,10 @@
     </table>
 
     <div class="status-note">
-        هذه الشهادة معتمدة وموثقة رقمياً. رمز التوقيع الإلكتروني (ESIG) غير قابل للتزوير ويمكن التحقق منه عبر المنصة.
+        @if($isSimpleCenterFlow)
+            شهادة تدريبية صادرة من المركز — يمكن التحقق منها عبر رمز QR.
+        @else
+            هذه الشهادة معتمدة وموثقة رقمياً. رمز التوقيع الإلكتروني (ESIG) غير قابل للتزوير ويمكن التحقق منه عبر المنصة.
+        @endif
     </div>
 </div>

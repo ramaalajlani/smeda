@@ -18,18 +18,18 @@ $pageTitle  = 'الشهادات';
   </div>
   <div class="tc-content">
     <div class="tc-scope is-course" style="margin-bottom:12px">
-      <div class="tc-scope-txt"><i class="bi bi-patch-check"></i> الشهادات على مستوى <strong>كل الدورة</strong> للناجحين فقط</div>
+      <div class="tc-scope-txt"><i class="bi bi-patch-check"></i> شهادة بسيطة للناجحين — <strong>بدون عقد</strong> — اطبع أو حمّل PDF مباشرة بعد الإصدار</div>
     </div>
     <div id="sumBox" class="tc-sum" hidden></div>
     <div class="tc-bar-row" style="justify-content:stretch">
-      <button type="button" id="issue" class="tc-btn-teal" style="width:100%" disabled><i class="bi bi-patch-check-fill"></i> إصدار الشهادات للناجحين</button>
+      <button type="button" id="issue" class="tc-btn-teal" style="width:100%" disabled><i class="bi bi-patch-check-fill"></i> إصدار شهادات الناجحين</button>
     </div>
     <div id="hint" class="tc-muted" style="margin:0 4px 12px;font-size:.82rem"></div>
     <div id="box"><div class="tc-spin"><i class="bi bi-hourglass-split"></i> جاري التحميل...</div></div>
   </div>
 </div>
 <?php include __DIR__ . '/../../includes/layout/scripts.php'; ?>
-<script src="<?php echo $basePath; ?>services/training/tc-common.js?v=1.4"></script>
+<script src="<?php echo $basePath; ?>services/training/tc-common.js?v=1.5"></script>
 <script>
 const COURSE_ID = new URLSearchParams(location.search).get('course');
 document.addEventListener('DOMContentLoaded', async () => {
@@ -44,15 +44,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const jget = async p => (await fetch(`${BASE}${p}`,{headers:H()})).json();
 
   const CERT_ST = {
-    approved:['معتمدة','b-green'],
+    approved:['جاهزة للطباعة','b-green'],
     issued:['صادرة','b-green'],
-    pending:['قيد الاعتماد','b-gold'],
-    pending_center_approval:['بانتظار اعتماد المركز','b-gold'],
-    pending_training_approval:['بانتظار اعتماد التدريب','b-gold'],
-    pending_deputy_approval:['بانتظار اعتماد النائب','b-gold'],
-    pending_general_director_approval:['بانتظار اعتماد المدير العام','b-gold'],
     rejected:['مرفوضة','b-red'],
-    draft:['مسودة','b-gray'],
   };
 
   const cached = TC.getCourse(COURSE_ID);
@@ -63,6 +57,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('issue').closest('.tc-bar-row')?.setAttribute('hidden', '');
   }
   load();
+
+  function certActions(c) {
+    const acts = [];
+    if (c.printable_url) acts.push(`<a class="open" href="${E(c.printable_url)}" target="_blank" rel="noopener"><i class="bi bi-eye-fill"></i> عرض</a>`);
+    if (c.pdf_url) acts.push(`<a class="pdf" href="${E(c.pdf_url)}" target="_blank" rel="noopener"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>`);
+    return acts;
+  }
 
   async function load(){
     const box = document.getElementById('box');
@@ -97,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const hint = document.getElementById('hint');
       if (needIssue.length) {
         issueBtn.disabled = false;
-        hint.textContent = `سيُصدر لـ ${needIssue.length} ناجح${needIssue.length>1?'ين':''} بدون شهادة. الراسبون (${failed.length}) لن يحصلوا على شهادة.`;
+        hint.textContent = `سيُصدر ${needIssue.length} شهادة للناجحين فوراً (قابلة للطباعة). الراسبون (${failed.length}) لا يحصلون على شهادة.`;
       } else if (!passed.length) {
         issueBtn.disabled = true;
         hint.innerHTML = pendingResults.length
@@ -124,9 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const [sl,sc] = CERT_ST[c.status] || [c.status || '—', 'b-gray'];
         const name = c.trainee_name || ('متدرب #'+(c.trainee_id||'—'));
         const num = c.certificate_number || c.reference_number || ('#'+c.id);
-        const acts = [];
-        if (c.printable_url) acts.push(`<a class="open" href="${E(c.printable_url)}" target="_blank" rel="noopener"><i class="bi bi-eye-fill"></i> فتح</a>`);
-        if (c.pdf_url) acts.push(`<a class="pdf" href="${E(c.pdf_url)}" target="_blank" rel="noopener"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>`);
+        const acts = certActions(c);
         return `<article class="tc-mcard">
           <div class="tc-mcard-top">
             <div>
@@ -152,18 +151,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function issue(){
     const needTxt = document.getElementById('hint').textContent || '';
-    if (!(await TC.confirm((needTxt ? needTxt + '\n\n' : '') + 'متابعة إصدار الشهادات؟'))) return;
+    if (!(await TC.confirm((needTxt ? needTxt + '\n\n' : '') + 'إصدار الشهادات الآن؟'))) return;
     const btn = document.getElementById('issue');
     btn.disabled = true; btn.textContent = 'جاري الإصدار...';
     try{
       const r = await fetch(`${BASE}/training-courses/${COURSE_ID}/issue-certificates`, { method:'POST', headers:HP(), body:'{}' });
       const d = await r.json().catch(()=>({}));
-      TC.toast(d.message || (r.ok ? 'تم الإصدار' : 'تعذّر الإصدار'), r.ok ? 'ok' : 'err');
+      TC.toast(d.message || (r.ok ? 'تم الإصدار — يمكنك الطباعة الآن' : 'تعذّر الإصدار'), r.ok ? 'ok' : 'err');
       await load();
     }catch(e){
       TC.toast('تعذّر إصدار الشهادات','err');
       btn.disabled = false;
-      btn.innerHTML = '<i class="bi bi-patch-check-fill"></i> إصدار الشهادات للناجحين';
+      btn.innerHTML = '<i class="bi bi-patch-check-fill"></i> إصدار شهادات الناجحين';
     }
   }
 });

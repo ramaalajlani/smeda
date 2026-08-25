@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       status: 'pending_general_director_approval',
     },
     {
+      permission: window.AppPermissions.APPROVE_CENTER_CERTIFICATES,
+      step: 'center_approval',
+      status: 'pending_center_approval',
+    },
+    {
       permission: window.AppPermissions.APPROVE_DEPUTY_CERTIFICATES,
       step: 'deputy_director_approval',
       status: 'pending_deputy_approval',
@@ -35,11 +40,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       permission: window.AppPermissions.APPROVE_TRAINING_CERTIFICATES,
       step: 'training_manager_approval',
       status: 'pending_training_approval',
-    },
-    {
-      permission: window.AppPermissions.APPROVE_CENTER_CERTIFICATES,
-      step: 'center_approval',
-      status: 'pending_center_approval',
     },
   ];
 

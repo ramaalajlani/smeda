@@ -88,7 +88,7 @@ $activePage = 'services';
 
             <div class="col-lg-6">
               <label class="form-label">التصنيف المطلوب</label>
-              <input type="text" id="classificationRequested" class="form-control">
+              <input type="text" id="classificationRequested" class="form-control" placeholder="اختياري">
             </div>
 
             <div class="col-lg-6">

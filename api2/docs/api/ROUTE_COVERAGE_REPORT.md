@@ -1,19 +1,19 @@
 # تقرير تغطية المسارات (Route Coverage)
 
-> تاريخ التوليد: 2026-07-16 17:57:29
-> Git commit: `غير متاح`
+> تاريخ التوليد: 2026-08-16 05:48:03
+> Git commit: `7d4288a70c1b4481abf69692997fde1503272aec`
 
 ## ملخص التغطية
 
 | المؤشر | القيمة |
 |--------|-------:|
-| إجمالي Routes (Endpoints) | 346 |
-| API Routes | 329 |
+| إجمالي Routes (Endpoints) | 396 |
+| API Routes | 379 |
 | Web Routes | 17 |
 | Public | 38 |
-| Protected (Bearer) | 300 |
+| Protected (Bearer) | 350 |
 | Signed URL | 8 |
-| OpenAPI Operations | 329 |
+| OpenAPI Operations | 379 |
 | OpenAPI duplicates skipped | 0 |
 | Markdown coverage | 100% |
 | OpenAPI API coverage | 100% |
@@ -146,15 +146,36 @@
 | `GET api/needs/analytics` | ✅ | ✅ | فعال |
 | `GET api/needs/workspace/data-entry` | ✅ | ✅ | فعال |
 | `GET api/needs/workspace/reviewer` | ✅ | ✅ | فعال |
+| `GET api/needs/lookups/manage` | ✅ | ✅ | فعال |
+| `POST api/needs/lookups/manage` | ✅ | ✅ | فعال |
+| `PUT api/needs/lookups/manage/{id}` | ✅ | ✅ | فعال |
+| `POST api/needs/sectors` | ✅ | ✅ | فعال |
+| `PUT api/needs/sectors/{id}` | ✅ | ✅ | فعال |
 | `PUT api/needs/{id}` | ✅ | ✅ | فعال |
 | `POST api/needs/{id}/review` | ✅ | ✅ | فعال |
 | `POST api/needs/{id}/approve` | ✅ | ✅ | فعال |
 | `POST api/needs/{id}/reject` | ✅ | ✅ | فعال |
 | `POST api/needs/{id}/return` | ✅ | ✅ | فعال |
+| `POST api/needs/ai-suggest` | ✅ | ✅ | فعال |
+| `POST api/needs/{id}/ai-suggest` | ✅ | ✅ | فعال |
 | `POST api/needs/{id}/classify` | ✅ | ✅ | فعال |
 | `POST api/needs/{id}/resolve` | ✅ | ✅ | فعال |
+| `POST api/ai/chat` | ✅ | ✅ | فعال |
+| `POST api/ai/chat/continue` | ✅ | ✅ | فعال |
+| `POST api/ai/chat/reset` | ✅ | ✅ | فعال |
+| `POST api/ai/isic4/classify` | ✅ | ✅ | فعال |
+| `GET api/ai/config` | ✅ | ✅ | فعال |
+| `GET api/ai/chat/history` | ✅ | ✅ | فعال |
+| `GET api/ai/chat/history/{session}/messages` | ✅ | ✅ | فعال |
+| `POST api/ai/chat/history/{session}/resume` | ✅ | ✅ | فعال |
+| `GET api/ai/knowledge/departments` | ✅ | ✅ | فعال |
+| `GET api/ai/knowledge/{department}` | ✅ | ✅ | فعال |
+| `POST api/ai/knowledge/ingest` | ✅ | ✅ | فعال |
 | `GET api/trainers` | ✅ | ✅ | فعال |
+| `POST api/trainers` | ✅ | ✅ | فعال |
 | `GET api/trainers/{id}` | ✅ | ✅ | فعال |
+| `PUT api/trainers/{id}` | ✅ | ✅ | فعال |
+| `PATCH api/trainers/{id}` | ✅ | ✅ | فعال |
 | `GET api/trainer-profiles/{id}` | ✅ | ✅ | فعال |
 | `GET api/my-trainer-profile` | ✅ | ✅ | فعال |
 | `POST api/my-trainer-profile` | ✅ | ✅ | فعال |
@@ -163,7 +184,10 @@
 | `GET api/training-kit-nominations/{id}` | ✅ | ✅ | فعال |
 | `POST api/training-kit-nominations/{id}/review` | ✅ | ✅ | فعال |
 | `GET api/trainees` | ✅ | ✅ | فعال |
+| `POST api/trainees` | ✅ | ✅ | فعال |
 | `GET api/trainees/{id}` | ✅ | ✅ | فعال |
+| `PUT api/trainees/{id}` | ✅ | ✅ | فعال |
+| `PATCH api/trainees/{id}` | ✅ | ✅ | فعال |
 | `GET api/workforces` | ✅ | ✅ | فعال |
 | `GET api/workforces/{id}` | ✅ | ✅ | فعال |
 | `POST api/workforces/enroll` | ✅ | ✅ | فعال |
@@ -181,7 +205,14 @@
 | `GET api/training-centers/{id}` | ✅ | ✅ | فعال |
 | `GET api/training-supervisors` | ✅ | ✅ | فعال |
 | `GET api/training-kits` | ✅ | ✅ | فعال |
+| `POST api/training-kits` | ✅ | ✅ | فعال |
 | `GET api/training-kits/{id}` | ✅ | ✅ | فعال |
+| `PUT api/training-kits/{id}` | ✅ | ✅ | فعال |
+| `PATCH api/training-kits/{id}` | ✅ | ✅ | فعال |
+| `GET api/training-kits/{id}/materials` | ✅ | ✅ | فعال |
+| `POST api/training-kits/{id}/materials` | ✅ | ✅ | فعال |
+| `PUT api/training-kits/{id}/materials/{materialId}` | ✅ | ✅ | فعال |
+| `DELETE api/training-kits/{id}/materials/{materialId}` | ✅ | ✅ | فعال |
 | `GET api/training-programs` | ✅ | ✅ | فعال |
 | `GET api/training-programs/{id}` | ✅ | ✅ | فعال |
 | `GET api/program-bank/stats` | ✅ | ✅ | فعال |
@@ -205,14 +236,31 @@
 | `GET api/training-courses` | ✅ | ✅ | فعال |
 | `POST api/training-courses` | ✅ | ✅ | فعال |
 | `GET api/training-courses/{id}/trainees` | ✅ | ✅ | فعال |
+| `GET api/training-courses/{id}/modules` | ✅ | ✅ | فعال |
+| `GET api/training-courses/{id}/sessions` | ✅ | ✅ | فعال |
+| `POST api/training-courses/{id}/sessions` | ✅ | ✅ | فعال |
+| `GET api/training-courses/{id}/sessions/{sessionId}/attendance` | ✅ | ✅ | فعال |
+| `POST api/training-courses/{id}/sessions/{sessionId}/attendance` | ✅ | ✅ | فعال |
+| `GET api/training-courses/{id}/module-scores` | ✅ | ✅ | فعال |
+| `POST api/training-courses/{id}/module-scores` | ✅ | ✅ | فعال |
+| `POST api/training-courses/{id}/issue-certificates` | ✅ | ✅ | فعال |
+| `GET api/training-courses/{id}/groups` | ✅ | ✅ | فعال |
+| `GET api/training-courses/{id}/ungrouped-trainees` | ✅ | ✅ | فعال |
+| `GET api/training-courses/{id}/groups/{groupId}/trainees` | ✅ | ✅ | فعال |
+| `POST api/training-courses/{id}/groups` | ✅ | ✅ | فعال |
+| `DELETE api/training-courses/{id}/groups/{groupId}` | ✅ | ✅ | فعال |
+| `POST api/training-courses/{id}/groups/{groupId}/assign` | ✅ | ✅ | فعال |
+| `POST api/training-courses/{id}/groups/{groupId}/remove` | ✅ | ✅ | فعال |
 | `POST api/training-courses/{id}/trainees` | ✅ | ✅ | فعال |
 | `PATCH api/training-courses/{id}/trainees/{traineeId}` | ✅ | ✅ | فعال |
 | `DELETE api/training-courses/{id}/trainees/{traineeId}` | ✅ | ✅ | فعال |
 | `POST api/training-courses/{id}/complete` | ✅ | ✅ | فعال |
 | `GET api/training-courses/{id}` | ✅ | ✅ | فعال |
 | `PATCH api/training-courses/{id}` | ✅ | ✅ | فعال |
+| `DELETE api/training-courses/{id}` | ✅ | ✅ | فعال |
 | `GET api/map/training-courses` | ✅ | ✅ | فعال |
 | `GET api/map/trainers` | ✅ | ✅ | فعال |
+| `GET api/map/trainees` | ✅ | ✅ | فعال |
 | `POST api/certificates/issue` | ✅ | ✅ | فعال |
 | `POST api/certificates/{id}/approve` | ✅ | ✅ | فعال |
 | `GET api/certificates` | ✅ | ✅ | فعال |
@@ -275,6 +323,7 @@
 | `GET api/consulting/offices/{id}` | ✅ | ✅ | فعال |
 | `POST api/consulting/offices` | ✅ | ✅ | فعال |
 | `PUT api/consulting/offices/{id}` | ✅ | ✅ | فعال |
+| `DELETE api/consulting/offices/{id}` | ✅ | ✅ | فعال |
 | `POST api/consulting/offices/{id}/activate` | ✅ | ✅ | فعال |
 | `POST api/consulting/offices/{id}/suspend` | ✅ | ✅ | فعال |
 | `POST api/consulting/offices/{id}/violations` | ✅ | ✅ | فعال |
@@ -284,6 +333,7 @@
 | `GET api/consulting/requests/{id}/offers` | ✅ | ✅ | فعال |
 | `POST api/consulting/requests` | ✅ | ✅ | فعال |
 | `PUT api/consulting/requests/{id}` | ✅ | ✅ | فعال |
+| `DELETE api/consulting/requests/{id}` | ✅ | ✅ | فعال |
 | `POST api/consulting/requests/{id}/submit` | ✅ | ✅ | فعال |
 | `POST api/consulting/requests/{id}/sort` | ✅ | ✅ | فعال |
 | `POST api/consulting/requests/{id}/accept-offer` | ✅ | ✅ | فعال |

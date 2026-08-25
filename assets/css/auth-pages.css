@@ -870,4 +870,12 @@ body.auth-page .btn-outline-secondary:hover {
 
 }
 
+body.auth-page .req-mark {
+  display: inline-block;
+  margin-inline-start: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #b91c1c;
+  vertical-align: middle;
+}
 

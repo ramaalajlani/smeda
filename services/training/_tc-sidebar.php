@@ -6,7 +6,7 @@ $tcActive = $tcActive ?? '';
 $basePath = $basePath ?? '../../';
 $tcRoot = $basePath . 'services/training/';
 
-$tcKitScreens = ['kit', 'kit-materials', 'kit-programs', 'kit-courses', 'kit-create', 'kit-form', 'kit-create-form', 'kit-trainers'];
+$tcKitScreens = ['kit', 'kit-materials', 'kit-attachments', 'kit-programs', 'kit-courses', 'kit-create', 'kit-form', 'kit-create-form', 'kit-trainers'];
 $tcTrainerScreens = ['trainer', 'trainer-form', 'trainer-kits', 'trainer-courses', 'trainer-create'];
 $tcCourseScreens = ['course', 'groups', 'group', 'trainees', 'modules', 'attendance', 'certificates', 'report', 'course-create', 'course-edit', 'scores'];
 
@@ -52,7 +52,7 @@ if (!function_exists('tc_nav')) {
   <div class="tc-sb-brand">
     <div class="av" id="sbAv">م</div>
     <div class="nm" id="sbName">مركز تدريبي</div>
-    <div class="rl" id="sbRole">تطبيق المركز التدريبي</div>
+    <div class="rl" id="sbRole">حقائب · مدربون · متدربون · شهادات</div>
   </div>
   <nav class="tc-sb-nav grow">
     <!-- مركز -->
@@ -95,6 +95,7 @@ if (!function_exists('tc_nav')) {
       <?php
         tc_nav($tcActive, 'kit',           $tcRoot."center-kit.php?id={$tcKitId}", 'bi-grid', 'إدارة الحقيبة');
         tc_nav($tcActive, 'kit-materials', $tcRoot."center-kit-materials.php?kit={$tcKitId}", 'bi-collection', 'مواد الحقيبة');
+        tc_nav($tcActive, 'kit-attachments', $tcRoot."center-kit-attachments.php?kit={$tcKitId}", 'bi-paperclip', 'مرفقات الحقيبة');
         tc_nav($tcActive, 'kit-trainers',  $tcRoot."center-kit-trainers.php?kit={$tcKitId}", 'bi-person-workspace', 'مدربو الحقيبة');
         tc_nav($tcActive, 'kit-form',      $tcRoot."center-kit-form.php?id={$tcKitId}", 'bi-pencil-square', 'تعديل الحقيبة');
         tc_nav($tcActive, 'kit-programs',  $tcRoot."center-kit-programs.php?kit={$tcKitId}", 'bi-journal-bookmark', 'البرامج');
@@ -144,7 +145,7 @@ function tcApplyWorkspaceNav(){
     document.querySelectorAll('[data-ws="trainer"]').forEach(el => { el.hidden = !isTrainer; });
     document.querySelectorAll('[data-center-only]').forEach(el => { el.hidden = !!isTrainer; });
     const roleEl=document.getElementById('sbRole');
-    if(roleEl) roleEl.textContent = isTrainer ? 'تطبيق المدرب' : 'تطبيق المركز التدريبي';
+    if(roleEl) roleEl.textContent = isTrainer ? 'تطبيق المدرب' : 'حقائب · مدربون · متدربون · شهادات';
   }catch(e){}
 }
 document.addEventListener('DOMContentLoaded', ()=>{

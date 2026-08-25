@@ -282,14 +282,11 @@ $pageTitle = 'تسجيل احتياج';
         <div class="form-step step-specific" data-step="2">
           <span class="step-num">٢</span><span class="step-label">تصنيف الاحتياج</span>
         </div>
-        <div class="form-step step-specific" data-step="3">
-          <span class="step-num">٣</span><span class="step-label">التصنيف الوطني</span>
+        <div class="form-step" data-step="3">
+          <span class="step-num">٣</span><span class="step-label">الموقع الجغرافي</span>
         </div>
-        <div class="form-step" data-step="4">
-          <span class="step-num">٤</span><span class="step-label">الموقع الجغرافي</span>
-        </div>
-        <div class="form-step step-specific" data-step="5">
-          <span class="step-num">٥</span><span class="step-label">المستفيدون والتفاصيل</span>
+        <div class="form-step step-specific" data-step="4">
+          <span class="step-num">٤</span><span class="step-label">المستفيدون والتفاصيل</span>
         </div>
       </div>
 
@@ -416,84 +413,13 @@ $pageTitle = 'تسجيل احتياج';
               <i class="bi bi-arrow-right me-1"></i>السابق
             </button>
             <button type="button" class="btn btn-brand btn-next" data-next="3">
-              التالي: التصنيف الوطني <i class="bi bi-arrow-left ms-1"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- ══════════ الخطوة 3: التصنيف الوطني SyrSIC ══════════ -->
-        <div class="form-panel" data-panel="3">
-
-          <div class="section-card">
-            <div class="section-card-title">
-              <span class="icon">🏭</span>التصنيف الوطني للأنشطة الاقتصادية (SyrSIC)
-            </div>
-            <p class="text-muted small mb-3">
-              ابحث باسم النشاط أو بالكود الرقمي مباشرةً — مثلاً: اكتب "<strong>مساحيق</strong>" أو "<strong>10801</strong>".
-              تظهر النتائج فوراً مع مسار الهرمية الكاملة.
-            </p>
-
-            <!-- حقل البحث الذكي -->
-            <div class="syrsic-search-wrap mb-3">
-              <label class="form-label">ابحث عن النشاط <span class="text-danger">*</span></label>
-              <input
-                type="text"
-                id="syrsicSearchInput"
-                class="form-control form-control-lg"
-                placeholder="اكتب اسم النشاط أو رقم الكود... (مثال: مساحيق، 108، بناء، مطعم)"
-                autocomplete="off"
-                dir="rtl"
-              >
-              <div id="syrsicResults" class="syrsic-results" role="listbox"></div>
-            </div>
-
-            <!-- الحقول المخفية للبيانات -->
-            <input type="hidden" name="syrsic_section"  id="hSyrsicSection">
-            <input type="hidden" name="syrsic_division" id="hSyrsicDivision">
-            <input type="hidden" name="syrsic_group"    id="hSyrsicGroup">
-            <input type="hidden" name="syrsic_class"    id="hSyrsicClass">
-            <input type="hidden" name="syrsic_activity" id="hSyrsicActivity">
-            <input type="hidden" name="sector"          id="hSector">
-            <input type="hidden" name="economic_sector" id="hEconomicSector">
-
-            <!-- عرض النشاط المختار -->
-            <div id="activityCodeBox" class="activity-code-box">
-              <div class="d-flex align-items-start flex-wrap gap-3">
-                <div>
-                  <div class="small text-muted mb-1">كود النشاط (SyrSIC)</div>
-                  <div class="code" id="activityCodeDisplay">—</div>
-                </div>
-                <div style="flex:1; min-width:160px">
-                  <div class="small text-muted mb-1">اسم النشاط التفصيلي</div>
-                  <div class="fw-semibold" id="activityNameDisplay" style="font-size:14px">—</div>
-                </div>
-                <div>
-                  <div class="small text-muted mb-1">الباب / القطاع</div>
-                  <div class="label" id="activitySectionDisplay">—</div>
-                </div>
-                <div>
-                  <div class="small text-muted mb-1">المسار الكامل</div>
-                  <div class="label text-muted" id="activityPathDisplay" style="font-size:11px">—</div>
-                </div>
-              </div>
-              <button type="button" id="clearActivityBtn" class="btn btn-sm btn-outline-secondary mt-2">
-                ✕ تغيير النشاط
-              </button>
-            </div>
-          </div>
-
-          <div class="nav-btns">
-            <button type="button" class="btn btn-outline-secondary btn-prev" data-prev="2">
-              <i class="bi bi-arrow-right me-1"></i>السابق
-            </button>
-            <button type="button" class="btn btn-brand btn-next" data-next="4">
               التالي: الموقع الجغرافي <i class="bi bi-arrow-left ms-1"></i>
             </button>
           </div>
         </div>
 
-        <!-- ══════════ الخطوة 4: الموقع الجغرافي ══════════ -->
-        <div class="form-panel" data-panel="4">
+        <!-- ══════════ الخطوة 3: الموقع الجغرافي ══════════ -->
+        <div class="form-panel" data-panel="3">
 
           <div class="section-card">
             <div class="section-card-title"><span class="icon">📍</span>الموقع الإداري</div>
@@ -535,21 +461,21 @@ $pageTitle = 'تسجيل احتياج';
           </div>
 
           <div class="nav-btns">
-            <button type="button" class="btn btn-outline-secondary btn-prev" data-prev="3">
+            <button type="button" class="btn btn-outline-secondary btn-prev" data-prev="2">
               <i class="bi bi-arrow-right me-1"></i>السابق
             </button>
-            <button type="button" class="btn btn-brand btn-next" data-next="5">
+            <button type="button" class="btn btn-brand btn-next" data-next="4">
               التالي: المستفيدون <i class="bi bi-arrow-left ms-1"></i>
             </button>
           </div>
         </div>
 
-        <!-- ══════════ الخطوة 5: المستفيدون والتفاصيل ══════════ -->
-        <div class="form-panel" data-panel="5">
+        <!-- ══════════ الخطوة 4: المستفيدون والتفاصيل ══════════ -->
+        <div class="form-panel" data-panel="4">
 
           <div class="section-card">
             <div class="section-card-title"><span class="icon">👥</span>المستفيدون</div>
-            <p class="text-muted small mb-3">عدد المستفيدين مرتبط بكود النشاط المختار — راجع التقدير أدناه وعدّله حسب الحاجة.</p>
+            <p class="text-muted small mb-3">أدخل أعداد المستفيدين وفرص العمل المتوقعة حسب تقديرك للاحتياج.</p>
             <div class="row g-3">
               <div class="col-md-4">
                 <label class="form-label">إجمالي المستفيدين المتوقع</label>
@@ -666,7 +592,7 @@ $pageTitle = 'تسجيل احتياج';
           </div>
 
           <div class="nav-btns">
-            <button type="button" class="btn btn-outline-secondary btn-prev" data-prev="4">
+            <button type="button" class="btn btn-outline-secondary btn-prev" data-prev="3">
               <i class="bi bi-arrow-right me-1"></i>السابق
             </button>
             <button type="submit" class="btn btn-brand px-5" id="submitBtn">
@@ -694,9 +620,8 @@ $pageTitle = 'تسجيل احتياج';
 <?php include $basePath . 'includes/layout/app-shell-close.php'; ?>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="<?php echo $basePath; ?>assets/js/pages/syria-geo-config.js?v=1.0"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/syrsic-data.js?v=2.1"></script>
 <script src="<?php echo $basePath; ?>assets/js/pages/needs-platform.js?v=1.0"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/need-create.js?v=4.20"></script>
+<script src="<?php echo $basePath; ?>assets/js/pages/need-create.js?v=4.21"></script>
 <script src="<?php echo $basePath; ?>assets/js/pages/needs-ai-fab.js?v=1.0"></script>
 </body>
 </html>

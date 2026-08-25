@@ -40,8 +40,8 @@ class SelfRegistrationCatalog
                     'center' => [
                         'label' => ['ar' => 'مركز تدريبي', 'en' => 'Training center'],
                         'description' => [
-                            'ar' => 'تسجيل مركز تدريبي للاعتماد وإدارة البرامج والشهادات.',
-                            'en' => 'Register a training center for accreditation and program management.',
+                            'ar' => 'رفع الحقائب، إدارة المدربين والمتدربين، وإصدار شهادات بسيطة للناجحين.',
+                            'en' => 'Upload training kits, manage trainers and trainees, and issue simple certificates.',
                         ],
                         'role' => 'center_user',
                         'entity_type' => 'center_user',

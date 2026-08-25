@@ -16,6 +16,7 @@ $pageTitle  = 'عرض المدربين';
     <button type="button" class="ic" onclick="location.reload()" aria-label="تحديث"><i class="bi bi-arrow-clockwise"></i></button>
   </div>
   <div class="tc-content">
+    <p style="margin:0 0 14px;color:#64748b;font-size:.9rem;line-height:1.7">إدارة مدربي المركز وربطهم بالحقائب والدورات.</p>
     <div id="tcTrainers"><div class="tc-spin">جاري التحميل...</div></div>
   </div>
 </div>

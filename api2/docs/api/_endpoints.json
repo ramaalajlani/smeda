@@ -2027,7 +2027,13 @@
         "status": "فعال",
         "status_note": "",
         "path_params": [],
-        "query_params": [],
+        "query_params": [
+            {
+                "name": "lite",
+                "type": "boolean",
+                "source": "controller"
+            }
+        ],
         "validation_rules": [],
         "form_request": null,
         "authorizations": [],
@@ -2133,6 +2139,11 @@
             {
                 "name": "governorate_id",
                 "type": "filled filter",
+                "source": "controller"
+            },
+            {
+                "name": "lite",
+                "type": "boolean",
                 "source": "controller"
             }
         ],
@@ -3144,6 +3155,11 @@
                 "source": "controller"
             },
             {
+                "name": "governorate_id",
+                "type": "filled filter",
+                "source": "controller"
+            },
+            {
                 "name": "per_page",
                 "type": "integer",
                 "default": "20",
@@ -3154,6 +3170,12 @@
                 "name": "status",
                 "type": "string",
                 "source": "controller"
+            },
+            {
+                "name": "q",
+                "type": "string",
+                "min_length": "2",
+                "source": "search"
             }
         ],
         "validation_rules": [],
@@ -3215,7 +3237,13 @@
                 "description": "معرف رقمي للسجل"
             }
         ],
-        "query_params": [],
+        "query_params": [
+            {
+                "name": "summary",
+                "type": "boolean",
+                "source": "controller"
+            }
+        ],
         "validation_rules": [],
         "form_request": null,
         "authorizations": [
@@ -3387,6 +3415,10 @@
                 "nullable",
                 "in:idea,startup,existing,expansion"
             ],
+            "project_status": [
+                "nullable",
+                "in:existing,new"
+            ],
             "requested_amount": [
                 "required",
                 "numeric",
@@ -3400,6 +3432,10 @@
             "financing_type": [
                 "nullable",
                 "in:capital,working_capital,mixed"
+            ],
+            "financing_mode": [
+                "nullable",
+                "in:islamic,conventional,both"
             ],
             "repayment_period_months": [
                 "nullable",
@@ -3415,6 +3451,54 @@
                 "string"
             ],
             "details": [
+                "nullable",
+                "array"
+            ],
+            "details.owner_experience": [
+                "nullable",
+                "string"
+            ],
+            "details.employees_count": [
+                "nullable",
+                "integer",
+                "min:0"
+            ],
+            "details.monthly_revenue": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "details.monthly_expenses": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "details.existing_debts": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "details.assets_description": [
+                "nullable",
+                "string"
+            ],
+            "details.market_description": [
+                "nullable",
+                "string"
+            ],
+            "details.challenges": [
+                "nullable",
+                "string"
+            ],
+            "details.requested_support": [
+                "nullable",
+                "string"
+            ],
+            "details.notes": [
+                "nullable",
+                "string"
+            ],
+            "details.extra_data": [
                 "nullable",
                 "array"
             ]
@@ -3500,6 +3584,16 @@
                 "email",
                 "max:255"
             ],
+            "governorate_id": [
+                "nullable",
+                "integer",
+                "exists:governorates,id"
+            ],
+            "branch_id": [
+                "nullable",
+                "integer",
+                "exists:branches,id"
+            ],
             "project_name": [
                 "sometimes",
                 "string",
@@ -3523,6 +3617,10 @@
                 "nullable",
                 "in:idea,startup,existing,expansion"
             ],
+            "project_status": [
+                "nullable",
+                "in:existing,new"
+            ],
             "requested_amount": [
                 "sometimes",
                 "numeric",
@@ -3536,6 +3634,10 @@
             "financing_type": [
                 "nullable",
                 "in:capital,working_capital,mixed"
+            ],
+            "financing_mode": [
+                "nullable",
+                "in:islamic,conventional,both"
             ],
             "repayment_period_months": [
                 "nullable",
@@ -3551,6 +3653,54 @@
                 "string"
             ],
             "details": [
+                "nullable",
+                "array"
+            ],
+            "details.owner_experience": [
+                "nullable",
+                "string"
+            ],
+            "details.employees_count": [
+                "nullable",
+                "integer",
+                "min:0"
+            ],
+            "details.monthly_revenue": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "details.monthly_expenses": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "details.existing_debts": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "details.assets_description": [
+                "nullable",
+                "string"
+            ],
+            "details.market_description": [
+                "nullable",
+                "string"
+            ],
+            "details.challenges": [
+                "nullable",
+                "string"
+            ],
+            "details.requested_support": [
+                "nullable",
+                "string"
+            ],
+            "details.notes": [
+                "nullable",
+                "string"
+            ],
+            "details.extra_data": [
                 "nullable",
                 "array"
             ]
@@ -7422,6 +7572,11 @@
                 "type": "string",
                 "min_length": "2",
                 "source": "search"
+            },
+            {
+                "name": "lite",
+                "type": "boolean",
+                "source": "controller"
             }
         ],
         "validation_rules": [],
@@ -7653,16 +7808,17 @@
                 "source": "controller"
             },
             {
-                "name": "branch_id",
-                "type": "filled filter",
-                "source": "controller"
-            },
-            {
                 "name": "per_page",
                 "type": "integer",
                 "default": "25",
-                "max": "100",
+                "max": "2000",
                 "source": "pagination"
+            },
+            {
+                "name": "q",
+                "type": "string",
+                "min_length": "2",
+                "source": "search"
             },
             {
                 "name": "district_name",
@@ -7670,15 +7826,9 @@
                 "source": "controller"
             },
             {
-                "name": "is_active",
-                "type": "boolean",
-                "source": "controller"
-            },
-            {
-                "name": "q",
+                "name": "level",
                 "type": "string",
-                "min_length": "2",
-                "source": "search"
+                "source": "controller"
             }
         ],
         "validation_rules": [],
@@ -7692,7 +7842,6 @@
         ],
         "has_file_upload": false,
         "status_codes": [
-            100,
             200,
             401,
             403,
@@ -8011,6 +8160,357 @@
         "notes": []
     },
     {
+        "key": "GET api/needs/lookups/manage",
+        "method": "GET",
+        "uri": "api/needs/lookups/manage",
+        "route_name": null,
+        "module": "Needs GIS",
+        "controller": "App\\Http\\Controllers\\Api\\NeedLookupAdminController",
+        "controller_short": "NeedLookupAdminController",
+        "action": "index",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "needs.manage_lookups"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "manageLookups @ Need::class"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/needs/lookups/manage",
+        "full_url_production": "https://smeda.gov.sy/api/api/needs/lookups/manage",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/needs/lookups/manage",
+        "method": "POST",
+        "uri": "api/needs/lookups/manage",
+        "route_name": null,
+        "module": "Needs GIS",
+        "controller": "App\\Http\\Controllers\\Api\\NeedLookupAdminController",
+        "controller_short": "NeedLookupAdminController",
+        "action": "storeLookup",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "needs.manage_lookups"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": {
+            "lookup_type": [
+                "required"
+            ],
+            "value": [
+                "required",
+                "string",
+                "max:100"
+            ],
+            "label": [
+                "required",
+                "string",
+                "max:255"
+            ],
+            "sort_order": [
+                "nullable",
+                "integer",
+                "min:0"
+            ],
+            "value.regex": [
+                "القيمة يجب أن تكون بأحرف لاتينية صغيرة وأرقام وشرطة سفلية فقط."
+            ]
+        },
+        "form_request": null,
+        "authorizations": [
+            "manageLookups @ Need::class"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/needs/lookups/manage",
+        "full_url_production": "https://smeda.gov.sy/api/api/needs/lookups/manage",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PUT api/needs/lookups/manage/{id}",
+        "method": "PUT",
+        "uri": "api/needs/lookups/manage/{id}",
+        "route_name": null,
+        "module": "Needs GIS",
+        "controller": "App\\Http\\Controllers\\Api\\NeedLookupAdminController",
+        "controller_short": "NeedLookupAdminController",
+        "action": "updateLookup",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "needs.manage_lookups"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "label": [
+                "sometimes",
+                "string",
+                "max:255"
+            ],
+            "sort_order": [
+                "sometimes",
+                "integer",
+                "min:0"
+            ],
+            "is_active": [
+                "sometimes",
+                "boolean"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [
+            "manageLookups @ Need::class"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/needs/lookups/manage/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/needs/lookups/manage/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/needs/sectors",
+        "method": "POST",
+        "uri": "api/needs/sectors",
+        "route_name": null,
+        "module": "Needs GIS",
+        "controller": "App\\Http\\Controllers\\Api\\NeedLookupAdminController",
+        "controller_short": "NeedLookupAdminController",
+        "action": "storeSector",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "needs.manage_lookups"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": {
+            "code": [
+                "required",
+                "string",
+                "max:50"
+            ],
+            "name_ar": [
+                "required",
+                "string",
+                "max:255"
+            ],
+            "sort_order": [
+                "nullable",
+                "integer",
+                "min:0"
+            ],
+            "code.regex": [
+                "الكود يجب أن يكون بأحرف لاتينية صغيرة وأرقام وشرطة سفلية فقط."
+            ]
+        },
+        "form_request": null,
+        "authorizations": [
+            "manageLookups @ Need::class"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/needs/sectors",
+        "full_url_production": "https://smeda.gov.sy/api/api/needs/sectors",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PUT api/needs/sectors/{id}",
+        "method": "PUT",
+        "uri": "api/needs/sectors/{id}",
+        "route_name": null,
+        "module": "Needs GIS",
+        "controller": "App\\Http\\Controllers\\Api\\NeedLookupAdminController",
+        "controller_short": "NeedLookupAdminController",
+        "action": "updateSector",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:needs.manage_lookups"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "needs.manage_lookups"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "name_ar": [
+                "sometimes",
+                "string",
+                "max:255"
+            ],
+            "sort_order": [
+                "sometimes",
+                "integer",
+                "min:0"
+            ],
+            "is_active": [
+                "sometimes",
+                "boolean"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [
+            "manageLookups @ Need::class"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/needs/sectors/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/needs/sectors/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "PUT api/needs/{id}",
         "method": "PUT",
         "uri": "api/needs/{id}",
@@ -8314,6 +8814,135 @@
         "notes": []
     },
     {
+        "key": "POST api/needs/ai-suggest",
+        "method": "POST",
+        "uri": "api/needs/ai-suggest",
+        "route_name": null,
+        "module": "Needs GIS",
+        "controller": "App\\Http\\Controllers\\Api\\NeedController",
+        "controller_short": "NeedController",
+        "action": "aiSuggest",
+        "middleware": [
+            "api",
+            "auth:sanctum"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": {
+            "title": [
+                "nullable",
+                "string",
+                "max:255"
+            ],
+            "description": [
+                "nullable",
+                "string",
+                "max:5000"
+            ],
+            "sector": [
+                "nullable",
+                "string",
+                "max:100"
+            ],
+            "district_name": [
+                "nullable",
+                "string",
+                "max:150"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [
+            "viewAny @ Need::class"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/needs/ai-suggest",
+        "full_url_production": "https://smeda.gov.sy/api/api/needs/ai-suggest",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/needs/{id}/ai-suggest",
+        "method": "POST",
+        "uri": "api/needs/{id}/ai-suggest",
+        "route_name": null,
+        "module": "Needs GIS",
+        "controller": "App\\Http\\Controllers\\Api\\NeedController",
+        "controller_short": "NeedController",
+        "action": "aiSuggestForNeed",
+        "middleware": [
+            "api",
+            "auth:sanctum"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "view @ $need"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/needs/{id}/ai-suggest",
+        "full_url_production": "https://smeda.gov.sy/api/api/needs/{id}/ai-suggest",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "POST api/needs/{id}/classify",
         "method": "POST",
         "uri": "api/needs/{id}/classify",
@@ -8443,6 +9072,662 @@
         "notes": []
     },
     {
+        "key": "POST api/ai/chat",
+        "method": "POST",
+        "uri": "api/ai/chat",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "chat",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": {
+            "message": [
+                "required",
+                "string",
+                "max:5000"
+            ],
+            "department_id": [
+                "sometimes",
+                "nullable",
+                "string",
+                "max:64"
+            ],
+            "message.required": [
+                "اكتب رسالتك أولاً."
+            ],
+            "message.max": [
+                "الرسالة طويلة جداً (الحد الأقصى 5000 حرف)."
+            ],
+            "department_id.regex": [
+                "معرّف القسم غير صالح."
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/chat",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/chat",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/ai/chat/continue",
+        "method": "POST",
+        "uri": "api/ai/chat/continue",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "continueReply",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/chat/continue",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/chat/continue",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/ai/chat/reset",
+        "method": "POST",
+        "uri": "api/ai/chat/reset",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "reset",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            429,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/chat/reset",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/chat/reset",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/ai/isic4/classify",
+        "method": "POST",
+        "uri": "api/ai/isic4/classify",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "isic4",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": {
+            "description": [
+                "required",
+                "string",
+                "max:2000"
+            ],
+            "description.required": [
+                "اكتب وصف النشاط أولاً."
+            ],
+            "description.max": [
+                "الوصف طويل جداً (الحد الأقصى 2000 حرف)."
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/isic4/classify",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/isic4/classify",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/ai/config",
+        "method": "GET",
+        "uri": "api/ai/config",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "config",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            429,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/config",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/config",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/ai/chat/history",
+        "method": "GET",
+        "uri": "api/ai/chat/history",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "history",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/chat/history",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/chat/history",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/ai/chat/history/{session}/messages",
+        "method": "GET",
+        "uri": "api/ai/chat/history/{session}/messages",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "historyMessages",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "session",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/chat/history/{session}/messages",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/chat/history/{session}/messages",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/ai/chat/history/{session}/resume",
+        "method": "POST",
+        "uri": "api/ai/chat/history/{session}/resume",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "resume",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "session",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/chat/history/{session}/resume",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/chat/history/{session}/resume",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/ai/knowledge/departments",
+        "method": "GET",
+        "uri": "api/ai/knowledge/departments",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "knowledgeDepartments",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/knowledge/departments",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/knowledge/departments",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/ai/knowledge/{department}",
+        "method": "GET",
+        "uri": "api/ai/knowledge/{department}",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "knowledgeItems",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "department",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "limit": [
+                "sometimes",
+                "integer",
+                "min:1",
+                "max:200"
+            ],
+            "offset": [
+                "sometimes",
+                "nullable",
+                "string",
+                "max:128"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            422,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/knowledge/{department}",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/knowledge/{department}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/ai/knowledge/ingest",
+        "method": "POST",
+        "uri": "api/ai/knowledge/ingest",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\AiChatController",
+        "controller_short": "AiChatController",
+        "action": "knowledgeIngest",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat",
+            "permission:manage_ai_knowledge"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "throttle:ai-chat",
+            "permission:manage_ai_knowledge"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_ai_knowledge"
+        ],
+        "roles": [],
+        "rate_limits": [
+            "throttle:ai-chat"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": {
+            "department_id": [
+                "required",
+                "string",
+                "max:64"
+            ],
+            "text": [
+                "nullable",
+                "string",
+                "max:200000"
+            ],
+            "files": [
+                "nullable",
+                "array",
+                "max:10"
+            ],
+            "files.*": [
+                "file",
+                "max:20480"
+            ],
+            "department_id.required": [
+                "حدّد القسم أولاً."
+            ],
+            "department_id.regex": [
+                "معرّف القسم غير صالح."
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": true,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            429,
+            500,
+            502
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/ai/knowledge/ingest",
+        "full_url_production": "https://smeda.gov.sy/api/api/ai/knowledge/ingest",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "GET api/trainers",
         "method": "GET",
         "uri": "api/trainers",
@@ -8534,6 +9819,62 @@
         "notes": []
     },
     {
+        "key": "POST api/trainers",
+        "method": "POST",
+        "uri": "api/trainers",
+        "route_name": null,
+        "module": "Trainers",
+        "controller": "App\\Http\\Controllers\\Api\\TrainerController",
+        "controller_short": "TrainerController",
+        "action": "store",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainers",
+            "permission:manage_trainers"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainers",
+            "permission:manage_trainers"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_trainers",
+            "manage_trainers"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "create @ Trainer::class"
+        ],
+        "resource": "TrainerResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/trainers",
+        "full_url_production": "https://smeda.gov.sy/api/api/trainers",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "GET api/trainers/{id}",
         "method": "GET",
         "uri": "api/trainers/{id}",
@@ -8573,6 +9914,130 @@
         "form_request": null,
         "authorizations": [
             "view @ $trainer"
+        ],
+        "resource": "TrainerResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/trainers/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/trainers/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PUT api/trainers/{id}",
+        "method": "PUT",
+        "uri": "api/trainers/{id}",
+        "route_name": null,
+        "module": "Trainers",
+        "controller": "App\\Http\\Controllers\\Api\\TrainerController",
+        "controller_short": "TrainerController",
+        "action": "update",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainers",
+            "permission:manage_trainers"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainers",
+            "permission:manage_trainers"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_trainers",
+            "manage_trainers"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "update @ $trainer"
+        ],
+        "resource": "TrainerResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/trainers/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/trainers/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PATCH api/trainers/{id}",
+        "method": "PATCH",
+        "uri": "api/trainers/{id}",
+        "route_name": null,
+        "module": "Trainers",
+        "controller": "App\\Http\\Controllers\\Api\\TrainerController",
+        "controller_short": "TrainerController",
+        "action": "update",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainers",
+            "permission:manage_trainers"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainers",
+            "permission:manage_trainers"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_trainers",
+            "manage_trainers"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "update @ $trainer"
         ],
         "resource": "TrainerResource",
         "ownership_checks": [
@@ -9174,6 +10639,62 @@
         "notes": []
     },
     {
+        "key": "POST api/trainees",
+        "method": "POST",
+        "uri": "api/trainees",
+        "route_name": null,
+        "module": "Trainees",
+        "controller": "App\\Http\\Controllers\\Api\\TraineeController",
+        "controller_short": "TraineeController",
+        "action": "store",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainees",
+            "permission:manage_trainees"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainees",
+            "permission:manage_trainees"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_trainees",
+            "manage_trainees"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "create @ Trainee::class"
+        ],
+        "resource": "TraineeResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/trainees",
+        "full_url_production": "https://smeda.gov.sy/api/api/trainees",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "GET api/trainees/{id}",
         "method": "GET",
         "uri": "api/trainees/{id}",
@@ -9213,6 +10734,130 @@
         "form_request": null,
         "authorizations": [
             "view @ $trainee"
+        ],
+        "resource": "TraineeResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/trainees/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/trainees/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PUT api/trainees/{id}",
+        "method": "PUT",
+        "uri": "api/trainees/{id}",
+        "route_name": null,
+        "module": "Trainees",
+        "controller": "App\\Http\\Controllers\\Api\\TraineeController",
+        "controller_short": "TraineeController",
+        "action": "update",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainees",
+            "permission:manage_trainees"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainees",
+            "permission:manage_trainees"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_trainees",
+            "manage_trainees"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "update @ $trainee"
+        ],
+        "resource": "TraineeResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/trainees/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/trainees/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PATCH api/trainees/{id}",
+        "method": "PATCH",
+        "uri": "api/trainees/{id}",
+        "route_name": null,
+        "module": "Trainees",
+        "controller": "App\\Http\\Controllers\\Api\\TraineeController",
+        "controller_short": "TraineeController",
+        "action": "update",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainees",
+            "permission:manage_trainees"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainees",
+            "permission:manage_trainees"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_trainees",
+            "manage_trainees"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "update @ $trainee"
         ],
         "resource": "TraineeResource",
         "ownership_checks": [
@@ -10432,6 +12077,16 @@
                 "source": "pagination"
             },
             {
+                "name": "training_center_id",
+                "type": "mixed",
+                "source": "controller"
+            },
+            {
+                "name": "trainer_id",
+                "type": "mixed",
+                "source": "controller"
+            },
+            {
                 "name": "status",
                 "type": "mixed",
                 "source": "controller"
@@ -10467,7 +12122,17 @@
                 "source": "controller"
             },
             {
+                "name": "with_centers",
+                "type": "boolean",
+                "source": "controller"
+            },
+            {
                 "name": "with_programs",
+                "type": "boolean",
+                "source": "controller"
+            },
+            {
+                "name": "with_counts",
                 "type": "boolean",
                 "source": "controller"
             },
@@ -10479,13 +12144,73 @@
         ],
         "validation_rules": [],
         "form_request": null,
-        "authorizations": [],
+        "authorizations": [
+            "viewAny @ TrainingKit::class"
+        ],
         "resource": "TrainingKitResource::collection",
-        "ownership_checks": [],
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
         "has_file_upload": false,
         "status_codes": [
             100,
             200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-kits",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-kits",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-kits",
+        "method": "POST",
+        "uri": "api/training-kits",
+        "route_name": null,
+        "module": "Training Kits",
+        "controller": "App\\Http\\Controllers\\Api\\TrainingKitController",
+        "controller_short": "TrainingKitController",
+        "action": "store",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_kits",
+            "manage_kits"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "create @ TrainingKit::class"
+        ],
+        "resource": "TrainingKitResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
             401,
             403,
             404,
@@ -10535,9 +12260,13 @@
         "query_params": [],
         "validation_rules": [],
         "form_request": null,
-        "authorizations": [],
+        "authorizations": [
+            "view @ $kit"
+        ],
         "resource": "TrainingKitResource",
-        "ownership_checks": [],
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
         "has_file_upload": false,
         "status_codes": [
             200,
@@ -10548,6 +12277,373 @@
         ],
         "full_url_local": "http://127.0.0.1:8000/api/training-kits/{id}",
         "full_url_production": "https://smeda.gov.sy/api/api/training-kits/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PUT api/training-kits/{id}",
+        "method": "PUT",
+        "uri": "api/training-kits/{id}",
+        "route_name": null,
+        "module": "Training Kits",
+        "controller": "App\\Http\\Controllers\\Api\\TrainingKitController",
+        "controller_short": "TrainingKitController",
+        "action": "update",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_kits",
+            "manage_kits"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "update @ $kit"
+        ],
+        "resource": "TrainingKitResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-kits/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-kits/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PATCH api/training-kits/{id}",
+        "method": "PATCH",
+        "uri": "api/training-kits/{id}",
+        "route_name": null,
+        "module": "Training Kits",
+        "controller": "App\\Http\\Controllers\\Api\\TrainingKitController",
+        "controller_short": "TrainingKitController",
+        "action": "update",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_kits",
+            "manage_kits"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "update @ $kit"
+        ],
+        "resource": "TrainingKitResource",
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-kits/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-kits/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/training-kits/{id}/materials",
+        "method": "GET",
+        "uri": "api/training-kits/{id}/materials",
+        "route_name": null,
+        "module": "Training Kits",
+        "controller": "App\\Http\\Controllers\\Api\\KitMaterialController",
+        "controller_short": "KitMaterialController",
+        "action": "index",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_kits"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-kits/{id}/materials",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-kits/{id}/materials",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-kits/{id}/materials",
+        "method": "POST",
+        "uri": "api/training-kits/{id}/materials",
+        "route_name": null,
+        "module": "Training Kits",
+        "controller": "App\\Http\\Controllers\\Api\\KitMaterialController",
+        "controller_short": "KitMaterialController",
+        "action": "store",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_kits",
+            "manage_kits"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-kits/{id}/materials",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-kits/{id}/materials",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "PUT api/training-kits/{id}/materials/{materialId}",
+        "method": "PUT",
+        "uri": "api/training-kits/{id}/materials/{materialId}",
+        "route_name": null,
+        "module": "Training Kits",
+        "controller": "App\\Http\\Controllers\\Api\\KitMaterialController",
+        "controller_short": "KitMaterialController",
+        "action": "update",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_kits",
+            "manage_kits"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            },
+            {
+                "name": "materialId",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-kits/{id}/materials/{materialId}",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-kits/{id}/materials/{materialId}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "DELETE api/training-kits/{id}/materials/{materialId}",
+        "method": "DELETE",
+        "uri": "api/training-kits/{id}/materials/{materialId}",
+        "route_name": null,
+        "module": "Training Kits",
+        "controller": "App\\Http\\Controllers\\Api\\KitMaterialController",
+        "controller_short": "KitMaterialController",
+        "action": "destroy",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_kits",
+            "permission:manage_kits"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_kits",
+            "manage_kits"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            },
+            {
+                "name": "materialId",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            204,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-kits/{id}/materials/{materialId}",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-kits/{id}/materials/{materialId}",
         "is_api": true,
         "is_signed": false,
         "notes": []
@@ -12321,6 +14417,1026 @@
         "notes": []
     },
     {
+        "key": "GET api/training-courses/{id}/modules",
+        "method": "GET",
+        "uri": "api/training-courses/{id}/modules",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\TrainingCourseController",
+        "controller_short": "TrainingCourseController",
+        "action": "modules",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_courses|view_course_details"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "view @ $course"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/modules",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/modules",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/training-courses/{id}/sessions",
+        "method": "GET",
+        "uri": "api/training-courses/{id}/sessions",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseSessionController",
+        "controller_short": "CourseSessionController",
+        "action": "index",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_courses|view_course_details"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [
+            {
+                "name": "group_id",
+                "type": "integer",
+                "source": "controller"
+            }
+        ],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/sessions",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/sessions",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-courses/{id}/sessions",
+        "method": "POST",
+        "uri": "api/training-courses/{id}/sessions",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseSessionController",
+        "controller_short": "CourseSessionController",
+        "action": "store",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_courses|manage_trainees|trainer_user"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "session_date": [
+                "required",
+                "date"
+            ],
+            "course_group_id": [
+                "nullable",
+                "integer"
+            ],
+            "program_module_id": [
+                "nullable",
+                "integer"
+            ],
+            "title": [
+                "nullable",
+                "string",
+                "max:255"
+            ],
+            "start_time": [
+                "nullable",
+                "string",
+                "max:8"
+            ],
+            "end_time": [
+                "nullable",
+                "string",
+                "max:8"
+            ],
+            "notes": [
+                "nullable",
+                "string"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/sessions",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/sessions",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/training-courses/{id}/sessions/{sessionId}/attendance",
+        "method": "GET",
+        "uri": "api/training-courses/{id}/sessions/{sessionId}/attendance",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseSessionController",
+        "controller_short": "CourseSessionController",
+        "action": "attendanceIndex",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_courses|view_course_details"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            },
+            {
+                "name": "sessionId",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/sessions/{sessionId}/attendance",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/sessions/{sessionId}/attendance",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-courses/{id}/sessions/{sessionId}/attendance",
+        "method": "POST",
+        "uri": "api/training-courses/{id}/sessions/{sessionId}/attendance",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseSessionController",
+        "controller_short": "CourseSessionController",
+        "action": "attendanceStore",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_courses|manage_trainees|trainer_user"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            },
+            {
+                "name": "sessionId",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "items": [
+                "required",
+                "array",
+                "min:1"
+            ],
+            "items.*.trainee_id": [
+                "required",
+                "integer"
+            ],
+            "items.*.status": [
+                "required",
+                "in:present,absent,late,excused"
+            ],
+            "items.*.minutes_attended": [
+                "nullable",
+                "integer",
+                "min:0"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/sessions/{sessionId}/attendance",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/sessions/{sessionId}/attendance",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/training-courses/{id}/module-scores",
+        "method": "GET",
+        "uri": "api/training-courses/{id}/module-scores",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\ModuleScoreController",
+        "controller_short": "ModuleScoreController",
+        "action": "index",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_courses|view_course_details"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [
+            {
+                "name": "module_id",
+                "type": "integer",
+                "source": "controller"
+            },
+            {
+                "name": "group_id",
+                "type": "integer",
+                "source": "controller"
+            }
+        ],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/module-scores",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/module-scores",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-courses/{id}/module-scores",
+        "method": "POST",
+        "uri": "api/training-courses/{id}/module-scores",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\ModuleScoreController",
+        "controller_short": "ModuleScoreController",
+        "action": "store",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_courses|manage_trainees|trainer_user"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "program_module_id": [
+                "required",
+                "integer"
+            ],
+            "max_score": [
+                "nullable",
+                "numeric",
+                "min:1"
+            ],
+            "pass_mark": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "items": [
+                "required",
+                "array",
+                "min:1"
+            ],
+            "items.*.trainee_id": [
+                "required",
+                "integer"
+            ],
+            "items.*.coursework_score": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ],
+            "items.*.exam_score": [
+                "nullable",
+                "numeric",
+                "min:0"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/module-scores",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/module-scores",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-courses/{id}/issue-certificates",
+        "method": "POST",
+        "uri": "api/training-courses/{id}/issue-certificates",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CertificateController",
+        "controller_short": "CertificateController",
+        "action": "issueForCourse",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:issue_certificates"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:issue_certificates"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "issue_certificates"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/issue-certificates",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/issue-certificates",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/training-courses/{id}/groups",
+        "method": "GET",
+        "uri": "api/training-courses/{id}/groups",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseGroupController",
+        "controller_short": "CourseGroupController",
+        "action": "index",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_courses|view_course_details"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/groups",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/groups",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/training-courses/{id}/ungrouped-trainees",
+        "method": "GET",
+        "uri": "api/training-courses/{id}/ungrouped-trainees",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseGroupController",
+        "controller_short": "CourseGroupController",
+        "action": "ungrouped",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_courses|view_course_details"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/ungrouped-trainees",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/ungrouped-trainees",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/training-courses/{id}/groups/{groupId}/trainees",
+        "method": "GET",
+        "uri": "api/training-courses/{id}/groups/{groupId}/trainees",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseGroupController",
+        "controller_short": "CourseGroupController",
+        "action": "trainees",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:view_courses|view_course_details"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_courses|view_course_details"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            },
+            {
+                "name": "groupId",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/groups/{groupId}/trainees",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/groups/{groupId}/trainees",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-courses/{id}/groups",
+        "method": "POST",
+        "uri": "api/training-courses/{id}/groups",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseGroupController",
+        "controller_short": "CourseGroupController",
+        "action": "store",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_courses|manage_trainees|trainer_user"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "name": [
+                "required",
+                "string",
+                "max:150"
+            ],
+            "code": [
+                "nullable",
+                "string",
+                "max:60"
+            ],
+            "capacity": [
+                "nullable",
+                "integer",
+                "min:1"
+            ],
+            "notes": [
+                "nullable",
+                "string"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/groups",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/groups",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "DELETE api/training-courses/{id}/groups/{groupId}",
+        "method": "DELETE",
+        "uri": "api/training-courses/{id}/groups/{groupId}",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseGroupController",
+        "controller_short": "CourseGroupController",
+        "action": "destroy",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_courses|manage_trainees|trainer_user"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            },
+            {
+                "name": "groupId",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            204,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/groups/{groupId}",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/groups/{groupId}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-courses/{id}/groups/{groupId}/assign",
+        "method": "POST",
+        "uri": "api/training-courses/{id}/groups/{groupId}/assign",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseGroupController",
+        "controller_short": "CourseGroupController",
+        "action": "assign",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_courses|manage_trainees|trainer_user"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            },
+            {
+                "name": "groupId",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "trainee_ids": [
+                "required",
+                "array",
+                "min:1"
+            ],
+            "trainee_ids.*": [
+                "integer"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/groups/{groupId}/assign",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/groups/{groupId}/assign",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "POST api/training-courses/{id}/groups/{groupId}/remove",
+        "method": "POST",
+        "uri": "api/training-courses/{id}/groups/{groupId}/remove",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\CourseGroupController",
+        "controller_short": "CourseGroupController",
+        "action": "remove",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:manage_courses|manage_trainees|trainer_user"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_courses|manage_trainees|trainer_user"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            },
+            {
+                "name": "groupId",
+                "required": true,
+                "type": "string",
+                "description": "معامل مسار"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": {
+            "trainee_ids": [
+                "required",
+                "array",
+                "min:1"
+            ],
+            "trainee_ids.*": [
+                "integer"
+            ]
+        },
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            201,
+            401,
+            403,
+            404,
+            422,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}/groups/{groupId}/remove",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}/groups/{groupId}/remove",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "POST api/training-courses/{id}/trainees",
         "method": "POST",
         "uri": "api/training-courses/{id}/trainees",
@@ -12827,6 +15943,62 @@
         "notes": []
     },
     {
+        "key": "DELETE api/training-courses/{id}",
+        "method": "DELETE",
+        "uri": "api/training-courses/{id}",
+        "route_name": null,
+        "module": "Training Courses",
+        "controller": "App\\Http\\Controllers\\Api\\TrainingCourseController",
+        "controller_short": "TrainingCourseController",
+        "action": "destroy",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:manage_courses"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:manage_courses"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "manage_courses"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            204,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/training-courses/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/training-courses/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "GET api/map/training-courses",
         "method": "GET",
         "uri": "api/map/training-courses",
@@ -12932,6 +16104,61 @@
         ],
         "full_url_local": "http://127.0.0.1:8000/api/map/trainers",
         "full_url_production": "https://smeda.gov.sy/api/api/map/trainers",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
+        "key": "GET api/map/trainees",
+        "method": "GET",
+        "uri": "api/map/trainees",
+        "route_name": null,
+        "module": "Maps",
+        "controller": "App\\Http\\Controllers\\Api\\TrainingMapController",
+        "controller_short": "TrainingMapController",
+        "action": "trainees",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainees",
+            "throttle:map-public"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "permission:view_trainees",
+            "throttle:map-public"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "view_trainees"
+        ],
+        "roles": [],
+        "rate_limits": [
+            "60 طلبات/دقيقة لكل IP"
+        ],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [
+            "hasPermissionTo() inline"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            401,
+            403,
+            404,
+            429,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/map/trainees",
+        "full_url_production": "https://smeda.gov.sy/api/api/map/trainees",
         "is_api": true,
         "is_signed": false,
         "notes": []
@@ -16368,7 +19595,7 @@
         "authorizations": [
             "viewAny @ User::class"
         ],
-        "resource": "UserAccessResource::collection",
+        "resource": "UserAccessListResource::collection",
         "ownership_checks": [
             "Policy authorize()"
         ],
@@ -16434,7 +19661,7 @@
         "validation_rules": [],
         "form_request": null,
         "authorizations": [],
-        "resource": "UserAccessResource::collection",
+        "resource": "UserAccessListResource::collection",
         "ownership_checks": [],
         "has_file_upload": false,
         "status_codes": [
@@ -17304,16 +20531,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17352,16 +20579,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17424,16 +20651,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17479,16 +20706,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17592,16 +20819,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17628,6 +20855,11 @@
                 "string",
                 "max:255"
             ],
+            "governorate_id": [
+                "nullable",
+                "integer",
+                "exists:governorates,id"
+            ],
             "phone": [
                 "nullable",
                 "string",
@@ -17645,6 +20877,10 @@
                 "nullable",
                 "url"
             ],
+            "bio": [
+                "nullable",
+                "string"
+            ],
             "license_number": [
                 "nullable",
                 "string",
@@ -17661,6 +20897,14 @@
             "notes": [
                 "nullable",
                 "string"
+            ],
+            "specializations": [
+                "nullable",
+                "array"
+            ],
+            "specializations.*": [
+                "string",
+                "max:10"
             ]
         },
         "form_request": null,
@@ -17683,6 +20927,62 @@
         "notes": []
     },
     {
+        "key": "DELETE api/consulting/offices/{id}",
+        "method": "DELETE",
+        "uri": "api/consulting/offices/{id}",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\ConsultingOfficeController",
+        "controller_short": "ConsultingOfficeController",
+        "action": "destroy",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [],
+        "resource": null,
+        "ownership_checks": [],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            204,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/consulting/offices/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/consulting/offices/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "POST api/consulting/offices/{id}/activate",
         "method": "POST",
         "uri": "api/consulting/offices/{id}/activate",
@@ -17694,16 +20994,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17750,16 +21050,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17806,16 +21106,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor"
+            "admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17873,16 +21173,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -17925,16 +21225,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18001,16 +21301,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18060,16 +21360,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18119,16 +21419,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:project_owner|admin|super_admin|system_admin|general_director|branch_manager|governor"
+            "role_or_permission:project_owner|admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|governor"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:project_owner|admin|super_admin|system_admin|general_director|branch_manager|governor"
+            "role_or_permission:project_owner|admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|governor"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "project_owner|admin|super_admin|system_admin|general_director|branch_manager|governor"
+            "project_owner|admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|governor"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18228,16 +21528,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18252,61 +21552,7 @@
             }
         ],
         "query_params": [],
-        "validation_rules": {
-            "category_code": [
-                "sometimes",
-                "string",
-                "max:10"
-            ],
-            "request_type": [
-                "sometimes",
-                "in:new_project,existing,financing,classification"
-            ],
-            "title": [
-                "sometimes",
-                "string",
-                "max:255"
-            ],
-            "description": [
-                "sometimes",
-                "string"
-            ],
-            "project_name": [
-                "nullable",
-                "string",
-                "max:255"
-            ],
-            "economic_activity": [
-                "nullable",
-                "string",
-                "max:255"
-            ],
-            "isic4_code": [
-                "nullable",
-                "string",
-                "max:10"
-            ],
-            "governorate_id": [
-                "nullable",
-                "integer",
-                "exists:governorates,id"
-            ],
-            "budget_min": [
-                "nullable",
-                "numeric",
-                "min:0"
-            ],
-            "budget_max": [
-                "nullable",
-                "numeric",
-                "min:0"
-            ],
-            "expected_duration_days": [
-                "nullable",
-                "integer",
-                "min:1"
-            ]
-        },
+        "validation_rules": [],
         "form_request": null,
         "authorizations": [
             "update @ $req"
@@ -18331,6 +21577,66 @@
         "notes": []
     },
     {
+        "key": "DELETE api/consulting/requests/{id}",
+        "method": "DELETE",
+        "uri": "api/consulting/requests/{id}",
+        "route_name": null,
+        "module": "Other Routes",
+        "controller": "App\\Http\\Controllers\\Api\\ConsultingRequestController",
+        "controller_short": "ConsultingRequestController",
+        "action": "destroy",
+        "middleware": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+        ],
+        "middleware_raw": [
+            "api",
+            "auth:sanctum",
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+        ],
+        "auth_type": "Bearer Token",
+        "permissions": [
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+        ],
+        "roles": [],
+        "rate_limits": [],
+        "status": "فعال",
+        "status_note": "",
+        "path_params": [
+            {
+                "name": "id",
+                "required": true,
+                "type": "string",
+                "description": "معرف رقمي للسجل"
+            }
+        ],
+        "query_params": [],
+        "validation_rules": [],
+        "form_request": null,
+        "authorizations": [
+            "delete @ $req"
+        ],
+        "resource": null,
+        "ownership_checks": [
+            "Policy authorize()"
+        ],
+        "has_file_upload": false,
+        "status_codes": [
+            200,
+            204,
+            401,
+            403,
+            404,
+            500
+        ],
+        "full_url_local": "http://127.0.0.1:8000/api/consulting/requests/{id}",
+        "full_url_production": "https://smeda.gov.sy/api/api/consulting/requests/{id}",
+        "is_api": true,
+        "is_signed": false,
+        "notes": []
+    },
+    {
         "key": "POST api/consulting/requests/{id}/submit",
         "method": "POST",
         "uri": "api/consulting/requests/{id}/submit",
@@ -18342,16 +21648,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18402,16 +21708,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18472,16 +21778,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18539,16 +21845,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18605,18 +21911,18 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office",
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office",
             "throttle:file-upload"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office",
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office",
             "throttle:file-upload"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [
@@ -18688,16 +21994,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18764,16 +22070,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18819,16 +22125,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18874,16 +22180,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18930,16 +22236,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -18996,18 +22302,18 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office",
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office",
             "throttle:file-upload"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office",
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office",
             "throttle:file-upload"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [
@@ -19094,16 +22400,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],
@@ -19160,16 +22466,16 @@
         "middleware": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "middleware_raw": [
             "api",
             "auth:sanctum",
-            "role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "auth_type": "Bearer Token",
         "permissions": [
-            "admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
+            "admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office"
         ],
         "roles": [],
         "rate_limits": [],

@@ -259,8 +259,9 @@ class TrainingDataScope
 
         if ($user->isCenterUser() && $user->training_center_id) {
             $centerId = (int) $user->training_center_id;
+            $userId = (int) $user->id;
 
-            return $query->where(function (Builder $scoped) use ($centerId) {
+            return $query->where(function (Builder $scoped) use ($centerId, $userId) {
                 $scoped->whereHas(
                     'centers',
                     fn (Builder $center) => $center->whereKey($centerId)
@@ -270,7 +271,7 @@ class TrainingDataScope
                 )->orWhereHas(
                     'trainers',
                     fn (Builder $trainer) => $trainer->where('training_center_id', $centerId)
-                );
+                )->orWhere('created_by', $userId);
             });
         }
 

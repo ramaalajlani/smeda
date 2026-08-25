@@ -2,7 +2,7 @@
 
 # توثيق API — منصة الهيئة (SMEDC)
 
-> **الإصدار:** 2.0.0 | **تاريخ التوليد:** 2026-07-16 17:57:29 | **المصدر:** كود Laravel الفعلي
+> **الإصدار:** 2.0.0 | **تاريخ التوليد:** 2026-08-16 05:48:03 | **المصدر:** كود Laravel الفعلي
 
 ## فهرس المحتويات
 
@@ -215,22 +215,22 @@ Content-Type: application/json
 | [Health Check](#module-Health-Check) | 1 |
 | [Inbox](#module-Inbox) | 8 |
 | [Incubators](#module-Incubators) | 6 |
-| [Maps](#module-Maps) | 3 |
-| [Needs GIS](#module-Needs-GIS) | 18 |
+| [Maps](#module-Maps) | 4 |
+| [Needs GIS](#module-Needs-GIS) | 25 |
 | [News](#module-News) | 6 |
 | [Notifications](#module-Notifications) | 5 |
-| [Other Routes](#module-Other-Routes) | 138 |
+| [Other Routes](#module-Other-Routes) | 151 |
 | [Printing](#module-Printing) | 4 |
 | [Program Bank](#module-Program-Bank) | 18 |
 | [Public APIs](#module-Public-APIs) | 8 |
 | [Signatures](#module-Signatures) | 1 |
 | [Success Stories](#module-Success-Stories) | 7 |
-| [Trainees](#module-Trainees) | 2 |
-| [Trainers](#module-Trainers) | 2 |
+| [Trainees](#module-Trainees) | 5 |
+| [Trainers](#module-Trainers) | 5 |
 | [Training Centers](#module-Training-Centers) | 2 |
-| [Training Courses](#module-Training-Courses) | 9 |
+| [Training Courses](#module-Training-Courses) | 25 |
 | [Training Kit Nominations](#module-Training-Kit-Nominations) | 4 |
-| [Training Kits](#module-Training-Kits) | 2 |
+| [Training Kits](#module-Training-Kits) | 9 |
 | [Training Programs](#module-Training-Programs) | 2 |
 | [Training Requests](#module-Training-Requests) | 1 |
 | [Training Supervisors](#module-Training-Supervisors) | 1 |
@@ -1064,7 +1064,7 @@ Content-Type: application/json
 | Production URL | `https://smeda.gov.sy/api/api/admin/users/{id}/children` |
 | Permission | `admin|super_admin|system_admin|general_director` |
 | Policy / authorize() | `viewAny @ User::class` |
-| API Resource | `UserAccessResource::collection` |
+| API Resource | `UserAccessListResource::collection` |
 | Rate Limit | 120 طلبات/دقيقة لكل admin user |
 
 **Path Parameters:**
@@ -1103,7 +1103,7 @@ Content-Type: application/json
 | Local URL | `http://127.0.0.1:8000/api/admin/my-children` |
 | Production URL | `https://smeda.gov.sy/api/api/admin/my-children` |
 | Permission | `admin|super_admin|system_admin|general_director` |
-| API Resource | `UserAccessResource::collection` |
+| API Resource | `UserAccessListResource::collection` |
 | Rate Limit | 120 طلبات/دقيقة لكل admin user |
 
 **Query Parameters:**
@@ -1904,6 +1904,7 @@ Content-Type: application/json
 | Parameter | Type | ملاحظات |
 |-----------|------|---------|
 | `governorate_id` | filled filter | controller |
+| `lite` | boolean | controller |
 
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
@@ -2932,6 +2933,12 @@ Content-Type: application/json
 | Production URL | `https://smeda.gov.sy/api/api/governorates` |
 | API Resource | `GovernorateResource::collection` |
 
+**Query Parameters:**
+
+| Parameter | Type | ملاحظات |
+|-----------|------|---------|
+| `lite` | boolean | controller |
+
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
 
@@ -3561,6 +3568,31 @@ Content-Type: application/json
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
 
 
+### GET `api/map/trainees`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainingMapController::trainees` |
+| Controller | `App\Http\Controllers\Api\TrainingMapController` |
+| Method | `trainees` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_trainees, throttle:map-public` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/map/trainees` |
+| Production URL | `https://smeda.gov.sy/api/api/map/trainees` |
+| Permission | `view_trainees` |
+| Rate Limit | 60 طلبات/دقيقة لكل IP |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 429, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
 ---
 
 <a id="module-Needs-GIS"></a>
@@ -3589,6 +3621,7 @@ Content-Type: application/json
 |-----------|------|---------|
 | `per_page` | integer | pagination default=20 max=100 |
 | `q` | string | search |
+| `lite` | boolean | controller |
 
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
@@ -3707,16 +3740,15 @@ Content-Type: application/json
 | Parameter | Type | ملاحظات |
 |-----------|------|---------|
 | `governorate_id` | filled filter | controller |
-| `branch_id` | filled filter | controller |
-| `per_page` | integer | pagination default=25 max=100 |
-| `district_name` | string | controller |
-| `is_active` | boolean | controller |
+| `per_page` | integer | pagination default=25 max=2000 |
 | `q` | string | search |
+| `district_name` | string | controller |
+| `level` | string | controller |
 
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
 
-**Status Codes المحتملة:** 100, 200, 401, 403, 404, 500
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
 
 
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
@@ -3864,6 +3896,205 @@ Content-Type: application/json
 
 
 **Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/needs/lookups/manage`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `NeedLookupAdminController::index` |
+| Controller | `App\Http\Controllers\Api\NeedLookupAdminController` |
+| Method | `index` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:needs.manage_lookups` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/needs/lookups/manage` |
+| Production URL | `https://smeda.gov.sy/api/api/needs/lookups/manage` |
+| Permission | `needs.manage_lookups` |
+| Policy / authorize() | `manageLookups @ Need::class` |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/needs/lookups/manage`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `NeedLookupAdminController::storeLookup` |
+| Controller | `App\Http\Controllers\Api\NeedLookupAdminController` |
+| Method | `storeLookup` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:needs.manage_lookups` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/needs/lookups/manage` |
+| Production URL | `https://smeda.gov.sy/api/api/needs/lookups/manage` |
+| Permission | `needs.manage_lookups` |
+| Policy / authorize() | `manageLookups @ Need::class` |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `lookup_type` | `required` |
+| `value` | `required`, `string`, `max:100` |
+| `label` | `required`, `string`, `max:255` |
+| `sort_order` | `nullable`, `integer`, `min:0` |
+| `value.regex` | `القيمة يجب أن تكون بأحرف لاتينية صغيرة وأرقام وشرطة سفلية فقط.` |
+
+```json
+{
+    "lookup_type": "...",
+    "value": "...",
+    "label": "...",
+    "sort_order": "...",
+    "value.regex": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PUT `api/needs/lookups/manage/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `NeedLookupAdminController::updateLookup` |
+| Controller | `App\Http\Controllers\Api\NeedLookupAdminController` |
+| Method | `updateLookup` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:needs.manage_lookups` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/needs/lookups/manage/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/needs/lookups/manage/{id}` |
+| Permission | `needs.manage_lookups` |
+| Policy / authorize() | `manageLookups @ Need::class` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `label` | `sometimes`, `string`, `max:255` |
+| `sort_order` | `sometimes`, `integer`, `min:0` |
+| `is_active` | `sometimes`, `boolean` |
+
+```json
+{
+    "label": "...",
+    "sort_order": "...",
+    "is_active": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/needs/sectors`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `NeedLookupAdminController::storeSector` |
+| Controller | `App\Http\Controllers\Api\NeedLookupAdminController` |
+| Method | `storeSector` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:needs.manage_lookups` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/needs/sectors` |
+| Production URL | `https://smeda.gov.sy/api/api/needs/sectors` |
+| Permission | `needs.manage_lookups` |
+| Policy / authorize() | `manageLookups @ Need::class` |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `code` | `required`, `string`, `max:50` |
+| `name_ar` | `required`, `string`, `max:255` |
+| `sort_order` | `nullable`, `integer`, `min:0` |
+| `code.regex` | `الكود يجب أن يكون بأحرف لاتينية صغيرة وأرقام وشرطة سفلية فقط.` |
+
+```json
+{
+    "code": "...",
+    "name_ar": "...",
+    "sort_order": "...",
+    "code.regex": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PUT `api/needs/sectors/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `NeedLookupAdminController::updateSector` |
+| Controller | `App\Http\Controllers\Api\NeedLookupAdminController` |
+| Method | `updateSector` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:needs.manage_lookups` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/needs/sectors/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/needs/sectors/{id}` |
+| Permission | `needs.manage_lookups` |
+| Policy / authorize() | `manageLookups @ Need::class` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `name_ar` | `sometimes`, `string`, `max:255` |
+| `sort_order` | `sometimes`, `integer`, `min:0` |
+| `is_active` | `sometimes`, `boolean` |
+
+```json
+{
+    "name_ar": "...",
+    "sort_order": "...",
+    "is_active": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 422, 500
 
 
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
@@ -4054,6 +4285,76 @@ Content-Type: application/json
 
 
 **Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/needs/ai-suggest`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `NeedController::aiSuggest` |
+| Controller | `App\Http\Controllers\Api\NeedController` |
+| Method | `aiSuggest` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/needs/ai-suggest` |
+| Production URL | `https://smeda.gov.sy/api/api/needs/ai-suggest` |
+| Policy / authorize() | `viewAny @ Need::class` |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `title` | `nullable`, `string`, `max:255` |
+| `description` | `nullable`, `string`, `max:5000` |
+| `sector` | `nullable`, `string`, `max:100` |
+| `district_name` | `nullable`, `string`, `max:150` |
+
+```json
+{
+    "title": "...",
+    "description": "...",
+    "sector": "...",
+    "district_name": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/needs/{id}/ai-suggest`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `NeedController::aiSuggestForNeed` |
+| Controller | `App\Http\Controllers\Api\NeedController` |
+| Method | `aiSuggestForNeed` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/needs/{id}/ai-suggest` |
+| Production URL | `https://smeda.gov.sy/api/api/needs/{id}/ai-suggest` |
+| Policy / authorize() | `view @ $need` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 500, 502
 
 
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
@@ -4754,8 +5055,10 @@ Content-Type: application/json
 | Parameter | Type | ملاحظات |
 |-----------|------|---------|
 | `branch_id` | filled filter | controller |
+| `governorate_id` | filled filter | controller |
 | `per_page` | integer | pagination default=20 max=100 |
 | `status` | string | controller |
+| `q` | string | search |
 
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
@@ -4788,6 +5091,12 @@ Content-Type: application/json
 | Parameter | Required | Description |
 |-----------|:--------:|-------------|
 | `id` | نعم | معرف رقمي للسجل |
+
+**Query Parameters:**
+
+| Parameter | Type | ملاحظات |
+|-----------|------|---------|
+| `summary` | boolean | controller |
 
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
@@ -4862,13 +5171,26 @@ Content-Type: application/json
 | `project_sector` | `nullable`, `string`, `max:100` |
 | `project_size` | `nullable`, `in:micro,small,medium` |
 | `business_stage` | `nullable`, `in:idea,startup,existing,expansion` |
+| `project_status` | `nullable`, `in:existing,new` |
 | `requested_amount` | `required`, `numeric`, `min:0` |
 | `currency` | `nullable`, `string`, `max:8` |
 | `financing_type` | `nullable`, `in:capital,working_capital,mixed` |
+| `financing_mode` | `nullable`, `in:islamic,conventional,both` |
 | `repayment_period_months` | `nullable`, `integer`, `min:1` |
 | `purpose` | `nullable`, `string` |
 | `description` | `nullable`, `string` |
 | `details` | `nullable`, `array` |
+| `details.owner_experience` | `nullable`, `string` |
+| `details.employees_count` | `nullable`, `integer`, `min:0` |
+| `details.monthly_revenue` | `nullable`, `numeric`, `min:0` |
+| `details.monthly_expenses` | `nullable`, `numeric`, `min:0` |
+| `details.existing_debts` | `nullable`, `numeric`, `min:0` |
+| `details.assets_description` | `nullable`, `string` |
+| `details.market_description` | `nullable`, `string` |
+| `details.challenges` | `nullable`, `string` |
+| `details.requested_support` | `nullable`, `string` |
+| `details.notes` | `nullable`, `string` |
+| `details.extra_data` | `nullable`, `array` |
 
 ```json
 {
@@ -4883,13 +5205,26 @@ Content-Type: application/json
     "project_sector": "...",
     "project_size": "...",
     "business_stage": "...",
+    "project_status": "...",
     "requested_amount": "...",
     "currency": "...",
     "financing_type": "...",
+    "financing_mode": "...",
     "repayment_period_months": "...",
     "purpose": "...",
     "description": "...",
-    "details": "..."
+    "details": "...",
+    "details.owner_experience": "...",
+    "details.employees_count": "...",
+    "details.monthly_revenue": "...",
+    "details.monthly_expenses": "...",
+    "details.existing_debts": "...",
+    "details.assets_description": "...",
+    "details.market_description": "...",
+    "details.challenges": "...",
+    "details.requested_support": "...",
+    "details.notes": "...",
+    "details.extra_data": "..."
 }
 ```
 
@@ -4931,18 +5266,33 @@ Content-Type: application/json
 | `national_id` | `nullable`, `string`, `max:50` |
 | `phone` | `nullable`, `string`, `max:50` |
 | `email` | `nullable`, `email`, `max:255` |
+| `governorate_id` | `nullable`, `integer`, `exists:governorates,id` |
+| `branch_id` | `nullable`, `integer`, `exists:branches,id` |
 | `project_name` | `sometimes`, `string`, `max:255` |
 | `project_type` | `nullable`, `string`, `max:100` |
 | `project_sector` | `nullable`, `string`, `max:100` |
 | `project_size` | `nullable`, `in:micro,small,medium` |
 | `business_stage` | `nullable`, `in:idea,startup,existing,expansion` |
+| `project_status` | `nullable`, `in:existing,new` |
 | `requested_amount` | `sometimes`, `numeric`, `min:0` |
 | `currency` | `nullable`, `string`, `max:8` |
 | `financing_type` | `nullable`, `in:capital,working_capital,mixed` |
+| `financing_mode` | `nullable`, `in:islamic,conventional,both` |
 | `repayment_period_months` | `nullable`, `integer`, `min:1` |
 | `purpose` | `nullable`, `string` |
 | `description` | `nullable`, `string` |
 | `details` | `nullable`, `array` |
+| `details.owner_experience` | `nullable`, `string` |
+| `details.employees_count` | `nullable`, `integer`, `min:0` |
+| `details.monthly_revenue` | `nullable`, `numeric`, `min:0` |
+| `details.monthly_expenses` | `nullable`, `numeric`, `min:0` |
+| `details.existing_debts` | `nullable`, `numeric`, `min:0` |
+| `details.assets_description` | `nullable`, `string` |
+| `details.market_description` | `nullable`, `string` |
+| `details.challenges` | `nullable`, `string` |
+| `details.requested_support` | `nullable`, `string` |
+| `details.notes` | `nullable`, `string` |
+| `details.extra_data` | `nullable`, `array` |
 
 ```json
 {
@@ -4950,18 +5300,33 @@ Content-Type: application/json
     "national_id": "...",
     "phone": "...",
     "email": "...",
+    "governorate_id": "...",
+    "branch_id": "...",
     "project_name": "...",
     "project_type": "...",
     "project_sector": "...",
     "project_size": "...",
     "business_stage": "...",
+    "project_status": "...",
     "requested_amount": "...",
     "currency": "...",
     "financing_type": "...",
+    "financing_mode": "...",
     "repayment_period_months": "...",
     "purpose": "...",
     "description": "...",
-    "details": "..."
+    "details": "...",
+    "details.owner_experience": "...",
+    "details.employees_count": "...",
+    "details.monthly_revenue": "...",
+    "details.monthly_expenses": "...",
+    "details.existing_debts": "...",
+    "details.assets_description": "...",
+    "details.market_description": "...",
+    "details.challenges": "...",
+    "details.requested_support": "...",
+    "details.notes": "...",
+    "details.extra_data": "..."
 }
 ```
 
@@ -6998,6 +7363,345 @@ Content-Type: application/json
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
 
 
+### POST `api/ai/chat`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::chat` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `chat` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/chat` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/chat` |
+| Rate Limit | throttle:ai-chat |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `message` | `required`, `string`, `max:5000` |
+| `department_id` | `sometimes`, `nullable`, `string`, `max:64` |
+| `message.required` | `اكتب رسالتك أولاً.` |
+| `message.max` | `الرسالة طويلة جداً (الحد الأقصى 5000 حرف).` |
+| `department_id.regex` | `معرّف القسم غير صالح.` |
+
+```json
+{
+    "message": "...",
+    "department_id": "...",
+    "message.required": "...",
+    "message.max": "...",
+    "department_id.regex": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/ai/chat/continue`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::continueReply` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `continueReply` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/chat/continue` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/chat/continue` |
+| Rate Limit | throttle:ai-chat |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/ai/chat/reset`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::reset` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `reset` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/chat/reset` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/chat/reset` |
+| Rate Limit | throttle:ai-chat |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 429, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/ai/isic4/classify`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::isic4` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `isic4` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/isic4/classify` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/isic4/classify` |
+| Rate Limit | throttle:ai-chat |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `description` | `required`, `string`, `max:2000` |
+| `description.required` | `اكتب وصف النشاط أولاً.` |
+| `description.max` | `الوصف طويل جداً (الحد الأقصى 2000 حرف).` |
+
+```json
+{
+    "description": "...",
+    "description.required": "...",
+    "description.max": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/ai/config`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::config` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `config` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/config` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/config` |
+| Rate Limit | throttle:ai-chat |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 429, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/ai/chat/history`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::history` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `history` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/chat/history` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/chat/history` |
+| Rate Limit | throttle:ai-chat |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/ai/chat/history/{session}/messages`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::historyMessages` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `historyMessages` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/chat/history/{session}/messages` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/chat/history/{session}/messages` |
+| Rate Limit | throttle:ai-chat |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `session` | نعم | معامل مسار |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/ai/chat/history/{session}/resume`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::resume` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `resume` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/chat/history/{session}/resume` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/chat/history/{session}/resume` |
+| Rate Limit | throttle:ai-chat |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `session` | نعم | معامل مسار |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/ai/knowledge/departments`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::knowledgeDepartments` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `knowledgeDepartments` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/knowledge/departments` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/knowledge/departments` |
+| Rate Limit | throttle:ai-chat |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/ai/knowledge/{department}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::knowledgeItems` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `knowledgeItems` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/knowledge/{department}` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/knowledge/{department}` |
+| Rate Limit | throttle:ai-chat |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `department` | نعم | معامل مسار |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `limit` | `sometimes`, `integer`, `min:1`, `max:200` |
+| `offset` | `sometimes`, `nullable`, `string`, `max:128` |
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 422, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/ai/knowledge/ingest`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `AiChatController::knowledgeIngest` |
+| Controller | `App\Http\Controllers\Api\AiChatController` |
+| Method | `knowledgeIngest` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, throttle:ai-chat, permission:manage_ai_knowledge` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/ai/knowledge/ingest` |
+| Production URL | `https://smeda.gov.sy/api/api/ai/knowledge/ingest` |
+| Permission | `manage_ai_knowledge` |
+| Rate Limit | throttle:ai-chat |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `department_id` | `required`, `string`, `max:64` |
+| `text` | `nullable`, `string`, `max:200000` |
+| `files` | `nullable`, `array`, `max:10` |
+| `files.*` | `file`, `max:20480` |
+| `department_id.required` | `حدّد القسم أولاً.` |
+| `department_id.regex` | `معرّف القسم غير صالح.` |
+
+```json
+{
+    "department_id": "...",
+    "text": "...",
+    "files": "...",
+    "files.*": "...",
+    "department_id.required": "...",
+    "department_id.regex": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 429, 500, 502
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
 ### GET `api/trainer-profiles/{id}`
 
 | البند | القيمة |
@@ -7873,12 +8577,12 @@ Content-Type: application/json
 | Controller | `غير محدد` |
 | Method | `غير محدد` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/categories` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/categories` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
@@ -7897,12 +8601,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfficeController` |
 | Method | `index` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/offices` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/offices` |
-| Permission | `admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office` |
 
 **Query Parameters:**
 
@@ -7930,12 +8634,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfficeController` |
 | Method | `show` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/offices/{id}` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/offices/{id}` |
-| Permission | `admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office` |
 
 **Path Parameters:**
 
@@ -7960,12 +8664,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfficeController` |
 | Method | `store` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/offices` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/offices` |
-| Permission | `admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 
 **Request Body / Validation:**
 
@@ -8020,12 +8724,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfficeController` |
 | Method | `update` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/offices/{id}` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/offices/{id}` |
-| Permission | `admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 
 **Path Parameters:**
 
@@ -8044,31 +8748,69 @@ Content-Type: application/json
 | Field | Rules |
 |-------|-------|
 | `name` | `sometimes`, `string`, `max:255` |
+| `governorate_id` | `nullable`, `integer`, `exists:governorates,id` |
 | `phone` | `nullable`, `string`, `max:30` |
 | `email` | `nullable`, `email` |
 | `address` | `nullable`, `string` |
 | `website` | `nullable`, `url` |
+| `bio` | `nullable`, `string` |
 | `license_number` | `nullable`, `string`, `max:100` |
 | `license_date` | `nullable`, `date` |
 | `license_expiry` | `nullable`, `date` |
 | `notes` | `nullable`, `string` |
+| `specializations` | `nullable`, `array` |
+| `specializations.*` | `string`, `max:10` |
 
 ```json
 {
     "name": "...",
+    "governorate_id": "...",
     "phone": "...",
     "email": "...",
     "address": "...",
     "website": "...",
+    "bio": "...",
     "license_number": "...",
     "license_date": "...",
     "license_expiry": "...",
-    "notes": "..."
+    "notes": "...",
+    "specializations": "...",
+    "specializations.*": "..."
 }
 ```
 
 
 **Status Codes المحتملة:** 200, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### DELETE `api/consulting/offices/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `ConsultingOfficeController::destroy` |
+| Controller | `App\Http\Controllers\Api\ConsultingOfficeController` |
+| Method | `destroy` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/consulting/offices/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/consulting/offices/{id}` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 204, 401, 403, 404, 500
 
 
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
@@ -8082,12 +8824,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfficeController` |
 | Method | `activate` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/offices/{id}/activate` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/offices/{id}/activate` |
-| Permission | `admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 
 **Path Parameters:**
 
@@ -8112,12 +8854,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfficeController` |
 | Method | `suspend` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/offices/{id}/suspend` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/offices/{id}/suspend` |
-| Permission | `admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 
 **Path Parameters:**
 
@@ -8142,12 +8884,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfficeController` |
 | Method | `addViolation` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/offices/{id}/violations` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/offices/{id}/violations` |
-| Permission | `admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor` |
 
 **Path Parameters:**
 
@@ -8184,12 +8926,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `stats` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/stats` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/stats` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | Policy / authorize() | `viewAny @ ConsultingRequest::class` |
 
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
@@ -8209,12 +8951,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `index` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | Policy / authorize() | `viewAny @ ConsultingRequest::class` |
 
 **Query Parameters:**
@@ -8243,12 +8985,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `show` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | Policy / authorize() | `view @ $req` |
 
 **Path Parameters:**
@@ -8274,12 +9016,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfferController` |
 | Method | `index` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}/offers` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}/offers` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | Policy / authorize() | `view @ $req` |
 
 **Path Parameters:**
@@ -8305,12 +9047,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `store` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:project_owner|admin|super_admin|system_admin|general_director|branch_manager|governor` |
+| Middleware | `api, auth:sanctum, role_or_permission:project_owner|admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|governor` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests` |
-| Permission | `project_owner|admin|super_admin|system_admin|general_director|branch_manager|governor` |
+| Permission | `project_owner|admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|governor` |
 | Policy / authorize() | `create @ ConsultingRequest::class` |
 
 **Request Body / Validation:**
@@ -8360,12 +9102,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `update` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | Policy / authorize() | `update @ $req` |
 
 **Path Parameters:**
@@ -8374,40 +9116,41 @@ Content-Type: application/json
 |-----------|:--------:|-------------|
 | `id` | نعم | معرف رقمي للسجل |
 
-**Request Body / Validation:**
-
-| Field | Rules |
-|-------|-------|
-| `category_code` | `sometimes`, `string`, `max:10` |
-| `request_type` | `sometimes`, `in:new_project,existing,financing,classification` |
-| `title` | `sometimes`, `string`, `max:255` |
-| `description` | `sometimes`, `string` |
-| `project_name` | `nullable`, `string`, `max:255` |
-| `economic_activity` | `nullable`, `string`, `max:255` |
-| `isic4_code` | `nullable`, `string`, `max:10` |
-| `governorate_id` | `nullable`, `integer`, `exists:governorates,id` |
-| `budget_min` | `nullable`, `numeric`, `min:0` |
-| `budget_max` | `nullable`, `numeric`, `min:0` |
-| `expected_duration_days` | `nullable`, `integer`, `min:1` |
-
-```json
-{
-    "category_code": "...",
-    "request_type": "...",
-    "title": "...",
-    "description": "...",
-    "project_name": "...",
-    "economic_activity": "...",
-    "isic4_code": "...",
-    "governorate_id": "...",
-    "budget_min": "...",
-    "budget_max": "...",
-    "expected_duration_days": "..."
-}
-```
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
 
 **Status Codes المحتملة:** 200, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### DELETE `api/consulting/requests/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `ConsultingRequestController::destroy` |
+| Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
+| Method | `destroy` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Policy / authorize() | `delete @ $req` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 204, 401, 403, 404, 500
 
 
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
@@ -8421,12 +9164,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `submit` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}/submit` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}/submit` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | Policy / authorize() | `update @ $req` |
 
 **Path Parameters:**
@@ -8452,12 +9195,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `sort` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}/sort` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}/sort` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | Policy / authorize() | `sort @ $req` |
 
 **Path Parameters:**
@@ -8495,12 +9238,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `acceptOffer` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}/accept-offer` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}/accept-offer` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | Policy / authorize() | `acceptOffer @ $req` |
 
 **Path Parameters:**
@@ -8536,12 +9279,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `transfer` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}/transfer` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}/transfer` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | Policy / authorize() | `transfer @ $req` |
 
 **Path Parameters:**
@@ -8577,12 +9320,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingRequestController` |
 | Method | `uploadAttachment` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office, throttle:file-upload` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office, throttle:file-upload` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}/attachments` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}/attachments` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | Policy / authorize() | `update @ $req` |
 | Rate Limit | 5 طلبات/دقيقة لكل (user|IP) |
 
@@ -8627,12 +9370,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingOfferController` |
 | Method | `store` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/requests/{id}/offers` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/requests/{id}/offers` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 
 **Path Parameters:**
 
@@ -8673,12 +9416,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingContractController` |
 | Method | `show` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/contracts/{id}` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/contracts/{id}` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 
 **Path Parameters:**
 
@@ -8703,12 +9446,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingContractController` |
 | Method | `messages` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/contracts/{id}/messages` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/contracts/{id}/messages` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office` |
 
 **Path Parameters:**
 
@@ -8733,12 +9476,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingContractController` |
 | Method | `sign` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/contracts/{id}/sign` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/contracts/{id}/sign` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 
 **Path Parameters:**
 
@@ -8763,12 +9506,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingContractController` |
 | Method | `sendMessage` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/contracts/{id}/messages` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/contracts/{id}/messages` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 
 **Path Parameters:**
 
@@ -8805,12 +9548,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingContractController` |
 | Method | `uploadReport` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office, throttle:file-upload` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office, throttle:file-upload` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/contracts/{id}/report` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/contracts/{id}/report` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | Rate Limit | 5 طلبات/دقيقة لكل (user|IP) |
 
 **Path Parameters:**
@@ -8860,12 +9603,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingContractController` |
 | Method | `approveReport` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/contracts/{id}/approve-report` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/contracts/{id}/approve-report` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 
 **Path Parameters:**
 
@@ -8902,12 +9645,12 @@ Content-Type: application/json
 | Controller | `App\Http\Controllers\Api\ConsultingContractController` |
 | Method | `submitReview` |
 | Route Name | `—` |
-| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Middleware | `api, auth:sanctum, role_or_permission:admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 | المصادقة | **Bearer Token** |
 | الحالة | فعال |
 | Local URL | `http://127.0.0.1:8000/api/consulting/contracts/{id}/review` |
 | Production URL | `https://smeda.gov.sy/api/api/consulting/contracts/{id}/review` |
-| Permission | `admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
+| Permission | `admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office` |
 
 **Path Parameters:**
 
@@ -11141,6 +11884,32 @@ Content-Type: application/json
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
 
 
+### POST `api/trainees`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TraineeController::store` |
+| Controller | `App\Http\Controllers\Api\TraineeController` |
+| Method | `store` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_trainees, permission:manage_trainees` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/trainees` |
+| Production URL | `https://smeda.gov.sy/api/api/trainees` |
+| Permission | `view_trainees`, `manage_trainees` |
+| Policy / authorize() | `create @ Trainee::class` |
+| API Resource | `TraineeResource` |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
 ### GET `api/trainees/{id}`
 
 | البند | القيمة |
@@ -11156,6 +11925,70 @@ Content-Type: application/json
 | Production URL | `https://smeda.gov.sy/api/api/trainees/{id}` |
 | Permission | `view_trainees` |
 | Policy / authorize() | `view @ $trainee` |
+| API Resource | `TraineeResource` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PUT `api/trainees/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TraineeController::update` |
+| Controller | `App\Http\Controllers\Api\TraineeController` |
+| Method | `update` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_trainees, permission:manage_trainees` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/trainees/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/trainees/{id}` |
+| Permission | `view_trainees`, `manage_trainees` |
+| Policy / authorize() | `update @ $trainee` |
+| API Resource | `TraineeResource` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PATCH `api/trainees/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TraineeController::update` |
+| Controller | `App\Http\Controllers\Api\TraineeController` |
+| Method | `update` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_trainees, permission:manage_trainees` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/trainees/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/trainees/{id}` |
+| Permission | `view_trainees`, `manage_trainees` |
+| Policy / authorize() | `update @ $trainee` |
 | API Resource | `TraineeResource` |
 
 **Path Parameters:**
@@ -11217,6 +12050,32 @@ Content-Type: application/json
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
 
 
+### POST `api/trainers`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainerController::store` |
+| Controller | `App\Http\Controllers\Api\TrainerController` |
+| Method | `store` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_trainers, permission:manage_trainers` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/trainers` |
+| Production URL | `https://smeda.gov.sy/api/api/trainers` |
+| Permission | `view_trainers`, `manage_trainers` |
+| Policy / authorize() | `create @ Trainer::class` |
+| API Resource | `TrainerResource` |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
 ### GET `api/trainers/{id}`
 
 | البند | القيمة |
@@ -11232,6 +12091,70 @@ Content-Type: application/json
 | Production URL | `https://smeda.gov.sy/api/api/trainers/{id}` |
 | Permission | `view_trainers` |
 | Policy / authorize() | `view @ $trainer` |
+| API Resource | `TrainerResource` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PUT `api/trainers/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainerController::update` |
+| Controller | `App\Http\Controllers\Api\TrainerController` |
+| Method | `update` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_trainers, permission:manage_trainers` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/trainers/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/trainers/{id}` |
+| Permission | `view_trainers`, `manage_trainers` |
+| Policy / authorize() | `update @ $trainer` |
+| API Resource | `TrainerResource` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PATCH `api/trainers/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainerController::update` |
+| Controller | `App\Http\Controllers\Api\TrainerController` |
+| Method | `update` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_trainers, permission:manage_trainers` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/trainers/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/trainers/{id}` |
+| Permission | `view_trainers`, `manage_trainers` |
+| Policy / authorize() | `update @ $trainer` |
 | API Resource | `TrainerResource` |
 
 **Path Parameters:**
@@ -11485,6 +12408,576 @@ Content-Type: application/json
 
 
 **Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/training-courses/{id}/modules`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainingCourseController::modules` |
+| Controller | `App\Http\Controllers\Api\TrainingCourseController` |
+| Method | `modules` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:view_courses|view_course_details` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/modules` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/modules` |
+| Permission | `view_courses|view_course_details` |
+| Policy / authorize() | `view @ $course` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/training-courses/{id}/sessions`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseSessionController::index` |
+| Controller | `App\Http\Controllers\Api\CourseSessionController` |
+| Method | `index` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:view_courses|view_course_details` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/sessions` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/sessions` |
+| Permission | `view_courses|view_course_details` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Query Parameters:**
+
+| Parameter | Type | ملاحظات |
+|-----------|------|---------|
+| `group_id` | integer | controller |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-courses/{id}/sessions`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseSessionController::store` |
+| Controller | `App\Http\Controllers\Api\CourseSessionController` |
+| Method | `store` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:manage_courses|manage_trainees|trainer_user` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/sessions` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/sessions` |
+| Permission | `manage_courses|manage_trainees|trainer_user` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `session_date` | `required`, `date` |
+| `course_group_id` | `nullable`, `integer` |
+| `program_module_id` | `nullable`, `integer` |
+| `title` | `nullable`, `string`, `max:255` |
+| `start_time` | `nullable`, `string`, `max:8` |
+| `end_time` | `nullable`, `string`, `max:8` |
+| `notes` | `nullable`, `string` |
+
+```json
+{
+    "session_date": "...",
+    "course_group_id": "...",
+    "program_module_id": "...",
+    "title": "...",
+    "start_time": "...",
+    "end_time": "...",
+    "notes": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/training-courses/{id}/sessions/{sessionId}/attendance`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseSessionController::attendanceIndex` |
+| Controller | `App\Http\Controllers\Api\CourseSessionController` |
+| Method | `attendanceIndex` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:view_courses|view_course_details` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/sessions/{sessionId}/attendance` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/sessions/{sessionId}/attendance` |
+| Permission | `view_courses|view_course_details` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+| `sessionId` | نعم | معامل مسار |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-courses/{id}/sessions/{sessionId}/attendance`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseSessionController::attendanceStore` |
+| Controller | `App\Http\Controllers\Api\CourseSessionController` |
+| Method | `attendanceStore` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:manage_courses|manage_trainees|trainer_user` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/sessions/{sessionId}/attendance` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/sessions/{sessionId}/attendance` |
+| Permission | `manage_courses|manage_trainees|trainer_user` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+| `sessionId` | نعم | معامل مسار |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `items` | `required`, `array`, `min:1` |
+| `items.*.trainee_id` | `required`, `integer` |
+| `items.*.status` | `required`, `in:present,absent,late,excused` |
+| `items.*.minutes_attended` | `nullable`, `integer`, `min:0` |
+
+```json
+{
+    "items": "...",
+    "items.*.trainee_id": "...",
+    "items.*.status": "...",
+    "items.*.minutes_attended": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/training-courses/{id}/module-scores`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `ModuleScoreController::index` |
+| Controller | `App\Http\Controllers\Api\ModuleScoreController` |
+| Method | `index` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:view_courses|view_course_details` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/module-scores` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/module-scores` |
+| Permission | `view_courses|view_course_details` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Query Parameters:**
+
+| Parameter | Type | ملاحظات |
+|-----------|------|---------|
+| `module_id` | integer | controller |
+| `group_id` | integer | controller |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-courses/{id}/module-scores`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `ModuleScoreController::store` |
+| Controller | `App\Http\Controllers\Api\ModuleScoreController` |
+| Method | `store` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:manage_courses|manage_trainees|trainer_user` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/module-scores` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/module-scores` |
+| Permission | `manage_courses|manage_trainees|trainer_user` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `program_module_id` | `required`, `integer` |
+| `max_score` | `nullable`, `numeric`, `min:1` |
+| `pass_mark` | `nullable`, `numeric`, `min:0` |
+| `items` | `required`, `array`, `min:1` |
+| `items.*.trainee_id` | `required`, `integer` |
+| `items.*.coursework_score` | `nullable`, `numeric`, `min:0` |
+| `items.*.exam_score` | `nullable`, `numeric`, `min:0` |
+
+```json
+{
+    "program_module_id": "...",
+    "max_score": "...",
+    "pass_mark": "...",
+    "items": "...",
+    "items.*.trainee_id": "...",
+    "items.*.coursework_score": "...",
+    "items.*.exam_score": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-courses/{id}/issue-certificates`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CertificateController::issueForCourse` |
+| Controller | `App\Http\Controllers\Api\CertificateController` |
+| Method | `issueForCourse` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:issue_certificates` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/issue-certificates` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/issue-certificates` |
+| Permission | `issue_certificates` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/training-courses/{id}/groups`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseGroupController::index` |
+| Controller | `App\Http\Controllers\Api\CourseGroupController` |
+| Method | `index` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:view_courses|view_course_details` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/groups` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/groups` |
+| Permission | `view_courses|view_course_details` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/training-courses/{id}/ungrouped-trainees`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseGroupController::ungrouped` |
+| Controller | `App\Http\Controllers\Api\CourseGroupController` |
+| Method | `ungrouped` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:view_courses|view_course_details` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/ungrouped-trainees` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/ungrouped-trainees` |
+| Permission | `view_courses|view_course_details` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/training-courses/{id}/groups/{groupId}/trainees`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseGroupController::trainees` |
+| Controller | `App\Http\Controllers\Api\CourseGroupController` |
+| Method | `trainees` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:view_courses|view_course_details` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/groups/{groupId}/trainees` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/groups/{groupId}/trainees` |
+| Permission | `view_courses|view_course_details` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+| `groupId` | نعم | معامل مسار |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-courses/{id}/groups`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseGroupController::store` |
+| Controller | `App\Http\Controllers\Api\CourseGroupController` |
+| Method | `store` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:manage_courses|manage_trainees|trainer_user` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/groups` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/groups` |
+| Permission | `manage_courses|manage_trainees|trainer_user` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `name` | `required`, `string`, `max:150` |
+| `code` | `nullable`, `string`, `max:60` |
+| `capacity` | `nullable`, `integer`, `min:1` |
+| `notes` | `nullable`, `string` |
+
+```json
+{
+    "name": "...",
+    "code": "...",
+    "capacity": "...",
+    "notes": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### DELETE `api/training-courses/{id}/groups/{groupId}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseGroupController::destroy` |
+| Controller | `App\Http\Controllers\Api\CourseGroupController` |
+| Method | `destroy` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:manage_courses|manage_trainees|trainer_user` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/groups/{groupId}` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/groups/{groupId}` |
+| Permission | `manage_courses|manage_trainees|trainer_user` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+| `groupId` | نعم | معامل مسار |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 204, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-courses/{id}/groups/{groupId}/assign`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseGroupController::assign` |
+| Controller | `App\Http\Controllers\Api\CourseGroupController` |
+| Method | `assign` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:manage_courses|manage_trainees|trainer_user` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/groups/{groupId}/assign` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/groups/{groupId}/assign` |
+| Permission | `manage_courses|manage_trainees|trainer_user` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+| `groupId` | نعم | معامل مسار |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `trainee_ids` | `required`, `array`, `min:1` |
+| `trainee_ids.*` | `integer` |
+
+```json
+{
+    "trainee_ids": "...",
+    "trainee_ids.*": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-courses/{id}/groups/{groupId}/remove`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `CourseGroupController::remove` |
+| Controller | `App\Http\Controllers\Api\CourseGroupController` |
+| Method | `remove` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, role_or_permission:manage_courses|manage_trainees|trainer_user` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}/groups/{groupId}/remove` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}/groups/{groupId}/remove` |
+| Permission | `manage_courses|manage_trainees|trainer_user` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+| `groupId` | نعم | معامل مسار |
+
+**Request Body / Validation:**
+
+| Field | Rules |
+|-------|-------|
+| `trainee_ids` | `required`, `array`, `min:1` |
+| `trainee_ids.*` | `integer` |
+
+```json
+{
+    "trainee_ids": "...",
+    "trainee_ids.*": "..."
+}
+```
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 422, 500
 
 
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
@@ -11767,6 +13260,36 @@ Content-Type: application/json
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
 
 
+### DELETE `api/training-courses/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainingCourseController::destroy` |
+| Controller | `App\Http\Controllers\Api\TrainingCourseController` |
+| Method | `destroy` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:manage_courses` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-courses/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/training-courses/{id}` |
+| Permission | `manage_courses` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 204, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
 ---
 
 <a id="module-Training-Kit-Nominations"></a>
@@ -11946,6 +13469,7 @@ Content-Type: application/json
 | Local URL | `http://127.0.0.1:8000/api/training-kits` |
 | Production URL | `https://smeda.gov.sy/api/api/training-kits` |
 | Permission | `view_kits` |
+| Policy / authorize() | `viewAny @ TrainingKit::class` |
 | API Resource | `TrainingKitResource::collection` |
 
 **Query Parameters:**
@@ -11953,6 +13477,8 @@ Content-Type: application/json
 | Parameter | Type | ملاحظات |
 |-----------|------|---------|
 | `per_page` | integer | pagination default=20 max=100 |
+| `training_center_id` | mixed | controller |
+| `trainer_id` | mixed | controller |
 | `status` | mixed | controller |
 | `sector` | mixed | controller |
 | `category` | mixed | controller |
@@ -11960,13 +13486,41 @@ Content-Type: application/json
 | `level` | mixed | controller |
 | `is_active` | mixed | controller |
 | `with_trainers` | boolean | controller |
+| `with_centers` | boolean | controller |
 | `with_programs` | boolean | controller |
+| `with_counts` | boolean | controller |
 | `search` | mixed | controller |
 
 **Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
 
 
 **Status Codes المحتملة:** 100, 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-kits`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainingKitController::store` |
+| Controller | `App\Http\Controllers\Api\TrainingKitController` |
+| Method | `store` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_kits, permission:manage_kits` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-kits` |
+| Production URL | `https://smeda.gov.sy/api/api/training-kits` |
+| Permission | `view_kits`, `manage_kits` |
+| Policy / authorize() | `create @ TrainingKit::class` |
+| API Resource | `TrainingKitResource` |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 500
 
 
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
@@ -11986,6 +13540,7 @@ Content-Type: application/json
 | Local URL | `http://127.0.0.1:8000/api/training-kits/{id}` |
 | Production URL | `https://smeda.gov.sy/api/api/training-kits/{id}` |
 | Permission | `view_kits` |
+| Policy / authorize() | `view @ $kit` |
 | API Resource | `TrainingKitResource` |
 
 **Path Parameters:**
@@ -11998,6 +13553,192 @@ Content-Type: application/json
 
 
 **Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PUT `api/training-kits/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainingKitController::update` |
+| Controller | `App\Http\Controllers\Api\TrainingKitController` |
+| Method | `update` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_kits, permission:manage_kits` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-kits/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/training-kits/{id}` |
+| Permission | `view_kits`, `manage_kits` |
+| Policy / authorize() | `update @ $kit` |
+| API Resource | `TrainingKitResource` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PATCH `api/training-kits/{id}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `TrainingKitController::update` |
+| Controller | `App\Http\Controllers\Api\TrainingKitController` |
+| Method | `update` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_kits, permission:manage_kits` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-kits/{id}` |
+| Production URL | `https://smeda.gov.sy/api/api/training-kits/{id}` |
+| Permission | `view_kits`, `manage_kits` |
+| Policy / authorize() | `update @ $kit` |
+| API Resource | `TrainingKitResource` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### GET `api/training-kits/{id}/materials`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `KitMaterialController::index` |
+| Controller | `App\Http\Controllers\Api\KitMaterialController` |
+| Method | `index` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_kits` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-kits/{id}/materials` |
+| Production URL | `https://smeda.gov.sy/api/api/training-kits/{id}/materials` |
+| Permission | `view_kits` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### POST `api/training-kits/{id}/materials`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `KitMaterialController::store` |
+| Controller | `App\Http\Controllers\Api\KitMaterialController` |
+| Method | `store` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_kits, permission:manage_kits` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-kits/{id}/materials` |
+| Production URL | `https://smeda.gov.sy/api/api/training-kits/{id}/materials` |
+| Permission | `view_kits`, `manage_kits` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 201, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### PUT `api/training-kits/{id}/materials/{materialId}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `KitMaterialController::update` |
+| Controller | `App\Http\Controllers\Api\KitMaterialController` |
+| Method | `update` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_kits, permission:manage_kits` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-kits/{id}/materials/{materialId}` |
+| Production URL | `https://smeda.gov.sy/api/api/training-kits/{id}/materials/{materialId}` |
+| Permission | `view_kits`, `manage_kits` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+| `materialId` | نعم | معامل مسار |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 401, 403, 404, 500
+
+
+**أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
+
+
+### DELETE `api/training-kits/{id}/materials/{materialId}`
+
+| البند | القيمة |
+|------|--------|
+| الوصف | Endpoint من `KitMaterialController::destroy` |
+| Controller | `App\Http\Controllers\Api\KitMaterialController` |
+| Method | `destroy` |
+| Route Name | `—` |
+| Middleware | `api, auth:sanctum, permission:view_kits, permission:manage_kits` |
+| المصادقة | **Bearer Token** |
+| الحالة | فعال |
+| Local URL | `http://127.0.0.1:8000/api/training-kits/{id}/materials/{materialId}` |
+| Production URL | `https://smeda.gov.sy/api/api/training-kits/{id}/materials/{materialId}` |
+| Permission | `view_kits`, `manage_kits` |
+
+**Path Parameters:**
+
+| Parameter | Required | Description |
+|-----------|:--------:|-------------|
+| `id` | نعم | معرف رقمي للسجل |
+| `materialId` | نعم | معامل مسار |
+
+**Request Body:** غير محدد بشكل صريح في الكود الحالي (لا Form Request ولا `$request->validate()` في method body المستخرج).
+
+
+**Status Codes المحتملة:** 200, 204, 401, 403, 404, 500
 
 
 **أخطاء التفويض:** 401 بدون Token؛ 403 عند فشل Policy/Permission/Role أو نطاق محافظة/فرع.
@@ -13560,15 +15301,36 @@ Content-Type: application/json
 | `GET api/needs/analytics` | Bearer Token | — | — | hasPermissionTo() inline | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
 | `GET api/needs/workspace/data-entry` | Bearer Token | role:data_entry | create @ Need::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/needs/workspace/reviewer` | Bearer Token | role:data_reviewer | — | hasPermissionTo() inline | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/needs/lookups/manage` | Bearer Token | needs.manage_lookups | manageLookups @ Need::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/needs/lookups/manage` | Bearer Token | needs.manage_lookups | manageLookups @ Need::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PUT api/needs/lookups/manage/{id}` | Bearer Token | needs.manage_lookups | manageLookups @ Need::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/needs/sectors` | Bearer Token | needs.manage_lookups | manageLookups @ Need::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PUT api/needs/sectors/{id}` | Bearer Token | needs.manage_lookups | manageLookups @ Need::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `PUT api/needs/{id}` | Bearer Token | — | update @ $need | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
 | `POST api/needs/{id}/review` | Bearer Token | — | review @ $need | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
 | `POST api/needs/{id}/approve` | Bearer Token | — | approve @ $need | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
 | `POST api/needs/{id}/reject` | Bearer Token | — | reject @ $need | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
 | `POST api/needs/{id}/return` | Bearer Token | — | returnForEdit @ $need | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
+| `POST api/needs/ai-suggest` | Bearer Token | — | viewAny @ Need::class | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
+| `POST api/needs/{id}/ai-suggest` | Bearer Token | — | view @ $need | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
 | `POST api/needs/{id}/classify` | Bearer Token | — | classify @ $need | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
 | `POST api/needs/{id}/resolve` | Bearer Token | — | resolve @ $need | Policy authorize() | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |
+| `POST api/ai/chat` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `POST api/ai/chat/continue` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `POST api/ai/chat/reset` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `POST api/ai/isic4/classify` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `GET api/ai/config` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `GET api/ai/chat/history` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `GET api/ai/chat/history/{session}/messages` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `POST api/ai/chat/history/{session}/resume` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `GET api/ai/knowledge/departments` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `GET api/ai/knowledge/{department}` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
+| `POST api/ai/knowledge/ingest` | Bearer Token | manage_ai_knowledge | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/trainers` | Bearer Token | view_trainers | viewAny @ Trainer::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/trainers` | Bearer Token | view_trainers, manage_trainers | create @ Trainer::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/trainers/{id}` | Bearer Token | view_trainers | view @ $trainer | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PUT api/trainers/{id}` | Bearer Token | view_trainers, manage_trainers | update @ $trainer | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PATCH api/trainers/{id}` | Bearer Token | view_trainers, manage_trainers | update @ $trainer | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/trainer-profiles/{id}` | Bearer Token | view_trainer_profiles | view @ $profile | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/my-trainer-profile` | Bearer Token | view_trainer_profiles|edit_own_trainer_profile | view @ $profile | Policy authorize(); hasPermissionTo() inline | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `POST api/my-trainer-profile` | Bearer Token | edit_own_trainer_profile | updateOwn @ TrainerProfile::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
@@ -13577,7 +15339,10 @@ Content-Type: application/json
 | `GET api/training-kit-nominations/{id}` | Bearer Token | nominate_training_kits|review_training_kit_nominations | — | hasPermissionTo() inline | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `POST api/training-kit-nominations/{id}/review` | Bearer Token | review_training_kit_nominations | — | hasPermissionTo() inline | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/trainees` | Bearer Token | view_trainees | viewAny @ Trainee::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/trainees` | Bearer Token | view_trainees, manage_trainees | create @ Trainee::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/trainees/{id}` | Bearer Token | view_trainees | view @ $trainee | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PUT api/trainees/{id}` | Bearer Token | view_trainees, manage_trainees | update @ $trainee | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PATCH api/trainees/{id}` | Bearer Token | view_trainees, manage_trainees | update @ $trainee | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/workforces` | Bearer Token | general_director|deputy_general_director|branch_manager|auditor|admin|super_admin|system_admin|training_manager|development_manager|workforce_manager | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/workforces/{id}` | Bearer Token | general_director|deputy_general_director|branch_manager|auditor|admin|super_admin|system_admin|training_manager|development_manager|workforce_manager | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `POST api/workforces/enroll` | Bearer Token | general_director|admin|super_admin|system_admin|training_manager | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
@@ -13594,8 +15359,15 @@ Content-Type: application/json
 | `GET api/training-centers` | Bearer Token | view_centers | viewAny @ TrainingCenter::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/training-centers/{id}` | Bearer Token | view_centers | view @ $center | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/training-supervisors` | Bearer Token | view_centers | viewAny @ \App\Models\TrainingCenter::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/training-kits` | Bearer Token | view_kits | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/training-kits/{id}` | Bearer Token | view_kits | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-kits` | Bearer Token | view_kits | viewAny @ TrainingKit::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-kits` | Bearer Token | view_kits, manage_kits | create @ TrainingKit::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-kits/{id}` | Bearer Token | view_kits | view @ $kit | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PUT api/training-kits/{id}` | Bearer Token | view_kits, manage_kits | update @ $kit | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PATCH api/training-kits/{id}` | Bearer Token | view_kits, manage_kits | update @ $kit | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-kits/{id}/materials` | Bearer Token | view_kits | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-kits/{id}/materials` | Bearer Token | view_kits, manage_kits | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PUT api/training-kits/{id}/materials/{materialId}` | Bearer Token | view_kits, manage_kits | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `DELETE api/training-kits/{id}/materials/{materialId}` | Bearer Token | view_kits, manage_kits | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/training-programs` | Bearer Token | view_programs | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/training-programs/{id}` | Bearer Token | view_programs | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/program-bank/stats` | Bearer Token | training_manager|general_director|admin|super_admin|system_admin|auditor|program_bank.view|view_programs|manage_programs | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
@@ -13619,14 +15391,31 @@ Content-Type: application/json
 | `GET api/training-courses` | Bearer Token | trainer_user|trainee_user|view_courses | viewAny @ TrainingCourse::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `POST api/training-courses` | Bearer Token | manage_courses | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/training-courses/{id}/trainees` | Bearer Token | view_courses|view_course_details | view @ $course | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-courses/{id}/modules` | Bearer Token | view_courses|view_course_details | view @ $course | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-courses/{id}/sessions` | Bearer Token | view_courses|view_course_details | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-courses/{id}/sessions` | Bearer Token | manage_courses|manage_trainees|trainer_user | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-courses/{id}/sessions/{sessionId}/attendance` | Bearer Token | view_courses|view_course_details | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-courses/{id}/sessions/{sessionId}/attendance` | Bearer Token | manage_courses|manage_trainees|trainer_user | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-courses/{id}/module-scores` | Bearer Token | view_courses|view_course_details | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-courses/{id}/module-scores` | Bearer Token | manage_courses|manage_trainees|trainer_user | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-courses/{id}/issue-certificates` | Bearer Token | issue_certificates | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-courses/{id}/groups` | Bearer Token | view_courses|view_course_details | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-courses/{id}/ungrouped-trainees` | Bearer Token | view_courses|view_course_details | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/training-courses/{id}/groups/{groupId}/trainees` | Bearer Token | view_courses|view_course_details | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-courses/{id}/groups` | Bearer Token | manage_courses|manage_trainees|trainer_user | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `DELETE api/training-courses/{id}/groups/{groupId}` | Bearer Token | manage_courses|manage_trainees|trainer_user | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-courses/{id}/groups/{groupId}/assign` | Bearer Token | manage_courses|manage_trainees|trainer_user | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/training-courses/{id}/groups/{groupId}/remove` | Bearer Token | manage_courses|manage_trainees|trainer_user | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `POST api/training-courses/{id}/trainees` | Bearer Token | manage_courses | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `PATCH api/training-courses/{id}/trainees/{traineeId}` | Bearer Token | manage_courses | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `DELETE api/training-courses/{id}/trainees/{traineeId}` | Bearer Token | manage_courses | deleteTrainee @ $course | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `POST api/training-courses/{id}/complete` | Bearer Token | manage_courses | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/training-courses/{id}` | Bearer Token | trainer_user|trainee_user|view_courses|view_course_details | view @ $course | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `PATCH api/training-courses/{id}` | Bearer Token | manage_courses | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `DELETE api/training-courses/{id}` | Bearer Token | manage_courses | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/map/training-courses` | Bearer Token | view_courses | — | hasPermissionTo() inline | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/map/trainers` | Bearer Token | view_trainers | — | hasPermissionTo() inline | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/map/trainees` | Bearer Token | view_trainees | — | hasPermissionTo() inline | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `POST api/certificates/issue` | Bearer Token | issue_certificates | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `POST api/certificates/{id}/approve` | Bearer Token | approve_center_certificates|approve_training_certificates|approve_deputy_certificates|approve_general_director_certificates | approve @ [$certificate, $approvalStep] | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/certificates` | Bearer Token | view_certificates | viewAny @ Certificate::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
@@ -13684,33 +15473,35 @@ Content-Type: application/json
 | `GET api/admin/permissions/{id}` | Bearer Token | admin|super_admin|system_admin|general_director | view @ $permission | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `PATCH api/admin/permissions/{id}` | Bearer Token | admin|super_admin|system_admin|general_director | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `DELETE api/admin/permissions/{id}` | Bearer Token | admin|super_admin|system_admin|general_director | delete @ $permission | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/categories` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/offices` | Bearer Token | admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/offices/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/offices` | Bearer Token | admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `PUT api/consulting/offices/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/offices/{id}/activate` | Bearer Token | admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/offices/{id}/suspend` | Bearer Token | admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/offices/{id}/violations` | Bearer Token | admin|super_admin|system_admin|general_director|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/requests/stats` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | viewAny @ ConsultingRequest::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/requests` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | viewAny @ ConsultingRequest::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/requests/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | view @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/requests/{id}/offers` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | view @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/requests` | Bearer Token | project_owner|admin|super_admin|system_admin|general_director|branch_manager|governor | create @ ConsultingRequest::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `PUT api/consulting/requests/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | update @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/requests/{id}/submit` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | update @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/requests/{id}/sort` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | sort @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/requests/{id}/accept-offer` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | acceptOffer @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/requests/{id}/transfer` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | transfer @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/requests/{id}/attachments` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | update @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/requests/{id}/offers` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/contracts/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `GET api/consulting/contracts/{id}/messages` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/contracts/{id}/sign` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/contracts/{id}/messages` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/contracts/{id}/report` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/contracts/{id}/approve-report` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
-| `POST api/consulting/contracts/{id}/review` | Bearer Token | admin|super_admin|system_admin|general_director|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/categories` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/offices` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/offices/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|branch_officer|governor|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/offices` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PUT api/consulting/offices/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `DELETE api/consulting/offices/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/offices/{id}/activate` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/offices/{id}/suspend` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/offices/{id}/violations` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|consultant_union_admin|branch_manager|governor | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/requests/stats` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | viewAny @ ConsultingRequest::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/requests` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | viewAny @ ConsultingRequest::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/requests/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | view @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/requests/{id}/offers` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | view @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/requests` | Bearer Token | project_owner|admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|governor | create @ ConsultingRequest::class | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `PUT api/consulting/requests/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | update @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `DELETE api/consulting/requests/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | delete @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/requests/{id}/submit` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | update @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/requests/{id}/sort` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | sort @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/requests/{id}/accept-offer` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | acceptOffer @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/requests/{id}/transfer` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | transfer @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/requests/{id}/attachments` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | update @ $req | Policy authorize() | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/requests/{id}/offers` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/contracts/{id}` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `GET api/consulting/contracts/{id}/messages` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|project_owner|consultant_union_admin|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/contracts/{id}/sign` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/contracts/{id}/messages` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/contracts/{id}/report` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/contracts/{id}/approve-report` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
+| `POST api/consulting/contracts/{id}/review` | Bearer Token | admin|super_admin|system_admin|general_director|project_services_manager|branch_manager|branch_officer|governor|consultant_union_admin|project_owner|consultant_office | — | — | ✅ محمي | لا إجراء — التحقق موجود في Controller/Policy |
 | `GET api/notifications/summary` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
 | `GET api/notifications` | Bearer Token | — | — | — | ⚠️ auth:sanctum فقط | مراجعة يدوية — لا permission middleware ولا authorize() مستخرج |
 | `POST api/notifications/read-all` | Bearer Token | — | — | user_id = current user | ✅ Bearer + فحص داخلي | مقبول — authorize()/ownership داخل Controller |

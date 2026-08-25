@@ -37,7 +37,7 @@ trait UploadsApproverSignatures
 
     protected function issueCertificateViaHttp(): Certificate
     {
-        $user = User::query()->where('email', 'center@system.com')->firstOrFail();
+        $user = User::query()->where('email', 'manager@system.com')->firstOrFail();
         Sanctum::actingAs($user);
 
         [$course, $trainee] = $this->prepareCompletedCourse($user);

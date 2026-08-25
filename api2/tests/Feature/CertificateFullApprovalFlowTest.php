@@ -24,8 +24,6 @@ class CertificateFullApprovalFlowTest extends TestCase
     /** @var array<int, string> */
     private const FLOW_STATUSES = [
         'pending_center_approval',
-        'pending_training_approval',
-        'pending_deputy_approval',
         'pending_general_director_approval',
         'approved',
     ];
@@ -38,7 +36,7 @@ class CertificateFullApprovalFlowTest extends TestCase
         $this->uploadSignaturesForApprovers();
     }
 
-    public function test_issue_certificate_starts_at_pending_center_approval_with_four_approval_rows(): void
+    public function test_issue_certificate_starts_at_pending_center_approval_with_two_approval_rows(): void
     {
         $certificate = $this->issueCertificateViaHttp();
 
@@ -52,8 +50,6 @@ class CertificateFullApprovalFlowTest extends TestCase
 
         $this->assertSame([
             'center_approval',
-            'training_manager_approval',
-            'deputy_director_approval',
             'general_director_approval',
         ], $steps);
 
@@ -74,34 +70,10 @@ class CertificateFullApprovalFlowTest extends TestCase
 
         $this->postApproveAs($certificate, 'center_approval', 'center@system.com')
             ->assertOk()
-            ->assertJsonPath('data.status', 'pending_training_approval');
-
-        $certificate->refresh();
-        $this->assertSame('pending_training_approval', $certificate->status);
-
-        $this->postApproveAs($certificate, 'training_manager_approval', 'manager@system.com')
-            ->assertOk()
-            ->assertJsonPath('data.status', 'pending_deputy_approval');
-
-        $certificate->refresh();
-        $this->assertSame('pending_deputy_approval', $certificate->status);
-
-        $this->postApproveAs($certificate, 'deputy_director_approval', 'deputy@system.com')
-            ->assertOk()
             ->assertJsonPath('data.status', 'pending_general_director_approval');
 
         $certificate->refresh();
         $this->assertSame('pending_general_director_approval', $certificate->status);
-
-        $deputySig = DocumentElectronicSignature::query()
-            ->whereHasMorph('signable', [CertificateApproval::class], function ($q) use ($certificate) {
-                $q->where('certificate_id', $certificate->id)
-                    ->where('approval_step', 'deputy_director_approval');
-            })
-            ->first();
-
-        $this->assertNotNull($deputySig);
-        $this->assertStringStartsWith('ESIG-', $deputySig->verification_code);
 
         $this->postApproveAs($certificate, 'general_director_approval', 'general@system.com')
             ->assertOk()
@@ -121,20 +93,17 @@ class CertificateFullApprovalFlowTest extends TestCase
         $this->assertNotNull($generalSig);
         $this->assertStringStartsWith('ESIG-', $generalSig->verification_code);
 
-        $this->getJson('/api/signatures/verify/' . $deputySig->verification_code)->assertOk()->assertJsonPath('valid', true);
         $this->getJson('/api/signatures/verify/' . $generalSig->verification_code)->assertOk()->assertJsonPath('valid', true);
     }
 
-    public function test_backend_status_enum_uses_pending_training_approval_not_manager_suffix(): void
+    public function test_backend_status_enum_moves_to_general_director_after_center(): void
     {
         $certificate = $this->issueCertificateViaHttp();
         $this->postApproveAs($certificate, 'center_approval', 'center@system.com')->assertOk();
 
         $certificate->refresh();
-        $this->assertSame('pending_training_approval', $certificate->status);
-        $this->assertNotSame('pending_training_manager_approval', $certificate->status);
-        $this->assertContains('pending_training_approval', self::FLOW_STATUSES);
-        $this->assertNotContains('pending_training_manager_approval', self::FLOW_STATUSES);
+        $this->assertSame('pending_general_director_approval', $certificate->status);
+        $this->assertContains('pending_general_director_approval', self::FLOW_STATUSES);
     }
 
     public function test_general_director_with_only_gd_approve_permission_passes_route_middleware(): void
@@ -265,16 +234,14 @@ class CertificateFullApprovalFlowTest extends TestCase
         ])->assertForbidden();
     }
 
-    public function test_training_manager_cannot_approve_deputy_step(): void
+    public function test_training_manager_cannot_approve_general_director_step(): void
     {
-        $certificate = $this->issueCertificateViaHttp();
-        $this->postApproveAs($certificate, 'center_approval', 'center@system.com')->assertOk();
-        $this->postApproveAs($certificate, 'training_manager_approval', 'manager@system.com')->assertOk();
+        $certificate = $this->advanceToGeneralDirectorQueue();
 
         Sanctum::actingAs(User::query()->where('email', 'manager@system.com')->firstOrFail());
 
         $this->postJson('/api/certificates/' . $certificate->id . '/approve', [
-            'approval_step' => 'deputy_director_approval',
+            'approval_step' => 'general_director_approval',
             'decision' => 'approved',
             'notes' => 'should fail',
         ])->assertForbidden();
@@ -301,24 +268,22 @@ class CertificateFullApprovalFlowTest extends TestCase
 
         $this->assertNotNull($row);
 
-        $deputyApproval = collect($row['approvals'] ?? [])
-            ->firstWhere('approval_step', 'deputy_director_approval');
+        $centerApproval = collect($row['approvals'] ?? [])
+            ->firstWhere('approval_step', 'center_approval');
         $generalApproval = collect($row['approvals'] ?? [])
             ->firstWhere('approval_step', 'general_director_approval');
 
-        $this->assertSame('approved', $deputyApproval['decision'] ?? null);
+        $this->assertSame('approved', $centerApproval['decision'] ?? null);
         $this->assertSame('approved', $generalApproval['decision'] ?? null);
-        $this->assertStringStartsWith('ESIG-', $deputyApproval['electronic_signature']['verification_code'] ?? '');
+        $this->assertStringStartsWith('CAPPR-', $centerApproval['electronic_signature']['verification_code'] ?? '');
         $this->assertStringStartsWith('ESIG-', $generalApproval['electronic_signature']['verification_code'] ?? '');
     }
 
-    public function test_all_four_approvals_are_approved_after_full_flow(): void
+    public function test_both_approvals_are_approved_after_full_flow(): void
     {
         $certificate = $this->issueCertificateViaHttp();
 
         $this->postApproveAs($certificate, 'center_approval', 'center@system.com')->assertOk();
-        $this->postApproveAs($certificate, 'training_manager_approval', 'manager@system.com')->assertOk();
-        $this->postApproveAs($certificate, 'deputy_director_approval', 'deputy@system.com')->assertOk();
         $this->postApproveAs($certificate, 'general_director_approval', 'general@system.com')->assertOk();
 
         $decisions = CertificateApproval::query()
@@ -327,17 +292,15 @@ class CertificateFullApprovalFlowTest extends TestCase
             ->pluck('decision')
             ->all();
 
-        $this->assertSame(['approved', 'approved', 'approved', 'approved'], $decisions);
+        $this->assertSame(['approved', 'approved'], $decisions);
         $this->assertSame('approved', $certificate->fresh()->status);
     }
 
-    public function test_print_view_includes_signature_snapshots_for_all_approvals(): void
+    public function test_print_view_shows_center_and_general_director_signatures(): void
     {
         $certificate = $this->issueCertificateViaHttp();
 
         $this->postApproveAs($certificate, 'center_approval', 'center@system.com')->assertOk();
-        $this->postApproveAs($certificate, 'training_manager_approval', 'manager@system.com')->assertOk();
-        $this->postApproveAs($certificate, 'deputy_director_approval', 'deputy@system.com')->assertOk();
         $this->postApproveAs($certificate, 'general_director_approval', 'general@system.com')->assertOk();
 
         $certificate->refresh();
@@ -345,7 +308,10 @@ class CertificateFullApprovalFlowTest extends TestCase
             ->assertOk()
             ->getContent();
 
-        $this->assertStringContainsString('sign-image', $html);
+        $this->assertStringContainsString('اعتماد المركز التدريبي', $html);
+        $this->assertStringContainsString('المدير العام', $html);
+        $this->assertStringNotContainsString('اعتماد قسم التدريب', $html);
+        $this->assertStringNotContainsString('نائب المدير العام', $html);
         $this->assertStringContainsString('ESIG-', $html);
     }
 
@@ -354,8 +320,6 @@ class CertificateFullApprovalFlowTest extends TestCase
         $certificate = $this->issueCertificateViaHttp();
 
         $this->postApproveAs($certificate, 'center_approval', 'center@system.com')->assertOk();
-        $this->postApproveAs($certificate, 'training_manager_approval', 'manager@system.com')->assertOk();
-        $this->postApproveAs($certificate, 'deputy_director_approval', 'deputy@system.com')->assertOk();
 
         return $certificate->fresh();
     }

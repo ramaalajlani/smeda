@@ -1,29 +1,29 @@
 # تقرير تدقيق API
 
-> تاريخ: 2026-07-16 17:57:29
+> تاريخ: 2026-08-16 05:48:03
 
 ## إحصائيات
 
 | المؤشر | العدد |
 |--------|------:|
-| total_endpoints | 346 |
-| total_routes_raw | 346 |
-| api_endpoints | 329 |
+| total_endpoints | 396 |
+| total_routes_raw | 396 |
+| api_endpoints | 379 |
 | web_endpoints | 17 |
 | public_endpoints | 38 |
-| protected_endpoints | 300 |
+| protected_endpoints | 350 |
 | signed_endpoints | 8 |
-| controllers | 57 |
+| controllers | 63 |
 | form_requests | 28 |
-| resources | 24 |
-| policies | 26 |
+| resources | 25 |
+| policies | 27 |
 
 ### حسب HTTP Method
-- **GET:** 185
-- **POST:** 114
-- **PUT:** 26
-- **DELETE:** 15
-- **PATCH:** 6
+- **GET:** 200
+- **POST:** 135
+- **PUT:** 32
+- **DELETE:** 20
+- **PATCH:** 9
 
 ### حسب الوحدة
 - **Admin:** 34
@@ -38,22 +38,22 @@
 - **Health Check:** 1
 - **Inbox:** 8
 - **Incubators:** 6
-- **Maps:** 3
-- **Needs GIS:** 18
+- **Maps:** 4
+- **Needs GIS:** 25
 - **News:** 6
 - **Notifications:** 5
-- **Other Routes:** 138
+- **Other Routes:** 151
 - **Printing:** 4
 - **Program Bank:** 18
 - **Public APIs:** 8
 - **Signatures:** 1
 - **Success Stories:** 7
-- **Trainees:** 2
-- **Trainers:** 2
+- **Trainees:** 5
+- **Trainers:** 5
 - **Training Centers:** 2
-- **Training Courses:** 9
+- **Training Courses:** 25
 - **Training Kit Nominations:** 4
-- **Training Kits:** 2
+- **Training Kits:** 9
 - **Training Programs:** 2
 - **Training Requests:** 1
 - **Training Supervisors:** 1
@@ -81,6 +81,16 @@
 | Informational | App\Http\Controllers\Api\FundingPartnerController | - | GET api/finance/my-partner-assignments محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
 | Informational | App\Http\Controllers\Api\NeedController | - | GET api/needs/analytics محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
 | Informational | App\Http\Controllers\Api\NeedController | - | GET api/needs/workspace/reviewer محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | POST api/ai/chat محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | POST api/ai/chat/continue محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | POST api/ai/chat/reset محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | POST api/ai/isic4/classify محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | GET api/ai/config محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | GET api/ai/chat/history محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | GET api/ai/chat/history/{session}/messages محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | POST api/ai/chat/history/{session}/resume محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | GET api/ai/knowledge/departments محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
+| Informational | App\Http\Controllers\Api\AiChatController | - | GET api/ai/knowledge/{department} محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
 | Informational | App\Http\Controllers\Api\NotificationController | - | GET api/notifications/summary محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
 | Informational | App\Http\Controllers\Api\NotificationController | - | GET api/notifications محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
 | Informational | App\Http\Controllers\Api\NotificationController | - | POST api/notifications/read-all محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
@@ -101,7 +111,7 @@
 | Informational | App\Http\Controllers\Api\EntrepreneurProfileController | - | POST api/entrepreneur/profile محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
 | Informational | App\Http\Controllers\Api\EntrepreneurProfileController | - | PUT api/entrepreneur/profile/{id} محمي بـ auth:sanctum فقط دون permission middleware أو authorize() مستخرج | التحقق يدوياً من Policy داخل Controller |
 
-> إجمالي مسارات auth:sanctum فقط (معلوماتي): ~29
+> إجمالي مسارات auth:sanctum فقط (معلوماتي): ~39
 
 ## Sanctum Token
 
@@ -116,7 +126,7 @@
 
 ## مراجعة الحماية — ملخص
 
-- مسارات في جدول المراجعة: 304
-- مسارات تحتاج مراجعة بشرية: 21
+- مسارات في جدول المراجعة: 354
+- مسارات تحتاج مراجعة بشرية: 31
 
 راجع `API_DOCUMENTATION_AR.md` → [مراجعة الحماية](#security-review) للجدول الكامل.

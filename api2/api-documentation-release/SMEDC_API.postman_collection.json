@@ -2,7 +2,7 @@
     "info": {
         "name": "SMEDC Authority API",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-        "description": "Generated from Laravel routes — 2026-07-16T17:47:46+00:00"
+        "description": "Generated from Laravel routes — 2026-08-15T07:40:18+00:00"
     },
     "variable": [
         {
@@ -3179,6 +3179,42 @@
                             ]
                         }
                     }
+                },
+                {
+                    "name": "GET api/map/trainees",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/map/trainees",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "map",
+                                "trainees"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
                 }
             ]
         },
@@ -3582,6 +3618,207 @@
                     }
                 },
                 {
+                    "name": "GET api/needs/lookups/manage",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/needs/lookups/manage",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "needs",
+                                "lookups",
+                                "manage"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/needs/lookups/manage",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/needs/lookups/manage",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "needs",
+                                "lookups",
+                                "manage"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"lookup_type\": \"\",\n    \"value\": \"\",\n    \"label\": \"\",\n    \"sort_order\": \"\",\n    \"value.regex\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "PUT api/needs/lookups/manage/{id}",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/needs/lookups/manage/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "needs",
+                                "lookups",
+                                "manage",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"label\": \"\",\n    \"sort_order\": \"\",\n    \"is_active\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/needs/sectors",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/needs/sectors",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "needs",
+                                "sectors"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"code\": \"\",\n    \"name_ar\": \"\",\n    \"sort_order\": \"\",\n    \"code.regex\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "PUT api/needs/sectors/{id}",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/needs/sectors/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "needs",
+                                "sectors",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name_ar\": \"\",\n    \"sort_order\": \"\",\n    \"is_active\": \"\"\n}"
+                        }
+                    }
+                },
+                {
                     "name": "PUT api/needs/{id}",
                     "request": {
                         "method": "PUT",
@@ -3778,6 +4015,83 @@
                         "body": {
                             "mode": "raw",
                             "raw": "{\n    \"return_reason\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/needs/ai-suggest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/needs/ai-suggest",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "needs",
+                                "ai-suggest"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"\",\n    \"description\": \"\",\n    \"sector\": \"\",\n    \"district_name\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/needs/{id}/ai-suggest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/needs/{id}/ai-suggest",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "needs",
+                                "{id}",
+                                "ai-suggest"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
                         }
                     }
                 },
@@ -4638,7 +4952,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"applicant_name\": \"\",\n    \"national_id\": \"\",\n    \"phone\": \"\",\n    \"email\": \"\",\n    \"governorate_id\": \"\",\n    \"branch_id\": \"\",\n    \"project_name\": \"\",\n    \"project_type\": \"\",\n    \"project_sector\": \"\",\n    \"project_size\": \"\",\n    \"business_stage\": \"\",\n    \"requested_amount\": \"\",\n    \"currency\": \"\",\n    \"financing_type\": \"\",\n    \"repayment_period_months\": \"\",\n    \"purpose\": \"\",\n    \"description\": \"\",\n    \"details\": \"\"\n}"
+                            "raw": "{\n    \"applicant_name\": \"\",\n    \"national_id\": \"\",\n    \"phone\": \"\",\n    \"email\": \"\",\n    \"governorate_id\": \"\",\n    \"branch_id\": \"\",\n    \"project_name\": \"\",\n    \"project_type\": \"\",\n    \"project_sector\": \"\",\n    \"project_size\": \"\",\n    \"business_stage\": \"\",\n    \"project_status\": \"\",\n    \"requested_amount\": \"\",\n    \"currency\": \"\",\n    \"financing_type\": \"\",\n    \"financing_mode\": \"\",\n    \"repayment_period_months\": \"\",\n    \"purpose\": \"\",\n    \"description\": \"\",\n    \"details\": \"\",\n    \"details.owner_experience\": \"\",\n    \"details.employees_count\": \"\",\n    \"details.monthly_revenue\": \"\",\n    \"details.monthly_expenses\": \"\",\n    \"details.existing_debts\": \"\",\n    \"details.assets_description\": \"\",\n    \"details.market_description\": \"\",\n    \"details.challenges\": \"\",\n    \"details.requested_support\": \"\",\n    \"details.notes\": \"\",\n    \"details.extra_data\": \"\"\n}"
                         }
                     }
                 },
@@ -4679,7 +4993,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"applicant_name\": \"\",\n    \"national_id\": \"\",\n    \"phone\": \"\",\n    \"email\": \"\",\n    \"project_name\": \"\",\n    \"project_type\": \"\",\n    \"project_sector\": \"\",\n    \"project_size\": \"\",\n    \"business_stage\": \"\",\n    \"requested_amount\": \"\",\n    \"currency\": \"\",\n    \"financing_type\": \"\",\n    \"repayment_period_months\": \"\",\n    \"purpose\": \"\",\n    \"description\": \"\",\n    \"details\": \"\"\n}"
+                            "raw": "{\n    \"applicant_name\": \"\",\n    \"national_id\": \"\",\n    \"phone\": \"\",\n    \"email\": \"\",\n    \"governorate_id\": \"\",\n    \"branch_id\": \"\",\n    \"project_name\": \"\",\n    \"project_type\": \"\",\n    \"project_sector\": \"\",\n    \"project_size\": \"\",\n    \"business_stage\": \"\",\n    \"project_status\": \"\",\n    \"requested_amount\": \"\",\n    \"currency\": \"\",\n    \"financing_type\": \"\",\n    \"financing_mode\": \"\",\n    \"repayment_period_months\": \"\",\n    \"purpose\": \"\",\n    \"description\": \"\",\n    \"details\": \"\",\n    \"details.owner_experience\": \"\",\n    \"details.employees_count\": \"\",\n    \"details.monthly_revenue\": \"\",\n    \"details.monthly_expenses\": \"\",\n    \"details.existing_debts\": \"\",\n    \"details.assets_description\": \"\",\n    \"details.market_description\": \"\",\n    \"details.challenges\": \"\",\n    \"details.requested_support\": \"\",\n    \"details.notes\": \"\",\n    \"details.extra_data\": \"\"\n}"
                         }
                     }
                 },
@@ -6917,6 +7231,428 @@
                     }
                 },
                 {
+                    "name": "POST api/ai/chat",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/chat",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "chat"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"message\": \"\",\n    \"department_id\": \"\",\n    \"message.required\": \"\",\n    \"message.max\": \"\",\n    \"department_id.regex\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/ai/chat/continue",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/chat/continue",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "chat",
+                                "continue"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/ai/chat/reset",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/chat/reset",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "chat",
+                                "reset"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/ai/isic4/classify",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/isic4/classify",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "isic4",
+                                "classify"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"description\": \"\",\n    \"description.required\": \"\",\n    \"description.max\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/ai/config",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/config",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "config"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/ai/chat/history",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/chat/history",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "chat",
+                                "history"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/ai/chat/history/{session}/messages",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/chat/history/{session}/messages",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "chat",
+                                "history",
+                                "{session}",
+                                "messages"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/ai/chat/history/{session}/resume",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/chat/history/{session}/resume",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "chat",
+                                "history",
+                                "{session}",
+                                "resume"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/ai/knowledge/departments",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/knowledge/departments",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "knowledge",
+                                "departments"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/ai/knowledge/{department}",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/knowledge/{department}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "knowledge",
+                                "{department}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/ai/knowledge/ingest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart/form-data",
+                                "disabled": true
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/ai/knowledge/ingest",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "ai",
+                                "knowledge",
+                                "ingest"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"department_id\": \"\",\n    \"text\": \"\",\n    \"files\": \"\",\n    \"files.*\": \"\",\n    \"department_id.required\": \"\",\n    \"department_id.regex\": \"\"\n}"
+                        }
+                    }
+                },
+                {
                     "name": "GET api/trainer-profiles/{id}",
                     "request": {
                         "method": "GET",
@@ -7942,7 +8678,44 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"\",\n    \"phone\": \"\",\n    \"email\": \"\",\n    \"address\": \"\",\n    \"website\": \"\",\n    \"license_number\": \"\",\n    \"license_date\": \"\",\n    \"license_expiry\": \"\",\n    \"notes\": \"\"\n}"
+                            "raw": "{\n    \"name\": \"\",\n    \"governorate_id\": \"\",\n    \"phone\": \"\",\n    \"email\": \"\",\n    \"address\": \"\",\n    \"website\": \"\",\n    \"bio\": \"\",\n    \"license_number\": \"\",\n    \"license_date\": \"\",\n    \"license_expiry\": \"\",\n    \"notes\": \"\",\n    \"specializations\": \"\",\n    \"specializations.*\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "DELETE api/consulting/offices/{id}",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/consulting/offices/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "consulting",
+                                "offices",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
                         }
                     }
                 },
@@ -8286,10 +9059,43 @@
                                     "type": "string"
                                 }
                             ]
+                        }
+                    }
+                },
+                {
+                    "name": "DELETE api/consulting/requests/{id}",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/consulting/requests/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "consulting",
+                                "requests",
+                                "{id}"
+                            ]
                         },
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n    \"category_code\": \"\",\n    \"request_type\": \"\",\n    \"title\": \"\",\n    \"description\": \"\",\n    \"project_name\": \"\",\n    \"economic_activity\": \"\",\n    \"isic4_code\": \"\",\n    \"governorate_id\": \"\",\n    \"budget_min\": \"\",\n    \"budget_max\": \"\",\n    \"expected_duration_days\": \"\"\n}"
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
                         }
                     }
                 },
@@ -10736,9 +11542,116 @@
                     }
                 },
                 {
+                    "name": "POST api/trainees",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/trainees",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "trainees"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
                     "name": "GET api/trainees/{id}",
                     "request": {
                         "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/trainees/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "trainees",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PUT api/trainees/{id}",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/trainees/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "trainees",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PATCH api/trainees/{id}",
+                    "request": {
+                        "method": "PATCH",
                         "header": [
                             {
                                 "key": "Accept",
@@ -10812,9 +11725,116 @@
                     }
                 },
                 {
+                    "name": "POST api/trainers",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/trainers",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "trainers"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
                     "name": "GET api/trainers/{id}",
                     "request": {
                         "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/trainers/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "trainers",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PUT api/trainers/{id}",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/trainers/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "trainers",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PATCH api/trainers/{id}",
+                    "request": {
+                        "method": "PATCH",
                         "header": [
                             {
                                 "key": "Accept",
@@ -11036,6 +12056,596 @@
                                     "type": "string"
                                 }
                             ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/training-courses/{id}/modules",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/modules",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "modules"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/training-courses/{id}/sessions",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/sessions",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "sessions"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/training-courses/{id}/sessions",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/sessions",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "sessions"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"session_date\": \"\",\n    \"course_group_id\": \"\",\n    \"program_module_id\": \"\",\n    \"title\": \"\",\n    \"start_time\": \"\",\n    \"end_time\": \"\",\n    \"notes\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/training-courses/{id}/sessions/{sessionId}/attendance",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/sessions/{sessionId}/attendance",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "sessions",
+                                "{sessionId}",
+                                "attendance"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/training-courses/{id}/sessions/{sessionId}/attendance",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/sessions/{sessionId}/attendance",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "sessions",
+                                "{sessionId}",
+                                "attendance"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"items\": \"\",\n    \"items.*.trainee_id\": \"\",\n    \"items.*.status\": \"\",\n    \"items.*.minutes_attended\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/training-courses/{id}/module-scores",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/module-scores",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "module-scores"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/training-courses/{id}/module-scores",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/module-scores",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "module-scores"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"program_module_id\": \"\",\n    \"max_score\": \"\",\n    \"pass_mark\": \"\",\n    \"items\": \"\",\n    \"items.*.trainee_id\": \"\",\n    \"items.*.coursework_score\": \"\",\n    \"items.*.exam_score\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/training-courses/{id}/issue-certificates",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/issue-certificates",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "issue-certificates"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/training-courses/{id}/groups",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/groups",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "groups"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/training-courses/{id}/ungrouped-trainees",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/ungrouped-trainees",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "ungrouped-trainees"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/training-courses/{id}/groups/{groupId}/trainees",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/groups/{groupId}/trainees",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "groups",
+                                "{groupId}",
+                                "trainees"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/training-courses/{id}/groups",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/groups",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "groups"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"\",\n    \"code\": \"\",\n    \"capacity\": \"\",\n    \"notes\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "DELETE api/training-courses/{id}/groups/{groupId}",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/groups/{groupId}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "groups",
+                                "{groupId}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/training-courses/{id}/groups/{groupId}/assign",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/groups/{groupId}/assign",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "groups",
+                                "{groupId}",
+                                "assign"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"trainee_ids\": \"\",\n    \"trainee_ids.*\": \"\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/training-courses/{id}/groups/{groupId}/remove",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}/groups/{groupId}/remove",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}",
+                                "groups",
+                                "{groupId}",
+                                "remove"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"trainee_ids\": \"\",\n    \"trainee_ids.*\": \"\"\n}"
                         }
                     }
                 },
@@ -11272,6 +12882,42 @@
                             "raw": "{\n    \"training_center_id\": \"\",\n    \"trainer_id\": \"\",\n    \"training_kit_id\": \"\",\n    \"training_program_id\": \"\",\n    \"title\": \"\",\n    \"delivery_mode\": \"\",\n    \"approved_platform\": \"\",\n    \"start_date\": \"\",\n    \"end_date\": \"\",\n    \"planned_hours\": \"\",\n    \"actual_hours\": \"\",\n    \"capacity\": \"\",\n    \"status\": \"\",\n    \"notes\": \"\",\n    \"venue_name\": \"\",\n    \"governorate\": \"\",\n    \"city\": \"\",\n    \"district\": \"\",\n    \"address\": \"\",\n    \"latitude\": \"\",\n    \"longitude\": \"\",\n    \"location_visibility\": \"\",\n    \"online_platform\": \"\",\n    \"online_url\": \"\"\n}"
                         }
                     }
+                },
+                {
+                    "name": "DELETE api/training-courses/{id}",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-courses/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-courses",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
                 }
             ]
         },
@@ -11470,6 +13116,41 @@
                     }
                 },
                 {
+                    "name": "POST api/training-kits",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-kits",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-kits"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
                     "name": "GET api/training-kits/{id}",
                     "request": {
                         "method": "GET",
@@ -11491,6 +13172,228 @@
                             "path": [
                                 "training-kits",
                                 "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PUT api/training-kits/{id}",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-kits/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-kits",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PATCH api/training-kits/{id}",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-kits/{id}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-kits",
+                                "{id}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "GET api/training-kits/{id}/materials",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-kits/{id}/materials",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-kits",
+                                "{id}",
+                                "materials"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "POST api/training-kits/{id}/materials",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-kits/{id}/materials",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-kits",
+                                "{id}",
+                                "materials"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "PUT api/training-kits/{id}/materials/{materialId}",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-kits/{id}/materials/{materialId}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-kits",
+                                "{id}",
+                                "materials",
+                                "{materialId}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "DELETE api/training-kits/{id}/materials/{materialId}",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/training-kits/{id}/materials/{materialId}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "training-kits",
+                                "{id}",
+                                "materials",
+                                "{materialId}"
                             ]
                         },
                         "auth": {

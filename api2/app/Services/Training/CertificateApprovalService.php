@@ -151,12 +151,14 @@ class CertificateApprovalService
                 return 'يجب اعتماد المركز أولاً.';
             }
 
-            if (($approvals['training_manager_approval']->decision ?? null) !== 'approved') {
-                return 'يجب اعتماد قسم التدريب أولاً.';
-            }
+            if ($approvals->has('deputy_director_approval')) {
+                if (($approvals['training_manager_approval']->decision ?? null) !== 'approved') {
+                    return 'يجب اعتماد قسم التدريب أولاً.';
+                }
 
-            if (($approvals['deputy_director_approval']->decision ?? null) !== 'approved') {
-                return 'يجب توقيع نائب المدير العام قبل اعتماد المدير العام.';
+                if (($approvals['deputy_director_approval']->decision ?? null) !== 'approved') {
+                    return 'يجب توقيع نائب المدير العام قبل اعتماد المدير العام.';
+                }
             }
         }
 
@@ -166,26 +168,35 @@ class CertificateApprovalService
     private function determineNextStatus($approvals): string
     {
         $centerApproved = $approvals->firstWhere('approval_step', 'center_approval')?->decision === 'approved';
-        $managerApproved = $approvals->firstWhere('approval_step', 'training_manager_approval')?->decision === 'approved';
-        $deputyApproved = $approvals->firstWhere('approval_step', 'deputy_director_approval')?->decision === 'approved';
         $generalApproved = $approvals->firstWhere('approval_step', 'general_director_approval')?->decision === 'approved';
 
-        if ($centerApproved && $managerApproved && $deputyApproved && $generalApproved) {
+        if ($centerApproved && $generalApproved) {
             return 'approved';
         }
 
-        if ($centerApproved && $managerApproved && $deputyApproved) {
+        if (!$centerApproved) {
+            return 'pending_center_approval';
+        }
+
+        $usesLegacyFlow = $approvals->contains(
+            fn ($row) => in_array($row->approval_step, ['training_manager_approval', 'deputy_director_approval'], true)
+        );
+
+        if (!$usesLegacyFlow) {
             return 'pending_general_director_approval';
         }
 
-        if ($centerApproved && $managerApproved) {
+        $managerApproved = $approvals->firstWhere('approval_step', 'training_manager_approval')?->decision === 'approved';
+        $deputyApproved = $approvals->firstWhere('approval_step', 'deputy_director_approval')?->decision === 'approved';
+
+        if ($managerApproved && $deputyApproved) {
+            return 'pending_general_director_approval';
+        }
+
+        if ($managerApproved) {
             return 'pending_deputy_approval';
         }
 
-        if ($centerApproved) {
-            return 'pending_training_approval';
-        }
-
-        return 'pending_center_approval';
+        return 'pending_training_approval';
     }
 }

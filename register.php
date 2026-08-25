@@ -4,6 +4,7 @@ $basePath = '';
 
 require_once __DIR__ . '/includes/layout/paths.php';
 require_once __DIR__ . '/includes/config/register-account-types.php';
+require_once __DIR__ . '/includes/form-required-mark.php';
 
 $frontBaseUrl = resolve_front_base_url();
 $apiBaseUrl = resolve_api_base_url();
@@ -38,7 +39,7 @@ $pageTitle = 'إنشاء حساب';
 
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-  <link href="<?php echo $basePath; ?>assets/css/auth-pages.css?v=1.1" rel="stylesheet">
+  <link href="<?php echo $basePath; ?>assets/css/auth-pages.css?v=1.2" rel="stylesheet">
 
 </head>
 
@@ -100,7 +101,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="registerName">الاسم الكامل</label>
+            <label class="form-label fw-bold" for="registerName">الاسم الكامل <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="registerName" class="form-control" placeholder="أدخل الاسم الكامل" autocomplete="name">
 
@@ -112,7 +113,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="registerEmail">البريد الإلكتروني</label>
+            <label class="form-label fw-bold" for="registerEmail">البريد الإلكتروني <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="registerEmail" class="form-control" placeholder="مثال: ahmad" autocomplete="username" dir="ltr">
 
@@ -126,7 +127,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="registerPassword">كلمة المرور</label>
+            <label class="form-label fw-bold" for="registerPassword">كلمة المرور <?php echo form_required_mark(); ?></label>
 
             <input type="password" id="registerPassword" class="form-control" placeholder="8 أحرف على الأقل" autocomplete="new-password">
 
@@ -138,7 +139,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="registerPasswordConfirmation">تأكيد كلمة المرور</label>
+            <label class="form-label fw-bold" for="registerPasswordConfirmation">تأكيد كلمة المرور <?php echo form_required_mark(); ?></label>
 
             <input type="password" id="registerPasswordConfirmation" class="form-control" placeholder="أعد إدخال كلمة المرور" autocomplete="new-password">
 
@@ -150,7 +151,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-12">
 
-            <label class="form-label fw-bold" for="registerAccountType">نوع الحساب</label>
+            <label class="form-label fw-bold" for="registerAccountType">نوع الحساب <?php echo form_required_mark(); ?></label>
 
             <select id="registerAccountType" class="form-select">
 
@@ -196,7 +197,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="tFullName">الاسم الكامل</label>
+            <label class="form-label fw-bold" for="tFullName">الاسم الكامل <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="tFullName" class="form-control">
 
@@ -339,7 +340,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="trFullName">الاسم الكامل</label>
+            <label class="form-label fw-bold" for="trFullName">الاسم الكامل <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="trFullName" class="form-control">
 
@@ -391,7 +392,7 @@ $pageTitle = 'إنشاء حساب';
 
             <label class="form-label fw-bold" for="trClassificationRequested">التصنيف المطلوب</label>
 
-            <input type="text" id="trClassificationRequested" class="form-control">
+            <input type="text" id="trClassificationRequested" class="form-control" placeholder="مثال: مدرب معتمد — اختياري">
 
             <div class="invalid-feedback"></div>
 
@@ -453,13 +454,17 @@ $pageTitle = 'إنشاء حساب';
 
         <h2 class="wizard-section-title">بيانات المركز التدريبي</h2>
 
-
+        <p class="text-muted mb-3" style="line-height:1.8;font-size:.95rem">
+          دور المركز: <strong>رفع الحقائب</strong>، إدارة <strong>المدربين</strong> و<strong>المتدربين</strong>،
+          وإصدار <strong>شهادة بسيطة</strong> للناجحين (بدون عقد).
+          تصنيف كل حقيبة (تعليمي، مهني، …) يُحدَّد عند إنشائها من التطبيق بعد الاعتماد.
+        </p>
 
         <div class="row g-3">
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="cCenterName">اسم المركز</label>
+            <label class="form-label fw-bold" for="cCenterName">اسم المركز <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="cCenterName" class="form-control" placeholder="أدخل اسم المركز التدريبي">
 
@@ -469,7 +474,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="cCenterCity">المدينة</label>
+            <label class="form-label fw-bold" for="cCenterCity">المدينة <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="cCenterCity" class="form-control" placeholder="مثال: إدلب">
 
@@ -479,7 +484,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="cCenterAddress">العنوان</label>
+            <label class="form-label fw-bold" for="cCenterAddress">العنوان <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="cCenterAddress" class="form-control" placeholder="العنوان التفصيلي">
 
@@ -489,7 +494,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="cCenterPhone">الهاتف</label>
+            <label class="form-label fw-bold" for="cCenterPhone">الهاتف <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="cCenterPhone" class="form-control">
 
@@ -502,16 +507,6 @@ $pageTitle = 'إنشاء حساب';
             <label class="form-label fw-bold" for="cCenterEmail">البريد الإلكتروني</label>
 
             <input type="email" id="cCenterEmail" class="form-control" placeholder="name@example.com">
-
-            <div class="invalid-feedback"></div>
-
-          </div>
-
-          <div class="col-md-6">
-
-            <label class="form-label fw-bold" for="cCenterClassification">التصنيف المطلوب</label>
-
-            <input type="text" id="cCenterClassification" class="form-control" placeholder="مثال: first_class">
 
             <div class="invalid-feedback"></div>
 
@@ -557,7 +552,7 @@ $pageTitle = 'إنشاء حساب';
 
 
 
-        <h3 class="wizard-section-title">موقع المركز على الخريطة</h3>
+        <h3 class="wizard-section-title">موقع المركز على الخريطة <?php echo form_required_mark(); ?></h3>
 
         <div class="row g-3 align-items-stretch mb-3">
 
@@ -605,7 +600,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="cLicenseNumber">رقم الترخيص</label>
+            <label class="form-label fw-bold" for="cLicenseNumber">رقم الترخيص <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="cLicenseNumber" class="form-control">
 
@@ -615,7 +610,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-md-6">
 
-            <label class="form-label fw-bold" for="cLicenseIssueDate">تاريخ الترخيص</label>
+            <label class="form-label fw-bold" for="cLicenseIssueDate">تاريخ الترخيص <?php echo form_required_mark(); ?></label>
 
             <input type="date" id="cLicenseIssueDate" class="form-control">
 
@@ -625,7 +620,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-12">
 
-            <label class="form-label fw-bold" for="cLicenseIssuedBy">الجهة الصادرة عنها</label>
+            <label class="form-label fw-bold" for="cLicenseIssuedBy">الجهة الصادرة عنها <?php echo form_required_mark(); ?></label>
 
             <input type="text" id="cLicenseIssuedBy" class="form-control">
 
@@ -635,7 +630,7 @@ $pageTitle = 'إنشاء حساب';
 
           <div class="col-12">
 
-            <label class="form-label fw-bold" for="cLicenseImage">صورة الترخيص</label>
+            <label class="form-label fw-bold" for="cLicenseImage">صورة الترخيص <?php echo form_required_mark(); ?></label>
 
             <input type="file" id="cLicenseImage" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.webp">
 

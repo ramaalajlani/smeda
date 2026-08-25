@@ -16,6 +16,9 @@ $pageTitle  = 'الحقائب التدريبية';
     <button type="button" class="ic" onclick="location.reload()" aria-label="تحديث"><i class="bi bi-arrow-clockwise"></i></button>
   </div>
   <div class="tc-content">
+    <p style="margin:0 0 14px;color:#64748b;font-size:.9rem;line-height:1.7">
+      من هنا يرفع المركز الحقائب التدريبية ويحدّد تصنيف كل حقيبة (تعليمي، مهني، …) ومرفقاتها وموادها.
+    </p>
     <div id="tcKits"><div class="tc-spin">جاري التحميل...</div></div>
   </div>
 </div>
@@ -33,12 +36,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     let msg = `تعذّر تحميل ${label}`;
     const status = err?.status;
     const apiMsg = err?.data?.message || err?.message;
-    if (status) msg += ` (${status})`;
-    if (apiMsg && status !== 401) msg += `: ${apiMsg}`;
+    if (status === 403) {
+      msg = 'لا تملك صلاحية عرض الحقائب — تأكد أن حسابك مربوط بمركز تدريبي، ثم سجّل خروجاً وادخل مجدداً.';
+    } else if (status === 401) {
+      msg = 'انتهت الجلسة — سجّل الدخول مجدداً.';
+    } else {
+      if (status) msg += ` (${status})`;
+      if (apiMsg && status !== 401) msg += `: ${apiMsg}`;
+    }
     document.getElementById(boxId).innerHTML = `<div class="tc-empty">${E(msg)}</div>`;
   };
   try {
-    const r = await fetch(`${BASE}/training-kits?per_page=200&with_counts=1&with_trainers=1`, { headers:H() });
+    const user = window.AppAuth.getUser() || {};
+    const centerId = user.training_center_id ? Number(user.training_center_id) : null;
+    const qs = new URLSearchParams({ per_page: '100', with_counts: '1', with_trainers: '1' });
+    if (centerId) qs.set('training_center_id', String(centerId));
+    const r = await fetch(`${BASE}/training-kits?${qs}`, { headers:H() });
     const payload = await r.json().catch(() => ({}));
     if (!r.ok) throw Object.assign(new Error('load-failed'), { data: payload, status: r.status });
     const all = payload.data || [];

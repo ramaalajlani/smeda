@@ -2,6 +2,7 @@
 $basePath = '../../';
 $pageTitle = 'طلب تسجيل مركز تدريبي';
 $activePage = 'services';
+require_once __DIR__ . '/../../includes/form-required-mark.php';
 ?>
 <?php include __DIR__ . '/../../includes/layout/html-open.php'; ?>
 <head>
@@ -56,6 +57,15 @@ $activePage = 'services';
       font-weight:800;
       color:#0f172a;
       margin:8px 0 14px;
+    }
+
+    .req-mark{
+      display:inline-block;
+      margin-inline-start:6px;
+      font-size:.78rem;
+      font-weight:700;
+      color:#b91c1c;
+      vertical-align:middle;
     }
 
     .map-box{
@@ -165,8 +175,8 @@ $activePage = 'services';
           <span class="section-badge">قسم التدريب</span>
           <h1 class="fw-bold mb-3">طلب تسجيل مركز تدريبي</h1>
           <p class="section-subtitle">
-            إرسال طلب اعتماد وتسجيل مركز تدريبي جديد، مع بيانات الترخيص والموقع الجغرافي
-            ليتم مراجعته من الجهة المخولة.
+            إرسال طلب اعتماد مركز تدريبي لرفع الحقائب التدريبية وإدارة الدورات،
+            مع بيانات الترخيص والموقع الجغرافي.
           </p>
         </div>
 
@@ -192,14 +202,14 @@ $activePage = 'services';
       <div class="registration-card">
         <h3 class="mb-3">نموذج الطلب</h3>
         <p class="registration-note">
-          يرجى تعبئة بيانات المركز بدقة. يمكن تحديد الموقع بالنقر على الخريطة،
-          مع إدخال بيانات الترخيص ورفع صورة واضحة عنه.
+          يرجى تعبئة بيانات المركز بدقة. بعد الاعتماد يمكن للمركز رفع الحقائب وإدارة المدربين والمتدربين،
+          وإصدار شهادات بسيطة للناجحين بدون عقد. حدّد الموقع على الخريطة وأرفق بيانات الترخيص.
         </p>
 
         <form id="centerRegistrationRequestForm" enctype="multipart/form-data">
           <div class="row g-3">
             <div class="col-lg-6">
-              <label class="form-label">اسم المركز</label>
+              <label class="form-label">اسم المركز <?php echo form_required_mark(); ?></label>
               <input
                 type="text"
                 id="centerName"
@@ -210,7 +220,7 @@ $activePage = 'services';
             </div>
 
             <div class="col-lg-6">
-              <label class="form-label">المدينة</label>
+              <label class="form-label">المدينة <?php echo form_required_mark(); ?></label>
               <input
                 type="text"
                 id="centerCity"
@@ -221,7 +231,7 @@ $activePage = 'services';
             </div>
 
             <div class="col-lg-6">
-              <label class="form-label">العنوان</label>
+              <label class="form-label">العنوان <?php echo form_required_mark(); ?></label>
               <input
                 type="text"
                 id="centerAddress"
@@ -232,7 +242,7 @@ $activePage = 'services';
             </div>
 
             <div class="col-lg-6">
-              <label class="form-label">الهاتف</label>
+              <label class="form-label">الهاتف <?php echo form_required_mark(); ?></label>
               <input
                 type="text"
                 id="centerPhone"
@@ -249,16 +259,6 @@ $activePage = 'services';
                 id="centerEmail"
                 class="form-control"
                 placeholder="name@example.com"
-              />
-            </div>
-
-            <div class="col-lg-6">
-              <label class="form-label">التصنيف المطلوب</label>
-              <input
-                type="text"
-                id="centerClassification"
-                class="form-control"
-                placeholder="مثال: first_class"
               />
             </div>
 
@@ -281,7 +281,7 @@ $activePage = 'services';
 
           <hr class="my-4">
 
-          <div class="section-mini-title">موقع المركز على الخريطة</div>
+          <div class="section-mini-title">موقع المركز على الخريطة <?php echo form_required_mark(); ?></div>
 
           <div class="row g-3 align-items-stretch">
             <div class="col-lg-8">
@@ -313,7 +313,7 @@ $activePage = 'services';
 
           <div class="row g-3">
             <div class="col-lg-6">
-              <label class="form-label">رقم الترخيص</label>
+              <label class="form-label">رقم الترخيص <?php echo form_required_mark(); ?></label>
               <input
                 type="text"
                 id="licenseNumber"
@@ -324,7 +324,7 @@ $activePage = 'services';
             </div>
 
             <div class="col-lg-6">
-              <label class="form-label">تاريخ الترخيص</label>
+              <label class="form-label">تاريخ الترخيص <?php echo form_required_mark(); ?></label>
               <input
                 type="date"
                 id="licenseIssueDate"
@@ -334,7 +334,7 @@ $activePage = 'services';
             </div>
 
             <div class="col-lg-12">
-              <label class="form-label">الجهة الصادرة عنها</label>
+              <label class="form-label">الجهة الصادرة عنها <?php echo form_required_mark(); ?></label>
               <input
                 type="text"
                 id="licenseIssuedBy"
@@ -345,7 +345,7 @@ $activePage = 'services';
             </div>
 
             <div class="col-lg-12">
-              <label class="form-label">صورة الترخيص</label>
+              <label class="form-label">صورة الترخيص <?php echo form_required_mark(); ?></label>
               <input
                 type="file"
                 id="licenseImage"

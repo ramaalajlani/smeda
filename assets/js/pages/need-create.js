@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // الخطوات (Steps)
   // ══════════════════════════════════════════
   let currentStep = 1;
-  const totalSteps = 5;
+  const totalSteps = 4;
 
   function showStep(n) {
     document.querySelectorAll('.form-panel').forEach((p) => p.classList.remove('active'));
@@ -53,23 +53,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentStep = n;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // تحميل كسول لتصنيف SyrSIC (~1.3MB) عند الحاجة فقط
-    if ((n === 2 || n === 3) && window.SYRSIC?.ensureLoaded) {
-      window.SYRSIC.ensureLoaded().catch(() => {});
-    }
-    if (n === 4) setTimeout(initMap, 100); // تهيئة الخريطة عند الوصول لخطوة الموقع
-    if (n === 5) buildSummary();
+    if (n === 3) setTimeout(initMap, 100);
+    if (n === 4) buildSummary();
   }
 
   document.querySelectorAll('.btn-next').forEach((btn) => {
     btn.addEventListener('click', () => {
       let next = parseInt(btn.dataset.next);
       if (currentComplexity === 'general') {
-        // الاحتياج العام: معلومات أساسية ← موقع ← حفظ (يتجاوز التصنيف والتفاصيل)
-        if (next === 2) next = 4;
-        if (next === 5) { submitForm(); return; }
+        if (next === 2) next = 3;
+        if (next === 4) { submitForm(); return; }
       }
-      // التحقق من خطوة تصنيف الاحتياج قبل المتابعة
       if (currentStep === 2 && next === 3 && !validateTaxonomyStep()) return;
       showStep(next);
     });
@@ -250,169 +244,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   loadTaxonomy();
 
-  // ══════════════════════════════════════════
-  // SyrSIC — بحث ذكي فوري
-  // ══════════════════════════════════════════
-  const S = window.SYRSIC;
-
-  const searchInput = document.getElementById('syrsicSearchInput');
-  const resultsBox  = document.getElementById('syrsicResults');
-  const codeBox     = document.getElementById('activityCodeBox');
-  const codeDisplay = document.getElementById('activityCodeDisplay');
-  const nameDisplay = document.getElementById('activityNameDisplay');
-  const sectionDisplay   = document.getElementById('activitySectionDisplay');
-  const pathDisplay      = document.getElementById('activityPathDisplay');
-  const clearActivityBtn = document.getElementById('clearActivityBtn');
-
-  // الحقول المخفية — SyrSIC
-  const hSection  = document.getElementById('hSyrsicSection');
-  const hDivision = document.getElementById('hSyrsicDivision');
-  const hGroup    = document.getElementById('hSyrsicGroup');
-  const hClass    = document.getElementById('hSyrsicClass');
-  const hActivity = document.getElementById('hSyrsicActivity');
-  // الحقول المخفية — القطاع (للخريطة والتصفية)
-  const hSector         = document.getElementById('hSector');
-  const hEconomicSector = document.getElementById('hEconomicSector');
-
-  if (!S) {
-    searchInput.placeholder = SiteI18n.ta('جاري تحميل بيانات التصنيف...');
-    searchInput.disabled = true;
-    const waitSyrsic = setInterval(() => {
-      if (window.SYRSIC) {
-        clearInterval(waitSyrsic);
-        searchInput.disabled = false;
-        searchInput.placeholder = SiteI18n.ta('ابحث بالاسم أو الكود...');
-        window.SYRSIC.ensureLoaded?.().catch(() => {});
-      }
-    }, 200);
-  } else {
-    searchInput.addEventListener('focus', () => {
-      if (!S.isReady()) {
-        searchInput.placeholder = SiteI18n.ta('جاري تحميل بيانات التصنيف...');
-        S.ensureLoaded().then(() => {
-          searchInput.placeholder = SiteI18n.ta('ابحث بالاسم أو الكود...');
-        }).catch(() => {
-          searchInput.placeholder = SiteI18n.ta('تعذّر تحميل التصنيف');
-        });
-      }
-    });
-  }
-
-  const LEVEL_LABELS = { activity: SiteI18n.ta('نشاط'), class: SiteI18n.ta('صنف'), group: SiteI18n.ta('مجموعة'), division: SiteI18n.ta('شعبة'), section: SiteI18n.ta('باب') };
-  const LEVEL_BADGE  = { activity: 'badge-activity', class: 'badge-class', group: 'badge-group', division: 'badge-division', section: 'badge-section' };
-
-  let focusedIdx = -1;
-  let lastResults = [];
-
-  function renderResults(results) {
-    lastResults = results;
-    focusedIdx = -1;
-    if (!results.length) {
-      resultsBox.innerHTML = '<div class="syrsic-no-result">' + SiteI18n.ta('لا توجد نتائج — جرّب كلمة مختلفة أو رقم الكود') + '</div>';
-      resultsBox.classList.add('open');
-      return;
-    }
-    resultsBox.innerHTML = results.map((item, i) => `
-      <div class="syrsic-result-item" data-idx="${i}" role="option">
-        <div class="rc">${item.code}</div>
-        <div style="flex:1;min-width:0">
-          <div class="rn">${item.name}</div>
-          <div class="rp">${item.path}</div>
-        </div>
-        <span class="badge-level ${LEVEL_BADGE[item.level] || ''}">${LEVEL_LABELS[item.level] || ''}</span>
-      </div>
-    `).join('');
-    resultsBox.classList.add('open');
-
-    resultsBox.querySelectorAll('.syrsic-result-item').forEach((el) => {
-      el.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        selectItem(parseInt(el.dataset.idx));
-      });
-    });
-  }
-
-  function selectItem(idx) {
-    const item = lastResults[idx];
-    if (!item) return;
-
-    // ملء الحقول المخفية — SyrSIC
-    hSection.value  = item.sectionCode  || '';
-    hDivision.value = item.divCode      || '';
-    hGroup.value    = item.grpCode      || '';
-    hClass.value    = item.classCode    || '';
-    hActivity.value = item.activityCode || '';
-    // القطاع (يُستخدم في الخريطة والفلترة)
-    if (hSector)         hSector.value         = item.sectionName || '';
-    if (hEconomicSector) hEconomicSector.value  = item.sectionName || '';
-
-    // عرض الكود المختار
-    codeDisplay.textContent    = item.code;
-    nameDisplay.textContent    = item.name;
-    sectionDisplay.textContent = item.sectionName || '';
-    pathDisplay.textContent    = item.path;
-    codeBox.classList.add('show');
-    requestAnimationFrame(() => codeBox.classList.add('visible'));
-
-    // إخفاء نتائج البحث وتحديث حقل الإدخال
-    searchInput.value = `${item.code} — ${item.name}`;
-    resultsBox.classList.remove('open');
-    searchInput.blur();
-
-    // تحديث تقدير العمال
-    updateJobsHint(item.code);
-  }
-
-  // إزالة الاختيار (زر "تغيير النشاط")
-  clearActivityBtn?.addEventListener('click', () => {
-    searchInput.value = '';
-    codeBox.classList.remove('show', 'visible');
-    [hSection, hDivision, hGroup, hClass, hActivity, hSector, hEconomicSector].forEach((h) => { if(h) h.value = ''; });
-    searchInput.focus();
-  });
-
-  // بحث فوري عند الكتابة
-  let debounceTimer;
-  searchInput.addEventListener('input', () => {
-    clearTimeout(debounceTimer);
-    const q = searchInput.value.trim();
-    if (q.length < 2) { resultsBox.classList.remove('open'); return; }
-    debounceTimer = setTimeout(() => {
-      const syrsic = window.SYRSIC;
-      if (!syrsic || !syrsic.isReady()) {
-        resultsBox.innerHTML = '<div class="syrsic-no-result">' + SiteI18n.ta('البيانات لم تُحمَّل بعد، انتظر لحظة...') + '</div>';
-        resultsBox.classList.add('open');
-        return;
-      }
-      renderResults(syrsic.search(q, 12));
-    }, 120);
-  });
-
-  // التنقل بلوحة المفاتيح
-  searchInput.addEventListener('keydown', (e) => {
-    const items = resultsBox.querySelectorAll('.syrsic-result-item');
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      focusedIdx = Math.min(focusedIdx + 1, items.length - 1);
-      items.forEach((el, i) => el.classList.toggle('focused', i === focusedIdx));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      focusedIdx = Math.max(focusedIdx - 1, 0);
-      items.forEach((el, i) => el.classList.toggle('focused', i === focusedIdx));
-    } else if (e.key === 'Enter' && focusedIdx >= 0) {
-      e.preventDefault();
-      selectItem(focusedIdx);
-    } else if (e.key === 'Escape') {
-      resultsBox.classList.remove('open');
-    }
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.syrsic-search-wrap')) resultsBox.classList.remove('open');
-  });
-
-  // دالة مرجعية للكود المختار (تُستخدم في buildSummary)
-  function getSelectedActivityCode() { return hActivity.value || hClass.value || hGroup.value || hDivision.value || hSection.value; }
 
   // ══════════════════════════════════════════
   // الموقع الجغرافي — قوائم متسلسلة
@@ -777,31 +608,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ══════════════════════════════════════════
-  // تقدير المستفيدين حسب كود النشاط
-  // ══════════════════════════════════════════
-  function updateJobsHint(actCode) {
-    const est = null; // job estimates removed — fill manually
-    if (!est) return;
-
-    const jobsHint = document.getElementById('jobsHint');
-    const beneHint = document.getElementById('beneficiariesHint');
-    const jobsInput = document.getElementById('jobsInput');
-    const bInput = document.getElementById('beneficiariesInput');
-
-    if (jobsHint) {
-      jobsHint.textContent = `📊 تقدير وفق كود النشاط: ${est.min}–${est.max} عامل (${est.label})`;
-      jobsHint.classList.add('show');
-    }
-    if (beneHint) {
-      beneHint.textContent = `💡 يُقترح تضمين صاحب المشروع + العمال المتوقعين`;
-      beneHint.classList.add('show');
-    }
-    // ملء تلقائي إذا كانت الحقول فارغة
-    if (jobsInput && !jobsInput.value) jobsInput.value = est.min;
-    if (bInput && !bInput.value) bInput.value = est.min + 1;
-  }
-
-  // ══════════════════════════════════════════
   // ملخص قبل الإرسال
   // ══════════════════════════════════════════
   function buildSummary() {
@@ -812,7 +618,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       return el.value || '—';
     };
 
-    const actCode = getSelectedActivityCode();
     const govName = govSelect.options[govSelect.selectedIndex]?.text || '—';
 
     const selText = (sel) => (sel && sel.value) ? (sel.options[sel.selectedIndex]?.text || '—') : '—';
@@ -831,8 +636,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="col-md-6"><strong>الجهة الطالبة:</strong> ${get('responsible_entity')}</div>
         <div class="col-md-6"><strong>نوع الملكية:</strong> ${get('need_owner_type')}</div>
         <div class="col-md-6"><strong>الأولوية:</strong> ${get('priority') || '—'}</div>
-        <div class="col-md-6"><strong>كود النشاط (SyrSIC):</strong> <span class="text-primary fw-bold">${actCode || '—'}</span></div>
-        <div class="col-md-6"><strong>اسم النشاط:</strong> ${document.getElementById('activityNameDisplay')?.textContent || '—'}</div>
         <div class="col-md-6"><strong>المحافظة:</strong> ${govName}</div>
         <div class="col-md-6"><strong>المنطقة:</strong> ${get('district_name')}</div>
         <div class="col-md-6"><strong>الناحية:</strong> ${get('countryside_name')}</div>
@@ -935,7 +738,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // المحافظة إلزامية قبل الحفظ
     if (!govSelect?.value) {
-      failSubmit(SiteI18n.ta('يرجى اختيار المحافظة قبل الحفظ.'), 4);
+      failSubmit(SiteI18n.ta('يرجى اختيار المحافظة قبل الحفظ.'), 3);
       return;
     }
 
@@ -943,13 +746,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const latVal = document.getElementById('latInput')?.value;
     const lngVal = document.getElementById('lngInput')?.value;
     if (!latVal || !lngVal) {
-      failSubmit(SiteI18n.ta('يرجى تحديد موقع الاحتياج على الخريطة قبل الحفظ.'), 4);
+      failSubmit(SiteI18n.ta('يرجى تحديد موقع الاحتياج على الخريطة قبل الحفظ.'), 3);
       return;
     }
 
     // المنطقة إلزامية عند نوع الاستهداف "دعم منطقة"
     if (currentComplexity !== 'general' && targetingSelect?.value === 'geographic_area' && !districtSelect.value) {
-      failSubmit(SiteI18n.ta('المنطقة إلزامية عند اختيار "دعم منطقة" كنوع استهداف.'), 4);
+      failSubmit(SiteI18n.ta('المنطقة إلزامية عند اختيار "دعم منطقة" كنوع استهداف.'), 3);
       return;
     }
 
@@ -957,7 +760,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (currentComplexity !== 'general') {
       const priorityInput = document.querySelector('[name="priority"]');
       if (priorityInput && !priorityInput.value) {
-        failSubmit(SiteI18n.ta('يرجى اختيار الأولوية.'), 5);
+        failSubmit(SiteI18n.ta('يرجى اختيار الأولوية.'), 4);
         return;
       }
     }
