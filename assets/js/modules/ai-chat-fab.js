@@ -1037,7 +1037,7 @@
   function renderIsicOptionButton(opt, step, index, root) {
     const btn = el('button', 'aic-isic-opt' + (opt.recommended ? ' rec' : ''));
     btn.type = 'button';
-    btn.disabled = !!isicState.busy;
+    btn.disabled = false;
     btn.appendChild(el('span', 'aic-isic-opt-index', String(index + 1)));
     const body = el('span', 'aic-isic-opt-lab');
     if (opt.code && !/^[A-U]$/.test(String(opt.code))) {
@@ -1076,14 +1076,14 @@
       const back = el('button', 'aic-isic-act ghost');
       back.type = 'button';
       back.innerHTML = '<i class="bi bi-arrow-right" aria-hidden="true"></i><span>رجوع</span>';
-      back.disabled = !!isicState.busy;
+      back.disabled = false;
       back.addEventListener('click', () => isicGoBack(root));
       acts.appendChild(back);
     }
     const reset = el('button', 'aic-isic-act ghost');
     reset.type = 'button';
     reset.innerHTML = '<i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i><span>بدء من جديد</span>';
-    reset.disabled = !!isicState.busy;
+    reset.disabled = false;
     reset.addEventListener('click', () => renderIsicIntro(root));
     acts.appendChild(reset);
     box.appendChild(acts);
@@ -1164,6 +1164,7 @@
       });
       if (requestId !== isicState.requestId) return;
       const data = isicPayload(res);
+      isicState.busy = false;
       if (data.status === 'need_input') {
         renderIsicWizard(root, data);
         return;
@@ -1171,6 +1172,7 @@
       renderIsicResult(root, data);
     } catch (err) {
       if (requestId !== isicState.requestId) return;
+      isicState.busy = false;
       showIsicError(root, err);
     } finally {
       if (requestId !== isicState.requestId) return;

@@ -76,6 +76,5 @@ $pageTitle = 'تفاصيل احتياج';
 <?php include $basePath . 'includes/layout/scripts.php'; ?>
 <script src="<?php echo $basePath; ?>assets/js/pages/needs-platform.js?v=1.0"></script>
 <script src="<?php echo $basePath; ?>assets/js/pages/need-view.js?v=3.1"></script>
-<script src="<?php echo $basePath; ?>assets/js/pages/needs-ai-fab.js?v=1.0"></script>
 </body>
 </html>
