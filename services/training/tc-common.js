@@ -217,4 +217,45 @@
       });
     },
   };
+
+  function ensureCenterCertificatesNav() {
+    try {
+      if (window.AppAuth && AppAuth.isTrainerWorkspaceUser && AppAuth.isTrainerWorkspaceUser()) return;
+      const nav = document.querySelector('#tcSidebar [data-ws="center"]');
+      if (!nav || nav.querySelector('a[href*="center-certificates-hub"]')) return;
+      const trainees = nav.querySelector('a[href*="center-trainees-list"]');
+      if (!trainees) return;
+      const href = trainees.getAttribute('href').replace('center-trainees-list.php', 'center-certificates-hub.php');
+      const link = document.createElement('a');
+      link.href = href;
+      link.innerHTML = '<i class="bi bi-patch-check"></i>الشهادات';
+      if (/center-certificates-hub\.php/i.test(location.pathname)) link.classList.add('active');
+      trainees.insertAdjacentElement('afterend', link);
+    } catch (e) {}
+  }
+
+  function upgradeKitLevelSelect() {
+    try {
+      const input = document.getElementById('level');
+      if (!input || input.tagName !== 'INPUT' || !document.getElementById('form')) return;
+      const map = { 'مبتدئ': 'beginner', 'متوسط': 'intermediate', 'متقدم': 'advanced' };
+      const current = map[input.value] || input.value || '';
+      const select = document.createElement('select');
+      select.id = 'level';
+      select.innerHTML =
+        '<option value="">— بدون تحديد —</option>' +
+        '<option value="beginner">مبتدئ</option>' +
+        '<option value="intermediate">متوسط</option>' +
+        '<option value="advanced">متقدم</option>';
+      if (current && select.querySelector('option[value="' + current + '"]')) select.value = current;
+      input.replaceWith(select);
+    } catch (e) {}
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    ensureCenterCertificatesNav();
+    upgradeKitLevelSelect();
+    setTimeout(ensureCenterCertificatesNav, 500);
+    setTimeout(upgradeKitLevelSelect, 100);
+  });
 })(window);

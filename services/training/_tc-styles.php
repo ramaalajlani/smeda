@@ -365,6 +365,7 @@
     .tc-num{width:100%;max-width:100%}
   }
 </style>
+<script src="center-kit-level.js?v=1"></script>
 <script>
 document.documentElement.classList.add('tc-app-html');
 document.addEventListener('DOMContentLoaded', function(){

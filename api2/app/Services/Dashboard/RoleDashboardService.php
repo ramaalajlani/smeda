@@ -757,6 +757,7 @@ class RoleDashboardService
                 ['label' => 'تطبيق المركز', 'path' => 'services/training/center-app.php'],
                 ['label' => 'المدربون', 'path' => 'services/training/center-trainers.php', 'permission' => 'view_trainers'],
                 ['label' => 'المتدربون', 'path' => 'services/training/center-trainees-list.php', 'permission' => 'view_trainees'],
+                ['label' => 'الشهادات', 'path' => 'services/training/center-certificates-hub.php', 'permission' => 'view_certificates'],
                 ['label' => 'الحقائب', 'path' => 'services/training/center-kits.php', 'permission' => 'view_kits'],
             ],
             'trainer_user' => [
