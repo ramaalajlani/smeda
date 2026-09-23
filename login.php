@@ -1,4 +1,4 @@
-<!-- test update -->
+<!-- test update 2 -->
 <?php
 require_once __DIR__ . '/includes/i18n/bootstrap.php';
 require_once __DIR__ . '/includes/layout/paths.php';
